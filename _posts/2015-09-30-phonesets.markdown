@@ -2,7 +2,7 @@
 layout: post
 title:  "phonesets"
 date:   2015-09-30 20:14:34 +0800
-categories: jekyll update
+categories: marytts
 ---
 ![image_test](/assets/1.jpg)
 
