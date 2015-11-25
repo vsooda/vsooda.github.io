@@ -1,0 +1,54 @@
+---
+layout: post
+title:  "iris检测算法流程"
+date:   2015-03-03 
+categories: ML
+---
+
+###基本原理
+如下图，人眼形状是圆形。在图像中找到一个圆，该圆应该有明显的边界（虹膜与眼白）。在该圆周上的各像素平均值与相邻半径的平均值之差达到最大。如下图的外圆。假设其圆心为c， 半径为r。那么半径r+1圆周上的像素平均值与r的像素平均值达到最大。
+
+**基本思路**是：先遍历圆心位置，再遍历半径，找到相差最大的位置。为了加速，可以用各种方法去快速定位圆心位置。该文章使用阈值+局部最小+粗搜索来缩小范围。找到了该圆心大致范围，再遍历所有找最小。
+
+![image](http://vsooda.github.io/assets/iris/iris1.png)
+
+###预处理
+```
+I=imcomplement(imfill(imcomplement(I),'holes'));
+```
+
+![image](http://vsooda.github.io/assets/iris/iris2.png)
+
+###粗检测
+1. I < 0.5
+2. 排除3x3矩阵内的局部最小值
+3. 排除离各个边缘距离小于最小半径的点
+4. 对于剩下的点，采用partiald在圆弧上求blur积分
+5. 最大值即为iris的中心所在的大致位置
+
+###细检测 search
+1. 在粗检测附近找10x10的patch
+2. 在这个patch内，同样采用partiald在圆弧上求blur积分
+3. 最大值即为iris的中心所在的大致位置，而这个半径也就是iris半径
+
+###各算法细节
+partiald 
+
+```
+R半径20-180遍历，每个求L (通过lineint求取) 
+若超出图像范围，半径不再增加
+对于各个半径获得对应的L，对L差分(diff(L))
+对这个差分进行blur， blur=convn(D,f,'same');
+取这个blur里面绝对值最大值作为以该点为中心的“置信度”
+```
+
+lineint算法
+
+```
+在围绕(x,y)指定半径r的圆周上， 将像素值累加，再去平均值即为L值。（注意：这里iris和pupil方法略有不同）。圆周的累加采用等分方法，将圆周等分600份，取圆周上的点的像素值进行计算。
+```
+
+最终结果：
+
+![image](http://vsooda.github.io/assets/iris/iris3.png)
+

@@ -4,7 +4,6 @@ title:  "phonesets"
 date:   2015-09-30 20:14:34 +0800
 categories: marytts
 ---
-![image_test](/assets/1.jpg)
 
 ##**元音vowel**的域有：(韵母) 
 ###vlng 发音长度
