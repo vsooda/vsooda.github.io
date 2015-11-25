@@ -1,0 +1,46 @@
+---
+layout: post
+title:  "mactex"
+date:   2015-11-25 
+categories: latex
+---
+
+latex部分语法在markdown中不支持。今天在mac下配置了mactex环境，支持中文。
+
+### 安装
+
+首先到这里[这里](https://tug.org/mactex/)下载mactex
+
+###设置texshop环境
+
+使用texshop文章编辑。 引擎选用xelatex，需要设置编码，路径，否则可能报错。
+
+![image](http://vsooda.github.io/assets/mactex/encode.png =300x)
+
+![image](http://vsooda.github.io/assets/mactex/xelatex.png =300x)
+
+![image](http://vsooda.github.io/assets/mactex/path.png =300x)
+
+
+### 中文支持（模板）
+使用xecjk宏包支持中英字体设置
+
+```
+\documentclass[12pt,a4paper]{article}
+\usepackage{xltxtra,fontspec,xunicode}
+\usepackage[slantfont,boldfont]{xeCJK} % 允许斜体和粗体
+\setCJKmainfont{PingFangSC-Regular}   % 设置缺省中文字体
+\setCJKmonofont{Hei}   % 设置等宽字体
+\setmainfont{Optima}   % 英文衬线字体
+\setmonofont{Monaco}   % 英文等宽字体
+\setsansfont{Trebuchet MS} % 英文无衬线字体
+\begin{document}
+
+\begin{verse}
+中文测试
+\end{verse}
+\end{document}
+```
+若报字体错误，可以打开mac“字体册“， 选择系统已有字体。
+
+![image](http://vsooda.github.io/assets/mactex/font.png =500x)

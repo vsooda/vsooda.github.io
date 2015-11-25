@@ -83,14 +83,24 @@ context特征的计算也是在server上，保持合成和训练一致。
 
 9 Feature 管理
 ---------
-FeatureDefinition  定义特征名字
+**FeatureDefinition**   
+ 定义特征名字
 
-MaryGenericfeatureProcessors 对tobiEndtone， next_cplace, next_ctype, next_cvox, next_is_pause等进行定义， 用于处理各种特征。
+**MaryGenericfeatureProcessors**   
+对tobiEndtone， next_cplace, next_ctype, next_cvox, next_is_pause等进行定义， 用于处理各种特征。
 
-FeatureProcessManager 对tobiEndtone，next_cplace, next_ctype, next_cvox, next_is_pause等进行注册。 `FeatureProcessManager管理每个特征的processors`。 在该类的定义中，featureProcessManager要么对应一种locale， 要么对应某种声音（通过registerAcousticModels函数进行设置）。 语言的配置文件（如zh.config）对使用哪个manager进行定义。 例如：featuremanager.classes.list = marytts.features.FeatureProcessorManager(zh)。 德文对feature进行了重定义，则在de.config中设置: featuremanager.classes.list = marytts.language.de.features.FeatureProcessorManager, 使用新featuremanager。 Voice.java加载一个声音，就是加载phoneset, 声学模型和featureManager类名。
+**FeatureProcessManager**   
+
+- 对tobiEndtone，next_cplace, next_ctype, next_cvox, next_is_pause等进行注册。 
+- `FeatureProcessManager管理每个特征的processors`。 
+- 在该类的定义中，featureProcessManager要么对应一种locale， 要么对应某种声音（通过registerAcousticModels函数进行设置）。 
+	- 语言的配置文件（如zh.config）对使用哪个manager进行定义。 例如：featuremanager.classes.list = marytts.features.FeatureProcessorManager(zh)。 德文对feature进行了重定义，则在de.config中设置: featuremanager.classes.list = marytts.language.de.features.FeatureProcessorManager, 使用新featuremanager。 
+- Voice.java加载一个声音，就是加载phoneset, 声学模型和featureManager类名。
 	
-TargetFeatureComputer(featureProcessorManager, featureDefinition.getFeaturesNameds()) 计算具体值的计算。  
-TargetFeatureComputer构造的时候， 讲featureProcessManager的processor按照类型保存到不同的类别中。
+**TargetFeatureComputer**  
+
+- (featureProcessorManager, featureDefinition.getFeaturesNameds())   计算具体值的计算。  
+- TargetFeatureComputer构造的时候， 将featureProcessManager的processor按照类型保存到不同的类别中。
 
 
 ```
@@ -116,6 +126,13 @@ HMMModel 包含HMMData（实例化为：htsData）， HMMData保存hmm模型的�
 数据加载。  
   
 ![image](http://vsooda.github.io/assets/marytts_train/loadData.png =350x)
+
+1. data prepare  
+将hts拷贝到对应目录中。检查依赖库是否完全安装。拷贝raw数据。
+2. hmm configure  
+在HMMvoiceConfigure.java（line 356）里， 转到hts目录，通过configure，对编译选项进行设置。 生成对应的makefile。设置mgc order， gain 是否log， 各种生成文件名等。是否adapter。
+3. hmm voice feature selection  
+设置用于训练的hmm参数。
 
 
 <!-- mou相对路径使用：![image](../assets/marytts_train/loadData.png =500x) -->
