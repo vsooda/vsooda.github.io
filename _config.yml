@@ -6,10 +6,10 @@
 # 'jekyll serve'. If you change this file, please restart the server process.
 
 # Site settings
-title: machine learning -- cv, nlp, speech
+title: Machine Learning
 email: liushouda@qq.com
 description: > # this means to ignore newlines until "baseurl:"
-  this is my new blog since 2015-11-16, my older blog in csdn "http://blog.csdn.net/vsooda/"
+  关注计算机视觉，自然语言处理，语音识别。
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "http://yourdomain.com" # the base hostname & protocol for your site
 twitter_username: vsooda

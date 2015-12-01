@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "marytts_train"
-date:   2015-11-17 20:14:34 +0800
+date:   2015-11-17
 categories: marytts
 ---
 
@@ -73,6 +73,7 @@ article_00002中， 1-107与上面相同， 109-235是label音素特征。 237-3
 ![image](http://vsooda.github.io/assets/marytts_train/features.png =500x)
 
 在web上勾上筛选特征，则输出的文件如上图所示。可以看出，第一个区域定义了selection_prosody特征的取值分别有 0 stressed pre-nuclear nuclear finalHigh finalLow final 七种， 分别对应到数字则是0-6。第二区域定义每个音素的selection_prosody特征。第三个区域将特征数值化。
+
 context特征的计算也是在server上，保持合成和训练一致。
 调用服务器进行特征计算，输入类型为：ALLOPHONES， 输出类型为：TARGETFEATURES， 并传入featureList指定需要计算的特征。
 
