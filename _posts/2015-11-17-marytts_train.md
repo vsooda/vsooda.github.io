@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "marytts_train"
+title:  "marytts训练流程"
 date:   2015-11-17
 categories: marytts
 ---

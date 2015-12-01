@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "lstm derivation"
+title:  "lstm推导"
 date:   2015-08-24 
 categories: ML
 ---
