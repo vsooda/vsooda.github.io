@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  " github博客搭建"
+title:  " github page Jekyll"
 date:   2015-12-15 
 categories: code
 ---
