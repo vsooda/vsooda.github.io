@@ -1,0 +1,125 @@
+---
+layout: post
+title: "hts train"
+date: 2016-01-28
+categories: 
+---
+
+以下是对Training.pl的解析。相对路径的根目录在`train_data/hts`下
+
+computing variance floors
+---
+HCompV -A -C configs/qst001/ver3/trn.cnf -D -T 1 -S data/scp/train.scp -m -M models/qst001/ver3/cmp -o models/qst001/ver3/cmp/average.mmf proto/qst001/ver3/state-5_stream-5_mgc-105_lf0-3_str-15.prt  
+head -n 1 proto/qst001/ver3/state-5_stream-5_mgc-105_lf0-3_str-15.prt > models/qst001/ver3/cmp/init.mmf    
+cat models/qst001/ver3/cmp/vFloors >> models/qst001/ver3/cmp/init.mmf  
+
+
+initialization & reestimation
+---
+HInit -A -C configs/qst001/ver3/trn.cnf -D -T 1 -S data/scp/train.scp -m 1 -u tmvw -w 5000 -H models/qst001/ver3/cmp/init.mmf -M models/qst001/ver3/cmp/HInit -I data/labels/mono.mlf -l li -o li proto/qst001/ver3/state-5_stream-5_mgc-105_lf0-3_str-15.prt  
+HRest -A -C configs/qst001/ver3/trn.cnf -D -T 1 -S data/scp/train.scp -m 1 -u tmvw -w 5000 -H models/qst001/ver3/cmp/init.mmf -M models/qst001/ver3/cmp/HRest -I data/labels/mono.mlf -l li -g models/qst001/ver3/dur/HRest/li models/qst001/ver3/cmp/HInit/li
+
+making monophone mmf
+---
+HHEd -A -C configs/qst001/ver3/trn.cnf -D -T 1 -p -i -d models/qst001/ver3/cmp/HRest -w models/qst001/ver3/cmp/monophone.mmf edfiles/qst001/ver3/cmp/lvf.hed data/lists/mono.list
+
+embed reestimate monophone (monephone)
+---
+HERest -A -C configs/qst001/ver3/trn.cnf -D -T 1 -S data/scp/train.scp -I data/labels/mono.mlf -m 1 -u tmvwdmv -w 5000 -t 1500 100 5000 -H models/qst001/ver3/cmp/monophone.mmf -N models/qst001/ver3/dur/monophone.mmf -M models/qst001/ver3/cmp -R models/qst001/ver3/dur data/lists/mono.list data/lists/mono.list
+
+copying monophone mmf to fullcontext
+---
+HHEd -A -C configs/qst001/ver3/trn.cnf -D -T 1 -p -i -H models/qst001/ver3/cmp/monophone.mmf -w models/qst001/ver3/cmp/fullcontext.mmf edfiles/qst001/ver3/cmp/m2f.hed data/lists/mono.list
+
+embeded reestimate (fullcontext)
+---
+HERest -A -C configs/qst001/ver3/trn.cnf -D -T 1 -S data/scp/train.scp -I data/labels/full.mlf -m 1 -u tmvwdmv -w 5000 -t 1500 100 5000 -H models/qst001/ver3/cmp/fullcontext.mmf -N models/qst001/ver3/dur/fullcontext.mmf -M models/qst001/ver3/cmp -R models/qst001/ver3/dur -C configs/qst001/ver3/nvf.cnf -s stats/qst001/ver3/cmp.stats -w 0.0 data/lists/full.list data/lists/full.list
+
+tree-based context clustering
+---
+cp models/qst001/ver3/cmp/fullcontext.mmf models/qst001/ver3/cmp/clustered.mmf  
+HHEd -A -C configs/qst001/ver3/trn.cnf -D -T 1 -p -i -C configs/qst001/ver3/mgc.cnf -H models/qst001/ver3/cmp/clustered.mmf -m -a 1.0 -w models/qst001/ver3/cmp/clustered.mmf edfiles/qst001/ver3/cmp/cxc_mgc.hed data/lists/full.list  
+
+embeded reestimate (clustered)
+---
+HERest -A -C configs/qst001/ver3/trn.cnf -D -T 1 -S data/scp/train.scp -I data/labels/full.mlf -m 1 -u tmvwdmv -w 5000 -t 1500 100 5000 -H models/qst001/ver3/cmp/clustered.mmf -N models/qst001/ver3/dur/clustered.mmf -M models/qst001/ver3/cmp -R models/qst001/ver3/dur data/lists/full.list data/lists/full.list
+
+untying the parameter sharing structure
+---
+HHEd -A -C configs/qst001/ver3/trn.cnf -D -T 1 -p -i -H models/qst001/ver3/cmp/clustered.mmf -w models/qst001/ver3/cmp/untied.mmf edfiles/qst001/ver3/cmp/unt.hed data/lists/full.list
+
+
+embedded reestimation (untied)
+---
+HERest -A -C configs/qst001/ver3/trn.cnf -D -T 1 -S data/scp/train.scp -I data/labels/full.mlf -m 1 -u tmvwdmv -w 5000 -t 1500 100 5000 -H models/qst001/ver3/cmp/untied.mmf -N models/qst001/ver3/dur/untied.mmf -M models/qst001/ver3/cmp -R models/qst001/ver3/dur -C configs/qst001/ver3/nvf.cnf -s stats/qst001/ver3/cmp.stats.untied -w 0.0 data/lists/full.list data/lists/full.list
+
+tree-based context clustering
+---
+HHEd -A -C configs/qst001/ver3/trn.cnf -D -T 1 -p -i -C configs/qst001/ver3/mgc.cnf -H models/qst001/ver3/cmp/re_clustered.mmf -m -a 1.0 -w models/qst001/ver3/cmp/re_clustered.mmf edfiles/qst001/ver3/cmp/cxc_mgc.hed.untied data/lists/full.list
+
+embedded reestimation (re-clustered)
+---
+HERest -A -C configs/qst001/ver3/trn.cnf -D -T 1 -S data/scp/train.scp -I data/labels/full.mlf -m 1 -u tmvwdmv -w 5000 -t 1500 100 5000 -H models/qst001/ver3/cmp/re_clustered.mmf -N models/qst001/ver3/dur/re_clustered.mmf -M models/qst001/ver3/cmp -R models/qst001/ver3/dur data/lists/full.list data/lists/full.list
+
+forced alignment
+---
+HSMMAlign -A -C configs/qst001/ver3/trn.cnf -D -T 1 -S data/scp/train.scp -I data/labels/mono.mlf -t 1500 100 5000 -w 1.0 -H models/qst001/ver3/cmp/monophone.mmf -N models/qst001/ver3/dur/monophone.mmf -m gv/qst001/ver3/fal data/lists/mono.list data/lists/mono.list
+
+making global variance
+---
+* make_proto_gv();  
+* make_data_gv();  
+* making average model   
+HCompV -A -C configs/qst001/ver3/trn.cnf -D -T 1 -S gv/qst001/ver3/gv.scp -m -o gv/qst001/ver3/average.mmf -M gv/qst001/ver3 gv/qst001/ver3/state-1_stream-3_mgc-35_lf0-1_str-5.prt
+*  make full context depdent model  
+HERest -A -C configs/qst001/ver3/trn.cnf -D -T 1 -S gv/qst001/ver3/gv.scp -I gv/qst001/ver3/gv.mlf -m 1 -C configs/qst001/ver3/nvf.cnf -s gv/qst001/ver3/gv.stats -w 0.0 -H gv/qst001/ver3/fullcontext.mmf -M gv/qst001/ver3 gv/qst001/ver3/gv.list
+* context clustering  
+cp gv/qst001/ver3/fullcontext.mmf gv/qst001/ver3/clustered.mmf  
+HHEd -A -C configs/qst001/ver3/trn.cnf -D -T 1 -p -i -H gv/qst001/ver3/clustered.mmf -m -a 1.0 -w gv/qst001/ver3/clustered.mmf gv/qst001/ver3/cxc_mgc.hed gv/qst001/ver3/gv.list
+* re-estimate  
+HERest -A -C configs/qst001/ver3/trn.cnf -D -T 1 -S gv/qst001/ver3/gv.scp -I gv/qst001/ver3/gv.mlf -m 1 -H gv/qst001/ver3/clustered.mmf -M gv/qst001/ver3 gv/qst001/ver3/gv.list
+	
+making unseen models (GV)
+---
+HHEd -A -C configs/qst001/ver3/trn.cnf -D -T 1 -p -i -H gv/qst001/ver3/clustered.mmf -w gv/qst001/ver3/clustered_all.mmf gv/qst001/ver3/mku.hed gv/qst001/ver3/gv.list
+
+making unseen models (1mix)
+---
+HHEd -A -C configs/qst001/ver3/trn.cnf -D -T 1 -p -i -H models/qst001/ver3/cmp/re_clustered.mmf -w models/qst001/ver3/cmp/re_clustered_all.mmf.1mix edfiles/qst001/ver3/cmp/mku.hed data/lists/full.list
+
+generating speech parameter sequences (1mix)
+---
+HMGenS -A -C configs/qst001/ver3/syn.cnf -D -T 1 -t 1500 100 5000 -S data/scp/gen.scp -c 0 -H models/qst001/ver3/cmp/re_clustered_all.mmf.1mix -N models/qst001/ver3/dur/re_clustered_all.mmf.1mix -M gen/qst001/ver3/1mix/0 models/qst001/ver3/cmp/tiedlist models/qst001/ver3/dur/tiedlist
+
+synthesizing waveforms (1mix)
+---
+using SPTK to generate wav 
+
+converting mmfs to the hts_engine file format
+---
+HHEd -A -C configs/qst001/ver3/cnv.cnf -D -T 1 -p -i -H models/qst001/ver3/cmp/re_clustered.mmf edfiles/qst001/ver3/cmp/cnv_mgc.hed data/lists/full.list  
+mv trees/qst001/ver3/cmp/trees.1 voices/qst001/ver3/tree-mgc.inf  
+mv models/qst001/ver3/cmp/pdf.2 voices/qst001/ver3/lf0.pdf
+
+GV:  
+HHEd -A -C configs/qst001/ver3/cnv.cnf -D -T 1 -p -i -H gv/qst001/ver3/clustered.mmf gv/qst001/ver3/cnv_mgc.hed gv/qst001/ver3/gv.list  
+mv gv/qst001/ver3/trees.1 voices/qst001/ver3/tree-gv-mgc.inf    
+mv gv/qst001/ver3/pdf.1 voices/qst001/ver3/gv-mgc.pdf
+
+synthesizing waveforms using hts_engine
+---
+using hts_engine to generate wav
+
+ps
+---
+* mlf: Master Label File  
+![image](http://vsooda.github.io/assets/hts_train/mlf.png =500x)
+
+* 将这里的-B去掉，从而获得非二进制文件  
+![image](http://vsooda.github.io/assets/hts_train/storage.png =500x)
+
+* context hmm名：  
+![image](http://vsooda.github.io/assets/hts_train/fullcontext_model_name.png =500x)
+
+* 问题集：  
+![image](http://vsooda.github.io/assets/hts_train/question.png =500x)
