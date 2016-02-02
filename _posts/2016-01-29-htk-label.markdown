@@ -45,3 +45,5 @@ build
 **HLStats** -T 1 -C htk/config/htkTrain.conf -b htk/etc/htk.phones.big -o htk/etc/htk.phone.list htk/etc/htk.phones.mlf > log_hlstats.txt 
 
 **HBuild** -T 1 -C htk/config/htkTrain.conf -n htk/etc/htk.phones.big htk/etc/htk.aug.phone.list htk/etc/htk.phones.net > log_hbuild.txt 
+
+[link](http://)
