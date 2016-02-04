@@ -40,6 +40,14 @@ split -l 20 -d train.scp train.scp.part
 
 
 ### 其他
-demo下载地址  
+1. demo下载地址  
 http://hts.sp.nitech.ac.jp/archives/2.2/HTS-demo_CMU-ARCTIC-SLT.tar.bz2  
 将上面url的2.2改成2.3即可下载2.3的声音demo
+
+2. herest直接运行错误  
+设置开关：  
+![image](../assets/hts_parallel/switch_config.png)  
+出现错误：  
+![image](../assets/hts_parallel/herest_fail.png)  
+`尝试将上图红线部分设置为1，重新拷贝monophone，则可以运行。也就是说，herest已破坏原始数据。`  
+ 类似的问题出现在训练过程中在263行的force alignment出错。检查到时因为262行中，部分文件没有生成，造成列表错误。一个解决方法是重新生成train.scp. 但是这样会造成部分训练数据损失。故，采取加大beam width的方法。直接将262打开，重新设置beam width。 但是，会出现于上面类似的错误，最后每个样本都失败。所以，`很有可能需要将前面的一个步骤也重新运行`！
