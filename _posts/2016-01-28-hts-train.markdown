@@ -19,6 +19,12 @@ initialization & reestimation
 **HInit** -A -C configs/qst001/ver3/trn.cnf -D -T 1 -S data/scp/train.scp -m 1 -u tmvw -w 5000 -H models/qst001/ver3/cmp/init.mmf -M models/qst001/ver3/cmp/HInit -I data/labels/mono.mlf -l li -o li proto/qst001/ver3/state-5_stream-5_mgc-105_lf0-3_str-15.prt  
 **HRest** -A -C configs/qst001/ver3/trn.cnf -D -T 1 -S data/scp/train.scp -m 1 -u tmvw -w 5000 -H models/qst001/ver3/cmp/init.mmf -M models/qst001/ver3/cmp/HRest -I data/labels/mono.mlf -l li -g models/qst001/ver3/dur/HRest/li models/qst001/ver3/cmp/HInit/li
 
+
+并行化
+> ~/speech/marytts/lib/external/bin/HERest -A -C configs/qst001/ver3/trn.cnf -D -T 1 -S data/scp/train.scp.part05 -I data/labels/mono.mlf -m 1 -u tmvwdmv -w 5000 -t 1500 100 5000 -p 6 -H  models/qst001/ver3/cmp/monophone.mmf -N models/qst001/ver3/dur/monophone.mmf -M models/qst001/ver3/cmp -R models/qst001/ver3/dur data/lists/mono.list data/lists/mono.list
+
+> ~/speech/marytts/lib/external/bin/HERest -p 0 -A -C configs/qst001/ver3/trn.cnf -D -T 1   -m 1 -u tmvwdmv -w 5000 -t 1500 100 5000  -H  models/qst001/ver3/cmp/monophone.mmf -N models/qst001/ver3/dur/monophone.mmf -M models/qst001/ver3/cmp -R models/qst001/ver3/dur data/lists/mono.list data/lists/mono.list models/qst001/ver3/cmp/HER1.hmm.acc models/qst001/ver3/cmp/HER1.dur.acc models/qst001/ver3/cmp/HER2.hmm.acc models/qst001/ver3/cmp/HER2.dur.acc models/qst001/ver3/cmp/HER3.hmm.acc models/qst001/ver3/cmp/HER3.dur.acc models/qst001/ver3/cmp/HER4.hmm.acc models/qst001/ver3/cmp/HER4.dur.acc models/qst001/ver3/cmp/HER5.hmm.acc models/qst001/ver3/cmp/HER5.dur.acc models/qst001/ver3/cmp/HER6.hmm.acc models/qst001/ver3/cmp/HER6.dur.acc
+
 making monophone mmf
 ---
 **HHEd** -A -C configs/qst001/ver3/trn.cnf -D -T 1 -p -i -d models/qst001/ver3/cmp/HRest -w models/qst001/ver3/cmp/monophone.mmf edfiles/qst001/ver3/cmp/lvf.hed data/lists/mono.list

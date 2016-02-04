@@ -2,7 +2,7 @@
 layout: post
 title: "SGE NFS kaldi 计算集群环境搭建"
 date: 2016-02-01
-categories: kaldi，sge
+categories: sge
 ---
 主要参考：[kaldi-parallel](http://kaldi-asr.org/doc/queue.html)
 
@@ -32,6 +32,8 @@ vi /etc/export
 /home/research/speech 192.168.11.0/24(rw,sync,all_squash,no_subtree_check)
 ```
 
+更改后，运行sudo exportfs -rv使其生效
+
 > 选项可以更改
 
 sudo service nfs-kernel-server restart
@@ -41,7 +43,7 @@ sudo apt-get install nfs-common
 
 mount:
 sudo mkdir /mnt/nfs  
-sudo mount 192.168.11.203:/home /mnt/nfs
+sudo mount 192.168.11.203:/home/research/speech /mnt/nfs
 
 umount:
 sudo umount -f -l /mnt/nfs
@@ -56,9 +58,9 @@ sudo apt-get install gridengine-master gridengine-client
 
 这个文件/var/lib/gridengine/default/common/act_qmaster保存了主节点hostname
 
-error: commlib error: access denied (client IP resolved to host name
-这种问题是因为/etc/hosts没有和上面这个文件的hostname一样的条目。
-可以增加hosts条目，也可以更改上面这个文件。
+error: commlib error: access denied (client IP resolved to host name  
+这种问题是因为/etc/hosts没有和上面这个文件的hostname一样的条目。  
+可以增加hosts条目，也可以更改上面这个文件。  
 更改完了知乎需要sudo service gridengine-master restart
 
 
@@ -72,10 +74,10 @@ sudo apt-get install gridengine-client gridengine-exec
 解决方法： 将master的hostname条目增加到/etc/hosts
 
 2. commlib error: can't bind socket (no additional information available)  
-解决方法：
-在master主机增加hosts。
-sudo -ah “work_hostname"
-master重启： sudo service gridengine-master restart
+解决方法：  
+在master主机增加hosts。  
+sudo -ah “work_hostname"  
+master重启： sudo service gridengine-master restart  
 work重启： sudo service gridengine-exec restart
 
 ###检查安装情况： 
