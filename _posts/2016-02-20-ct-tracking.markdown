@@ -73,10 +73,8 @@ vector<vector<float> > featuresWeight; //特征权重
 	for (int i=0; i<featureNum; i++)
 	{
 		meanStdDev(_sampleFeatureValue.row(i), muTemp, sigmaTemp);
-	   
 		_sigma[i] = (float)sqrt( _learnRate*_sigma[i]*_sigma[i]	+ (1.0f-_learnRate)*sigmaTemp.val[0]*sigmaTemp.val[0] 
 		+ _learnRate*(1.0f-_learnRate)*(_mu[i]-muTemp.val[0])*(_mu[i]-muTemp.val[0]));	// equation 6 in paper
-
 		_mu[i] = _mu[i]*_learnRate + (1.0f-_learnRate)*muTemp.val[0];	// equation 6 in paper
 	}
 {% endhighlight %}
