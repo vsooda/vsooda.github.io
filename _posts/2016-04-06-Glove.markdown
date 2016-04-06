@@ -46,7 +46,7 @@ Glove是stanford nlp组出品，效果比word2vec更好。
 
 最出名的例子是：
 >
-man - woman = king - queue
+man - woman = king - queen
 
 同样可以用来解决：
 >
