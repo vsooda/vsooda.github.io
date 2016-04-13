@@ -11,17 +11,17 @@ Convolutional Neural Networks for Sentence Classification
 
 ###处理流程
 
-![image](http://vsooda.github.io/assets/cnn_sentence/framework.png =600x)
+<img src="http://vsooda.github.io/assets/cnn_sentence/framework.png" width="600">
 
 最左边是句子基于词向量的表示（词向量：将每个字表示为相同维度的向量，而且向量之间的距离可以用来表达词意距离）。词向量可以直接选取word2vec训练结果，也可以先直接随机初始化，再在学习的过程中不断优化。本文用到两个通道，每个通道是一种词向量表示。其中一个通道保持不变，另外一个通道则接受bp的调整。
 
-这里的卷积和图片的卷积略有不同，一般采用narrow convolution。也就是，卷积核的宽度采用与词向量相同的宽度。这样，每个句子的卷积结果为：1 x (sentence_length - filter_size + 1 )
+这里的卷积和图片的卷积略有不同，一般采用narrow convolution。也就是，卷积核的宽度采用与词向量相同的宽度。这样，每个句子的卷积结果为：1 x (sentence\_length - filter\_size + 1 )
 
-通过max_pooling将这个不同sentence_length - filter_size + 1维的数据降为1维。再把所有卷积核的结果连成长向量，放入全连接层，使用softmax进行分类任务。
+通过max\_pooling将这个不同sentence\_length - filter\_size + 1维的数据降为1维。再把所有卷积核的结果连成长向量，放入全连接层，使用softmax进行分类任务。
 
 从下图可以更清楚看出这个流程。需要注意的是，卷积核大小各部相同，一般采用3，4，5大小的卷积核。
 
-![image](http://vsooda.github.io/assets/cnn_sentence/narrow_conv.png =600x)
+<img src="http://vsooda.github.io/assets/cnn_sentence/narrow_conv.png" width="600">
 
 ### tensorflow实现
 
@@ -29,7 +29,7 @@ Convolutional Neural Networks for Sentence Classification
 
 Embedding layer
 
-```
+```python
 with tf.device('/cpu:0'), tf.name_scope("embedding"):
     W = tf.Variable(
         tf.random_uniform([vocab_size, embedding_size], -1.0, 1.0),
@@ -40,7 +40,7 @@ with tf.device('/cpu:0'), tf.name_scope("embedding"):
 
 conv + pooling
 
-```
+```python
 for i, filter_size in enumerate(filter_sizes):
     with tf.name_scope("conv-maxpool-%s" % filter_size):
         # Convolution Layer
@@ -67,14 +67,14 @@ for i, filter_size in enumerate(filter_sizes):
 
 dropout
 
-```
+```python
 with tf.name_scope("dropout"):
     self.h_drop = tf.nn.dropout(self.h_pool_flat, self.dropout_keep_prob)
 ```
 
 output
 
-```
+```python
 with tf.name_scope("output"):
     W = tf.Variable(tf.truncated_normal([num_filters_total, num_classes], stddev=0.1), name="W")
     b = tf.Variable(tf.constant(0.1, shape=[num_classes]), name="b")
@@ -86,7 +86,7 @@ with tf.name_scope("output"):
 
 cross-entropy loss
 
-```
+```python
 with tf.name_scope("loss"):
    losses = tf.nn.softmax_cross_entropy_with_logits(self.scores, self.input_y)
    self.loss = tf.reduce_mean(losses) + l2_reg_lambda * l2_loss
@@ -94,7 +94,7 @@ with tf.name_scope("loss"):
 
 主流程：
 
-```
+```python
 with tf.Graph().as_default():
 	sess = tf.Session(config=session_conf)
 	optimizer = tf.train.AdamOptimizer(1e-4)

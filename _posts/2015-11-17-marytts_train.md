@@ -32,7 +32,7 @@ LabelPauseDeleter.threshold  =  10
 
 转换lab格式。 从lab读取文件， 保存到phonelab中
 
-![image](http://vsooda.github.io/assets/marytts_train/phonelabel.png =500x)
+![image](http://vsooda.github.io/assets/marytts_train/phonelabel.png)
 
 
 5 TranscriptionAligner
@@ -44,7 +44,7 @@ LabelPauseDeleter.threshold  =  10
 
 内容为：
 
-![image](http://vsooda.github.io/assets/marytts_train/transcriptalign.png =500x)
+![image](http://vsooda.github.io/assets/marytts_train/transcriptalign.png)
 
 6 FeatureSelection
 ------------
@@ -70,7 +70,7 @@ article_00002中， 1-107与上面相同， 109-235是label音素特征。 237-3
 
 从上面可以发现上面三部分中，第二部分和第三部分的长度都是相同的，所以第三个部分对应的也是音素特征。
 
-![image](http://vsooda.github.io/assets/marytts_train/features.png =500x)
+![image](http://vsooda.github.io/assets/marytts_train/features.png)
 
 在web上勾上筛选特征，则输出的文件如上图所示。可以看出，第一个区域定义了selection_prosody特征的取值分别有 0 stressed pre-nuclear nuclear finalHigh finalLow final 七种， 分别对应到数字则是0-6。第二区域定义每个音素的selection_prosody特征。第三个区域将特征数值化。
 
@@ -126,7 +126,7 @@ HMMModel 包含HMMData（实例化为：htsData）， HMMData保存hmm模型的�
 
 数据加载。  
   
-![image](http://vsooda.github.io/assets/marytts_train/loadData.png =350x)
+![image](http://vsooda.github.io/assets/marytts_train/loadData.png)
 
 1. data prepare  
 将hts拷贝到对应目录中。检查依赖库是否完全安装。拷贝raw数据。

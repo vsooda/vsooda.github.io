@@ -15,11 +15,11 @@ latex部分语法在markdown中不支持。今天在mac下配置了mactex环境�
 
 使用texshop文章编辑。 引擎选用xelatex，需要设置编码，路径，否则可能报错。
 
-![image](http://vsooda.github.io/assets/mactex/encode.png =300x)
+<img src="http://vsooda.github.io/assets/mactex/encode.png" width="300">
 
-![image](http://vsooda.github.io/assets/mactex/xelatex.png =300x)
+<img src="http://vsooda.github.io/assets/mactex/xelatex.png" width="300">
 
-![image](http://vsooda.github.io/assets/mactex/path.png =300x)
+<img src="http://vsooda.github.io/assets/mactex/path.png" width="300">
 
 
 ### 中文支持（模板）
@@ -43,4 +43,4 @@ latex部分语法在markdown中不支持。今天在mac下配置了mactex环境�
 ```
 若报字体错误，可以打开mac“字体册“， 选择系统已有字体。
 
-![image](http://vsooda.github.io/assets/mactex/font.png =500x)
+<img src="http://vsooda.github.io/assets/mactex/font.png" width="500">

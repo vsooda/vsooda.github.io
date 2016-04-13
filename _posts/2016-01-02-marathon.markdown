@@ -26,13 +26,13 @@ categories:  life
 
 ###图片轰炸
 ####2016-01-02全程
-![image](http://vsooda.github.io/assets/marathon/full_self.jpg =500x)
-![image](http://vsooda.github.io/assets/marathon/full_whole_body.jpg =500x)
-![image](http://vsooda.github.io/assets/marathon/full_record.jpg =500x)
-![image](http://vsooda.github.io/assets/marathon/full_complete_card.jpg =500x)
-![image](http://vsooda.github.io/assets/marathon/full_mdeal.jpg =500x)
+![image](http://vsooda.github.io/assets/marathon/full_self.jpg)
+![image](http://vsooda.github.io/assets/marathon/full_whole_body.jpg)
+![image](http://vsooda.github.io/assets/marathon/full_record.jpg)
+![image](http://vsooda.github.io/assets/marathon/full_complete_card.jpg)
+![image](http://vsooda.github.io/assets/marathon/full_mdeal.jpg)
 
 ####2015-12-12半程
-![image](http://vsooda.github.io/assets/marathon/half_self.jpg =500x)
-![image](http://vsooda.github.io/assets/marathon/half_whole_body.jpg =500x)
-![image](http://vsooda.github.io/assets/marathon/half_record.jpg =500x)
+![image](http://vsooda.github.io/assets/marathon/half_self.jpg)
+![image](http://vsooda.github.io/assets/marathon/half_whole_body.jpg)
+![image](http://vsooda.github.io/assets/marathon/half_record.jpg)

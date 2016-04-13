@@ -120,13 +120,13 @@ using hts_engine to generate wav
 ps
 ---
 * mlf: Master Label File  
-![image](http://vsooda.github.io/assets/hts_train/mlf.png =500x)
+<img src="http://vsooda.github.io/assets/hts_train/mlf.png" width="500">
 
 * 将这里的-B去掉，从而获得非二进制文件  
-![image](http://vsooda.github.io/assets/hts_train/storage.png =500x)
+<img src="http://vsooda.github.io/assets/hts_train/storage.png" width="500">
 
 * context hmm名：  
-![image](http://vsooda.github.io/assets/hts_train/fullcontext_model_name.png =500x)
+<img src="http://vsooda.github.io/assets/hts_train/fullcontext_model_name.png" width="500">
 
 * 问题集：  
-![image](http://vsooda.github.io/assets/hts_train/question.png =500x)
+<img src="http://vsooda.github.io/assets/hts_train/question.png" width="500">

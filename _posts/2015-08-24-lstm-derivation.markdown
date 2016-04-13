@@ -54,16 +54,16 @@ dy += ((1 - sigy) * sigy) * dsigy                                 #(1)
 
 前向更新公式为：
 
-![image](http://vsooda.github.io/assets/lstm/lstm.png =500x)
+![image](http://vsooda.github.io/assets/lstm/lstm.png)
 
 依照上文的后向传播的推导方式，可以得到，
 前向更新，请见代码中`#sooda注释`部分：
 
-![image](http://vsooda.github.io/assets/lstm/lstm_forward.png =800x)
+![image](http://vsooda.github.io/assets/lstm/lstm_forward.png)
 
 后向更新：
 
-![image](http://vsooda.github.io/assets/lstm/lstm_backward.png =800x)
+![image](http://vsooda.github.io/assets/lstm/lstm_backward.png)
 
 ###注意点
 1. 通过观察公式1到4， 发现所有的乘机因子为x、h，互相没有依赖，可以并行化。利用向量化进行加速

@@ -128,13 +128,13 @@ if __name__ == "__main__":
 
 上面用到的公式：
 
-![](http://vsooda.github.io/assets/maxent/eq15.png =350x)
+<img src="http://vsooda.github.io/assets/maxent/eq15.png" width="350">
 
-![](http://vsooda.github.io/assets/maxent/eq16.png =350x)
+<img src="http://vsooda.github.io/assets/maxent/eq16.png" width="350">
 
 通过求对偶问题内部问题的极小化，将原约束最大化问题转化为公式16的最大化问题。接下来要求解的是，使得公式16最大化的权值。
 
-![](http://vsooda.github.io/assets/maxent/eq19_22.png =450x)
+<img src="http://vsooda.github.io/assets/maxent/eq19_22.png" width="450">
 
 其中data.txt是根据天气情况决定是否去打球。第一列是是否打球，后面列是特征。
 
@@ -161,7 +161,7 @@ no  rainy   mild    high    TRUE
 2. 用第 N 次迭代的模型来估算每种信息特征在训练数据中的分布，如果超过了实际的，就把相应的模型参数变小；否则，将它们便大。
 3. 重复步骤 2 直到收敛。
 
-在这个例子中，将X的所有可能取值和y的取值进行组合，获得关于(x,y)的统计信息。直接的统计信息是_sample_ep。并将结果保存在self._ep_（对应于公式20）。
-而在训练时候，_model_ep，要使参数self._ep（对应于公式21）与统计信息一致。根据两者之间的差别，对权值进行调整。直到收敛。
+在这个例子中，将X的所有可能取值和y的取值进行组合，获得关于(x,y)的统计信息。直接的统计信息是\_sample\_ep。并将结果保存在self.\_ep\_（对应于公式20）。
+而在训练时候，\_model\_ep，要使参数self.\_ep（对应于公式21）与统计信息一致。根据两者之间的差别，对权值进行调整。直到收敛。
 
 在实际训练中，最大熵的计算量非常大。GIS算法不稳定，即使用其改进版的迭代尺度算法也很慢。在统计学习方法中还介绍了拟牛顿法等。

@@ -22,56 +22,55 @@ categories: ML
 
 概率无向图的随机变量满足：成对马尔可夫性，局部马尔可夫性，全局马尔可夫性。
 
-![image](http://vsooda.github.io/assets/crf/local.png =200x)
-
-![image](http://vsooda.github.io/assets/crf/global.png =200x)
+<img src="http://vsooda.github.io/assets/crf/local.png" width="200">
+<img src="http://vsooda.github.io/assets/crf/global.png" width="200">
 
 以上是概率无向图模型的定义，在实际计算时，通常使用因子分解将其转化为一系列概率的乘积。而，概率无向图模型的最大特点就是易于因子分解。
 
 #### 因子分解
 团与最大团：无向图中任意有边连接的结点子集称为团(clique)。若该团无法加入新的结点，则成为最大团。
 
-![image](http://vsooda.github.io/assets/crf/clique.png =200x)
+<img src="http://vsooda.github.io/assets/crf/clique.png" width="200">
 
 概率无向图的因子分解：将概率无线头图模型的联合概率分布表示为其最大团上的随机变量的**函数**的乘机形式的操作
 
-![image](http://vsooda.github.io/assets/crf/clique_mul.png =150x)
+<img src="http://vsooda.github.io/assets/crf/clique_mul.png" width="150">
 
 这里的函数一般称为**势函数**(potential function).通常是指数函数。
 
-![image](http://vsooda.github.io/assets/crf/potential.png =150x)
+<img src="http://vsooda.github.io/assets/crf/potential.png" width="150">
 
 
 
 ###2 条件随机场
 条件随机场是给定随机变量X的条件下，随机变量Y的马尔可夫随机场。学习P(Y|X), 预测时，给定输入序列x，求其概率最大的p(y|x)的输出序列y
 
-![image](http://vsooda.github.io/assets/crf/crf.png =300x)
+<img src="http://vsooda.github.io/assets/crf/crf.png" width="300">
 
 一般的分词，词性任务只使用线性条件随机场，形式为：
 
-![image](http://vsooda.github.io/assets/crf/linear.png =300x)
+<img src="http://vsooda.github.io/assets/crf/linear.png" width="300">
 
 在随机变量X取值为x的条件下，随机变量Y取值为y的条件概率形式：
 
-![image](http://vsooda.github.io/assets/crf/calculate.png =350x)
+<img src="http://vsooda.github.io/assets/crf/calculate.png" width="350">
 
 其中\\(t_k\\)和\\(s_l\\)是特征函数，\\(\lambda_k\\)和\\(\mu_l\\)是对应的权值。求和是在所有可能的输出序列上进行的。\\(t_k\\)是转移特征，依赖于前一个位置和当前位置。\\(s_l\\)是状态特征，依赖于当前位置。通常特征函数\\(t_k\\)和\\(s_l\\)定义为1或0，满足特征取1，不满足则取0. 条件随机场完全由特征函数\\(t_k\\)，\\(s_l\\)和对应的权值\\(\lambda_k\\)，\\(\mu_l\\)确定。
 
 词性标注例子[^zzh]
 
-![image](http://vsooda.github.io/assets/crf/pos.jpg =400x)
+<img src="http://vsooda.github.io/assets/crf/pos.jpg" width="400">
 
 特征样例：
 
-![image](http://vsooda.github.io/assets/crf/feature.jpg =500x)
+<img src="http://vsooda.github.io/assets/crf/feature.jpg" width="300">
 
 ###3 概率计算
-![image](http://vsooda.github.io/assets/crf/eg.png =500x)
+<img src="http://vsooda.github.io/assets/crf/eg.png" width="500">
 
 计算如下：
 
-![image](http://vsooda.github.io/assets/crf/cal_eg.jpg =350x)
+<img src="http://vsooda.github.io/assets/crf/cal_eg.jpg" width="350">
 ###4 crf在分词的应用
 参考这篇[博客](http://www.52nlp.cn/%E4%B8%AD%E6%96%87%E5%88%86%E8%AF%8D%E5%85%A5%E9%97%A8%E4%B9%8B%E5%AD%97%E6%A0%87%E6%B3%A8%E6%B3%954)
 
@@ -124,13 +123,14 @@ B
 ```
 结果：
 
-![image](http://vsooda.github.io/assets/crf/result.png =250x)
+<img src="http://vsooda.github.io/assets/crf/result.png" width="250">
 
 ###5 总结
 1. 从上面分词例子看来，nlp的很多任务实际上是数据问题。即使算法差不多，不同的数据会导致结果差别很大
 2. 依照上面的crf框架，应该可以用来对句子语调，停顿，轻重音预测 
 
 [^lihang]: 李航 统计学习方法
+
 [^zzh]: 周志华 机器学习
 
 <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>

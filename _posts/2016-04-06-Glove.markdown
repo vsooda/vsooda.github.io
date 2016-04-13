@@ -160,7 +160,7 @@ W中的顺序为：word1 词向量，偏置1， word2 词向量， 偏置2，...
 
 <div class="imgcap">
 <div>
-<img src="http://vsooda.github.io/assets/glove/op.png" style="max-width:90%;">
+<img src="http://vsooda.github.io/assets/glove/op.png" >
 </div>
 <div class="thecap">源码笔记</div>
 </div>
