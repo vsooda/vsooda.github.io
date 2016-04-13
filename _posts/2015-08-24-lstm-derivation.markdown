@@ -13,7 +13,7 @@ cs231上有一篇关于[非常好的文章](http://cs231n.github.io/optimization
 一个例子：
 $$f(x,y) = \frac{x + \sigma(y)}{\sigma(x) + (x+y)^2}$$
 
-```
+```
 x = 3 # example values
 y = -4
 # forward pass
