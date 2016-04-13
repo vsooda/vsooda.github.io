@@ -17,4 +17,6 @@ github_username:  vsooda
 
 # Build settings
 #markdown: kramdown
-markdown: rdiscount #对mou的支持较好
+#markdown: rdiscount #对mou的支持较好
+markdown: redcarpet
+#permalink: pretty 
