@@ -9,7 +9,6 @@ categories: nlp
 
 ##GloVe: Global Vectors for Word Representation
 
-注意，在本文的公式中，由于解析器问题，有些公式无法用正确表达。主要体现在部分连续下标，\\(P_{ij}\\)可能会写成\\(P_ij\\)。他们表示相同的意思。
 
 ###词向量是什么
 
@@ -52,7 +51,6 @@ man - woman = king - queen
 >
 中国 - 北京 = 法国 - 巴黎
 
-![image](http://vsooda.github.io/assets/glove/man_woman_small.jpg =250x)
 
 2 相似性
 
@@ -62,49 +60,48 @@ man - woman = king - queen
 
 
 ### GloVe原理
-![image](http://vsooda.github.io/assets/glove/example.png =500x)
 
-在这个例子中，我们要考察的是，ice和steam的关系。这两个词的分别对应于\\(i\\)和\\(j\\). 同时，我们希望通过单词共现来获取它们之间的关系。\\(i\\)和\\(j\\)在其上下文窗口中，出现的单词记为\\(k\\)。我们希望通过\\(k\\)来获取\\(i\\)和\\(j\\)的关系。在这个例子中，\\(i=ice\\)，\\(j=steam\\), \\(k=solid,gas,water,fashion\\) 等。其中\\(P(k=gas|ice)=\frac{P(gas,ice)}{P(ice)}=\frac{P_{ik}}{P_i}\\). 
+在这个例子中，我们要考察的是，ice和steam的关系。这两个词的分别对应于\\(i\\)和\\(j\\). 同时，我们希望通过单词共现来获取它们之间的关系。\\(i\\)和\\(j\\)在其上下文窗口中，出现的单词记为\\(k\\)。我们希望通过\\(k\\)来获取\\(i\\)和\\(j\\)的关系。在这个例子中，\\(i=ice\\)，\\(j=steam\\), \\(k=solid,gas,water,fashion\\) 等。其中\\(P(k=gas|ice)=\frac{P(gas,ice)}{P(ice)}=\frac{P\_{ik}}{P\_i}\\). 
 
-在\\(i,j\\)有区分的维度\\(\frac{P_{ik}}{P_jk}\\)要么很大，要么很小。比如，上面的\\(8.9\\)和\\(8.5x10^{-2}\\).其他的值都会很接近于1.
+在\\(i,j\\)有区分的维度\\(\frac{P\_{ik}}{P\_{jk}}\\)要么很大，要么很小。比如，上面的\\(8.9\\)和\\(8.5x10^{-2}\\).其他的值都会很接近于1.
 
 
 ###公式推导
 
 
-$$F(w_i,w_j, \tilde{w_k})=\frac{P_ik}{P_{jk}}\qquad(1)$$ 
+$$F(w\_i,w\_j, \tilde{w\_k})=\frac{P\_{ik}}{P\_{jk}}\qquad(1)$$ 
 
-其中\\(w_i\\)是词向量（word vector），\\(\tilde{w_k}\\)是上下文词向量（context word vector）。
+其中\\(w\_i\\)是词向量（word vector），\\(\tilde{w\_k}\\)是上下文词向量（context word vector）。
 为了表示内在的线性关系，使用差分进行表示:
 
-$$F(w_i-w_j, \tilde{w_k})=\frac{P_ik}{P_{jk}}\qquad(2)$$
+$$F(w\_i-w\_j, \tilde{w\_k})=\frac{P\_{ik}}{P\_{jk}}\qquad(2)$$
 
 上面公式的左边是向量，右边是标量。可以通过神经网络等算法来学习这个\\(F\\)参数（实际上真的有文章是这么做的）。但是这样做，会使得我们想获得的线性关系变得模糊。为了避免这个问题，使用点乘进行表示：
-$$F((w_i-w_j)^T\tilde{w_k})=\frac{P_ik}{P_{jk}}\qquad(3)$$
+$$F((w\_i-w\_j)^T\tilde{w\_k})=\frac{P\_{ik}}{P\_{jk}}\qquad(3)$$
 
 所谓的上下文词向量跟词向量本身很难界定关系，甚至可以互相替换。也就是\\(w\\)和\\(\tilde{w}\\)也可以相互交换的。但是公式(3)不行。所以，作者要求\\(F\\)必须是同质(homomorphism)的,即：
-$$F((w_i-w_j)^T\tilde{w_k})=\frac{F(w_i^T\tilde{w_k})}{F(w_j^T\tilde{w_k})}\qquad(4)$$
+$$F((w\_i-w\_j)^T\tilde{w\_k})=\frac{F(w\_i^T\tilde{w\_k})}{F(w\_j^T\tilde{w\_k})}\qquad(4)$$
 
 由公式(3)可得，
-$$F(w_i^T\tilde{w_k})=P_ik=\frac{X_{ik}}{X_i} \qquad(5)$$
+$$F(w\_i^T\tilde{w\_k})=P\_{ik}=\frac{X\_{ik}}{X\_i} \qquad(5)$$
 
 公式(4)的解是， \\(F=exp\\),或者，
 
-$$w_i^T\tilde{w_k}=log(X_{ik})-log(X_i) \qquad(6)$$
+$$w\_i^T\tilde{w\_k}=log(X\_{ik})-log(X\_i) \qquad(6)$$
 
-其中\\(log(X_i)\\)独立于\\(k\\),所以，该项可以放都\\(w_i\\)的偏置项\\(b_i\\)中。所以，
-$$w_i^T\tilde{w_k}+b_i+\tilde{b_k}=log(X_{ik}) \qquad(7)$$
+其中\\(log(X\_i)\\)独立于\\(k\\),所以，该项可以放都\\(w\_i\\)的偏置项\\(b\_i\\)中。所以，
+$$w\_i^T\tilde{w\_k}+b\_i+\tilde{b\_k}=log(X\_{ik}) \qquad(7)$$
 
-现在还存在一个问题：所以词的权重都是一样的。而实际上，我们希望很少出现（可能是噪声），或者经常出现（可能是功能词）的权重不要太大。在公式(7)的基础上引入权重\\(f(X_{ij})\\):
+现在还存在一个问题：所以词的权重都是一样的。而实际上，我们希望很少出现（可能是噪声），或者经常出现（可能是功能词）的权重不要太大。在公式(7)的基础上引入权重\\(f(X\_{ij})\\):
 
-<!-- $$J=\sum_{i,j=1}^{V}^w_i^T\tilde{w_k}+b_i+\tilde{b_k}=log(X_{ik}) \qquad(8)$$ -->
-![image](http://vsooda.github.io/assets/glove/eq8.png =300x)
+$$J=\sum\_{i,j=1}^{V}f(X\_{ij})(w\_i^T\tilde{w\_k}+b_i+\tilde{b\_k}-log(X\_{ik}))^2 \qquad(8)$$ 
+
 
 通过作者的实验，
 
 ![image](http://vsooda.github.io/assets/glove/eq9.png =300x)
 
-其中\\(x_{max}=100\\)， \\(\alpha=0.75\\)取得很好的效果。
+其中\\(x\_{max}=100\\)， \\(\alpha=0.75\\)取得很好的效果。
 
 ![image](http://vsooda.github.io/assets/glove/weight.png =400x)
 
