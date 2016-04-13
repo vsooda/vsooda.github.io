@@ -136,11 +136,11 @@ $$J=\sum\_{i,j=1}^{V}f(X\_{ij})(w\_i^T\tilde{w\_k}+b_i+\tilde{b\_k}-log(X\_{ik})
 
 cooccur的基本思路是记录每个单词与其他单词一起出现的概率
 主要是外存堆排序
-lookup是个累计函数。lookup[a]保存在词频上排行为a的词在bigram_table上的起始下标。  
-在bigram_table上每个单词的保存数目分别为：max_product / a;   对于部分贡献单词数目超出部分，先保存在缓存数组中，缓存数组满，则写入文件。假设最终写到k个文件中  
-遍历完token(单词）之后，将biggram_table写入到第k+1个文件中。对于每行，内容为word1， word2， weight；这里weight需要将两者在窗口内的距离计算在内。  
-文件归并：（每个堆成员的id表示这个成员来自的文件id，其实要保证的是每个文件最多只有一个元素在堆里。也就是去掉一个之后，需要再从其对应文件中再读取一个放到堆里。）  
-先每个文件读取第一行。每个文件内部按照词频非递减顺序排列。  
+lookup是个累计函数。lookup[a]保存在词频上排行为a的词在bigram\_table上的起始下标。    
+在bigram\_table上每个单词的保存数目分别为：max_product / a;   对于部分贡献单词数目超出部分，先保存在缓存数组中，缓存数组满，则写入文件。假设最终写到k个文件中  
+遍历完token(单词）之后，将biggram\_table写入到第k+1个文件中。对于每行，内容为word1， word2， weight；这里weight需要将两者在窗口内的距离计算在内。    
+文件归并：（每个堆成员的id表示这个成员来自的文件id，其实要保证的是每个文件最多只有一个元素在堆里。也就是去掉一个之后，需要再从其对应文件中再读取一个放到堆里。)  
+先每个文件读取第一行。每个文件内部按照词频非递减顺序排列.  
 写入文件有个需要注意的：需要一个缓存，保存当前word1，word2，weight。下一个如果一样则合并，如果不一样则写入old，将新来的当作old。最后再写入缓存old 
 
 #### shuffle.c
@@ -150,7 +150,7 @@ lookup是个累计函数。lookup[a]保存在词频上排行为a的词在bigram_
 #### glove.c
 使用多线程进行求解。why lock-free？因为SGD的性质？不担心丢失部分信息？  
 gradsq保存的是梯度平方和，用于控制梯度下降速度：adaptive  
-W用于保存求解的词向量以及basis。每个词向量大小为vector_size, 共vacab_size个词 。  
+W用于保存求解的词向量以及basis。每个词向量大小为vector\_size, 共vacab\_size个词 。  
 W中的顺序为：word1 词向量，偏置1， word2 词向量， 偏置2，... , word vacab_size词向量， 偏置。 word1 context 词向量， 偏置。。以此类推。  
 优化目标为公式(8)
 
