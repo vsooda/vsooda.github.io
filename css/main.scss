@@ -51,3 +51,15 @@ $on-laptop:        800px;
         "layout",
         "syntax-highlighting"
 ;
+
+/* AK custom CSS mods */
+.imgright { float: right; margin-left: 10px; }
+.imgcap img {
+    border: 1px solid #999;
+    max-width: 100%;
+}
+.imgcap {
+    color: #555;
+    font-size: 14px;
+    text-align: center;
+}

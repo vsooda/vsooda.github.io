@@ -99,11 +99,20 @@ $$J=\sum\_{i,j=1}^{V}f(X\_{ij})(w\_i^T\tilde{w\_k}+b_i+\tilde{b\_k}-log(X\_{ik})
 
 通过作者的实验，
 
-![image](http://vsooda.github.io/assets/glove/eq9.png =300x)
+
+<div class="imgcap">
+<div>
+<img src="http://vsooda.github.io/assets/glove/eq9.png" style="width:300px">
+</div>
+</div>
 
 其中\\(x\_{max}=100\\)， \\(\alpha=0.75\\)取得很好的效果。
 
-![image](http://vsooda.github.io/assets/glove/weight.png =400x)
+<div class="imgcap">
+<div>
+<img src="http://vsooda.github.io/assets/glove/weight.png" style="width:400px">
+</div>
+</div>
 
 
 ### 源码笔记
@@ -113,7 +122,14 @@ $$J=\sum\_{i,j=1}^{V}f(X\_{ij})(w\_i^T\tilde{w\_k}+b_i+\tilde{b\_k}-log(X\_{ik})
 
 统计输入文件单词出现频率，并按单词频率从大到小的字母顺序排列
 实现了hash函数等：
-![image](http://vsooda.github.io/assets/glove/hash.png =500x)
+
+<div class="imgcap">
+<div>
+<img src="http://vsooda.github.io/assets/glove/hash.png" style="max-width:80%;">
+</div>
+<div class="thecap">hash函数</div>
+</div>
+
 
 
 #### cooccur.c
@@ -142,4 +158,21 @@ W中的顺序为：word1 词向量，偏置1， word2 词向量， 偏置2，...
 主线程将文件进行划分。每个线程负责一部分。
 在每个线程内部：（看注释）
 
-![image](http://vsooda.github.io/assets/glove/op.png)
+<div class="imgcap">
+<div>
+<img src="http://vsooda.github.io/assets/glove/op.png" style="max-width:90%;">
+</div>
+<div class="thecap">源码笔记</div>
+</div>
+</div>
+
+
+<!--
+<div class="imgcap">
+<div>
+<img src="http://vsooda.github.io/assets/glove/weight.png" style="max-width:49%; height:400px;">
+<img src="http://vsooda.github.io/assets/glove/weight.png" style="max-width:49%; height:400px;">
+</div>
+<div class="thecap">Left: 测试左右分图. Right: 右图.</div>
+<div>
+-->
