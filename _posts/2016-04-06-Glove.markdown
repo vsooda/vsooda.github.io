@@ -174,5 +174,5 @@ W中的顺序为：word1 词向量，偏置1， word2 词向量， 偏置2，...
 <img src="http://vsooda.github.io/assets/glove/weight.png" style="max-width:49%; height:400px;">
 </div>
 <div class="thecap">Left: 测试左右分图. Right: 右图.</div>
-<div>
+</div>
 -->
