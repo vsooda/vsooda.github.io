@@ -4,6 +4,8 @@ title: "decision tree"
 date: 2016-04-18
 categories: ml
 ---
+
+#决策树
 <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 
 本文主要参考[^zzh]. 原文写得非常好，墙裂推荐。
@@ -12,7 +14,16 @@ categories: ml
 
 ![image](http://vsooda.github.io/assets/decision_tree/rude.jpg)
 
-决策树具有训练简单，易解释的特点。在实际中，大量机器学习，数据挖掘任务中都会用到决策树。基于hmm-gmm的语音识别，合成是建立在基于决策树的状态聚类，绑定上。通常所调的特征，影响的就是状态聚类的结果，进而影响hmm-gmm的训练。
+决策树具有训练简单，易解释的特点。在实际中，大量机器学习，数据挖掘任务中都会用到决策树。
+
+基于hmm-gmm的语音识别，合成是建立在基于决策树的状态聚类，绑定上。通常所调的特征，影响的就是状态聚类的结果，进而影响hmm-gmm的训练。
+
+<div class="imgcap">
+<img src="http://vsooda.github.io/assets/decision_tree/state_cluster.png" style="max-width:98%;">
+<div class="thecap">状态绑定局部图</div>
+</div>
+
+给定属性数据及其对应的标签，如何构造决策树呢？
 
 ##划分选择
 ![image](http://vsooda.github.io/assets/decision_tree/info_gain.jpg)
@@ -40,11 +51,19 @@ $$Ent(D)=-\sum\_{k=1}^{|y|}p\_klog\_2p\_k=-(\frac{8}{17}log\_2\frac{8}{17}+\frac
 
 从上例的计算可以看出，在各类别的样本总数很相近时候，熵的值趋近于\\(log\_2|y|\\)
 
-在对样本进行划分时候，我们希望每个分支的样本纯度越高越好，对应的熵越小越好。定义了信息增益来描述对样本进行划分的收获。
+在对样本进行划分时候，我们希望每个分支的样本纯度越高越好，对应的熵越小越好。定义了信息增益来描述对样本进行划分的收获。信息增益代表样本不纯度的下降。
 
 $$Gain(D,a)=Ent(D)-\sum\_{v=1}^{V}\frac{|D^v|}{|D|}Ent(D^v)$$
 
 其中\\(V\\)表示按照\\(a\\)属性进行划分，可以获得的类别。\\(|D^v|\\)表示\\(v\\)类样本的数目。信息增益越大，表示按照该属性划分获得的纯度提升越大。
+
+计算样例：\\(D\\)样本集按照某个属性\\(a\\)可以划分为\\(D^1,D^2,D^3\\)。其中每个样本集中，分别包含\\(6,6,5\\)个样本。正负样本数分别为\\((3,3),(4,2),(1,4)\\)。先计算每个分支节点的信息熵：
+$$Ent(D^1)=-(\frac{3}{6}log\_2\frac{3}{6}+\frac{3}{6}log\_2\frac{3}{6})=1.000$$
+$$Ent(D^2)=-(\frac{4}{6}log\_2\frac{4}{6}+\frac{2}{6}log\_2\frac{2}{6})=0.918$$
+$$Ent(D^3)=-(\frac{1}{5}log\_2\frac{1}{5}+\frac{4}{5}log\_2\frac{4}{5})=0.722$$
+
+根据信息增益的计算公式：
+$$Gain(D,a)=0.998-(\frac{6}{17}\times1.000+\frac{6}{17}\times0.918+\frac{5}{17}\times0.722)=0.109$$
 
 ID3采用增益来作为划分度量。ID3采用多分支结构，每次消耗一个属性。其归纳偏置是，偏好结构简单的决策树。这种结构无法处理连续数值问题。对可取值数目较多的属性有偏好（属性取值多，熵自然就大）。为了减少这种偏好带来的不利影响，C4.5引入增益率。
 
@@ -56,7 +75,7 @@ $$IV(a)=-\sum\_{v=1}^{|V|}\frac{|D^v|}{|D|}log\_2\frac{|D^v|}{|D|}$$
 
 \\(IV(a)\\)称为属性\\(a\\)的固有值。属性可能的取值数目越多，则该值越大。
 
-增益率准别对可取值数目较少的属性有偏好，C4.5算法也不是直接采用增益率。而是先从候选划分属性中找出信息增益率高于平均水平的属性，再从中选择增益率最高的属性。
+增益率准别对可取值数目较少的属性有偏好，C4.5算法也不是直接采用增益率。而是先从候选划分属性中找出信息增益高于平均水平的属性，再从中选择增益率最高的属性。
 
 ###Gini指数（不纯度）
 $$Gini(D)=\sum\_{k=1}^{|y|}\sum\_{k^{\prime}\ne{k}}p\_kp\_k^{\prime}$$
@@ -76,8 +95,8 @@ $$Gini(D)=\sum\_{k=1}^{|y|}\sum\_{k^{\prime}\ne{k}}p\_kp\_k^{\prime}$$
 
 <div class="imgcap">
 <div>
-<img src="http://vsooda.github.io/assets/decision_tree/non_pruning.jpg" style="max-width:49%; height:300px;">
-<img src="http://vsooda.github.io/assets/decision_tree/pruning.jpg" style="max-width:49%; height:300px;">
+<img src="http://vsooda.github.io/assets/decision_tree/non_pruning.jpg" style="max-width:49%; height:200px;">
+<img src="http://vsooda.github.io/assets/decision_tree/pruning.jpg" style="max-width:49%; height:200px;">
 </div>
 <div class="thecap">Left: 未剪枝决策树. Right: 后剪枝决策树.</div>
 </div>
@@ -108,5 +127,7 @@ $$Gini(D)=\sum\_{k=1}^{|y|}\sum\_{k^{\prime}\ne{k}}p\_kp\_k^{\prime}$$
 2. 寻找替换属性。当需要使用该属性划分时，选取与其表现相近的属性
 
 [^zzh]: 周志华 机器学习
+
 [^lihang]: 李航 统计学习方法
+
 [^lxt]: 林轩田 机器学习技法
