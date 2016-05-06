@@ -12,6 +12,8 @@ categories: ML
 
 ![image](http://vsooda.github.io/assets/iris/iris1.png)
 
+![image](http://vsooda.github.io/assets/iris/framework.png)
+
 ###预处理
 ```
 I=imcomplement(imfill(imcomplement(I),'holes'));
@@ -21,7 +23,7 @@ I=imcomplement(imfill(imcomplement(I),'holes'));
 
 ###粗检测
 1. I < 0.5
-2. 排除3x3矩阵内的局部最小值
+2. 排除3x3矩阵内的非局部最小值
 3. 排除离各个边缘距离小于最小半径的点
 4. 对于剩下的点，采用partiald在圆弧上求blur积分
 5. 最大值即为iris的中心所在的大致位置
