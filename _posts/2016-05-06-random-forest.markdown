@@ -21,7 +21,6 @@ categories: ML
 </div>
 <div class="thecap">图1：单棵决策树</div>
 </div>
-</div>
 
 <div class="imgcap">
 <div>
@@ -29,14 +28,12 @@ categories: ML
 </div>
 <div class="thecap">图2：100棵决策树的随机森林</div>
 </div>
-</div>
 
 <div class="imgcap">
 <div>
 <img src="http://vsooda.github.io/assets/rf/demo3.png" style="width:500px">
 </div>
 <div class="thecap">图3：1000棵决策树的随机森林</div>
-</div>
 </div>
 
 
@@ -46,7 +43,6 @@ categories: ML
 <img src="http://vsooda.github.io/assets/rf/rf.png" style="width:500px">
 </div>
 <div class="thecap">随机森林与决策树</div>
-</div>
 </div>
 
 #### basis vs variance
