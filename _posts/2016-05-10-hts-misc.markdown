@@ -1,0 +1,13 @@
+---
+layout: post
+title: "hts misc"
+date: 2016-05-10
+categories: ml
+---
+
+####聚类结果
+
+![image](../assets/hts/cluster.png)
+
+第一次聚类结果。
+每个hmm由于
