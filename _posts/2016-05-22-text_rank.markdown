@@ -1,3 +1,10 @@
+---
+layout: post
+title: "text rank"
+date: 2016-05-22
+categories: ml
+---
+
 ###TextRank: Bringing order into texts
 
 textrank基于pagerank算法，用于生成文本关键字和摘要。
@@ -16,7 +23,7 @@ $$S(V\_i)=(1-d)+d*\sum\_{j\in{In(V\_i)}}\frac{1}{|Out(V\_j)|}S(V\_j)\qquad(1)$$
 PageRank需要使用上面的公式多次迭代才能得到结果。初始时，可以设置每个网页的重要性为1。上面公式等号左边计算的结果是迭代后网页i的PR值，等号右边用到的PR值全是迭代前的。
 
 举个例子：
-![image](../assets/textrank/pagerank-02.png)
+![image](http://vsooda.github.io/assets/textrank/pagerank-02.png)
 
 上图表示三张网页之间的连接关系。直觉上认为A最重要。根据连接关系可以得到下表：
 
@@ -85,7 +92,7 @@ textrank的模型与pagerank相似。基本模型还是公式(1)。
 $$WS(V\_i)=(1-d)+d*\sum\_{j\in{In(V\_i)}}\frac{w\_{ji}}{\sum\_{v\_k\in{Out(V\_j)}}w\_jk}WS(V\_j)\qquad(2)$$
 
 ####2.3 textrank流程
-![image](../assets/textrank/pseudo.png)
+![image](http://vsooda.github.io/assets/textrank/pseudo.png)
 
 ###3. textrank 应用
 ####3.1 关键词抽取
@@ -94,7 +101,7 @@ $$WS(V\_i)=(1-d)+d*\sum\_{j\in{In(V\_i)}}\frac{w\_{ji}}{\sum\_{v\_k\in{Out(V\_j)
 * 在分词的过程中，可能会有部分词被分作多个词。比如，支持向量机被分为：支持，向量，机。如果在构图时就考虑这些情况，会使得构图复杂度大大提升。解决方法是：通过一个后处理程序，将这些被误差的词重新组合起来。具体做法是：在候选关键词列表中，按照重要性降序排序，尝试组合这些词，如果组合的词在原文中出现次数超过一定次数（例如：``支持，向量，机``组成``支持向量机``），则认为应该是一个词。
 * 作者同时测试了，使用有向图对结果没有帮助。
 
-#####3.2 句子抽取（文本摘要）
+####3.2 句子抽取（文本摘要）
 文本摘要的任务就是抽取出最能概括文章内容的若干句子作为摘要。在文本摘要中，每个句子是一个节点。
 
 句子间的关系通过表现为“结点间的相互推荐”。文本中的一个句子表达了若干个概念，相当于给读者对于表达了相同概念的句子一定的推荐度。这样，可以在这些相互推荐的句子间加上一条边。这个边的权值就是两个句子的相似度。
