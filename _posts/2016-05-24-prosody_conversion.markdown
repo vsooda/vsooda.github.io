@@ -15,7 +15,7 @@ categories: speech
 
 原文（可忽略）：
 
-![image](../assets/prosody/data_record.png)
+![image](http://vsooda.github.io/assets/prosody/data_record.png)
 
 ### 特征
 `对现有特征可改进之处`：
@@ -29,7 +29,7 @@ categories: speech
 
 总的来说，在happiness,anger时f0较高，在fear，sadness时候f0偏低。
 
-![image](../assets/prosody/prosody_f0.png)
+![image](http://vsooda.github.io/assets/prosody/prosody_f0.png)
 
 ### f0转化
 不同情绪的f0长度也不相同，但是可以使用一个简单的scale处理。f0模型的转化提到三种算法，包括：LMM（linear modification model），GMM，CART
