@@ -1,0 +1,83 @@
+<!-----
+layout: post
+title: "mdl-based context-dependent subword modeling for speech recognition"
+date: 2016-05-26
+categories: 
+----->
+
+mdl-based context-dependent subword modeling for speech recognition
+---
+
+在hmm基于最大似然（ML）的聚类策略，很难确定最终停止条件。mdl自动判别最终聚类停止条件，在很多情况下取得很好的结果。
+
+### 1. mdl criterion
+
+假如有一组模型\\(\\{1,2,...,i,...,I\\}\\). 对于数据\\(\\{x^N=x\_1,...,x\_N\\}\\),其描述长度为\\(l\_i(x^N)\\),在模型\\(i\\)的描述长度表示为：
+
+![image](../assets/mdl/eq1.png)
+
+上式右边三项分别为：
+
+* 第一项：数据\\(x^N\\)在模型\\(i\\)下的最大似然概率的复log值。最大似然概率越大，其复log值越小。所以，这一项随着结点的分裂，越来越小。
+* 第二项：对于模型复杂度的惩罚项，模型越复杂，这个值越大。
+* 第三项： 常数，可忽略。
+
+mdl计算时，就是要需找一个模型使得描述长度\\(l\_i(x^N)\\)最小。第一项与第二项和最终优化目标的关系如下图所示。第一项越来越小，第二项越来越大。找一个点，使得两者的和最小。
+
+![image](../assets/mdl/mdl.png)
+
+###2. description length for HMMs
+对于包含\\(E\\)个句子（example）的数据，每个句子\\(e\\)内部的数据表示为\\(\\{o\_1^e,...,o\_t^e,...,o\_{T\_e}^e\\}\\),其中\\(T\_e\\)是句子\\(e\\)的帧数。
+
+
+* hmm 均值，协方差
+
+![image](../assets/mdl/eq2_3.png)
+
+* \\(e\\)句子，第\\(t\\)帧属于状态\\(s\_t\\)的概率\\(\gamma\_l(e,t)\\)表示如下
+
+![image](../assets/mdl/eq4.png)
+
+
+* 计算所有结点集合的似然概率计算代价太高，所以做了以下假设：
+
+	a. 在计算似然概率时，忽略转移概率
+	b. 状态集合的分裂，不改变帧和状态的对齐关系
+	c. 一个状态产生数据序列o的似然概率可以表示为：各个数据点属于该状态的概率乘上高斯分布产生该数据的概率的似然值之和。这个假设是合理的原因在于，公式4中，每个样本属于某个状态的值，参考了其前向概率和后向概率。综合前后概率之后，会导致基本大部分\\(\gamma\_l(e,t)\\)的值为0，只有真实状态的概率接近为1
+
+* 在三音素模型集合中，将属于同一个结点的模型当做一个模型子集。例如\\(\\{s\_1^m,...s\_l^m,...,s\_{L\_m}^m\\}\\)构成了结点\\(s\_m\\),而\\(L\_m\\)是状态子集中状态个数。所有状态可以重新按照其子集标记为:\\(\\{s\_1^1,...,s\_{L\_1}^1,s\_1^m,...,s\_{L\_m}^m,s\_1^m,...,s\_{L\_M}^M\\}\\)。公式2，3可以重写为：
+
+![image](../assets/mdl/eq5_7.png)
+
+![image](../assets/mdl/eq8_10.png)
+
+![image](../assets/mdl/eq11_12.png)
+
+
+
+![image](../assets/mdl/eq14.png)
+
+
+![image](../assets/mdl/eq15.png)
+
+
+![image](../assets/mdl/eq16.png)
+
+
+![image](../assets/mdl/eq17.png)
+
+
+![image](../assets/mdl/eq18.png)
+
+
+![image](../assets/mdl/eq19.png)
+
+
+![image](../assets/mdl/eq20.png)
+
+
+
+
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
