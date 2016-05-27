@@ -5,9 +5,6 @@ date: 2016-05-24
 categories: speech
 ---
 
-
-##prosody conversion from neutral speech to emotional speech
-
 ###  数据准备
 * 准备1500句子，每种句子用五种情绪读出：neutral，happiness，sadness，fear，anger
 * 人工对每个句子的情感强度进行标定。分为：strong，medium，weak，unlike
@@ -35,3 +32,5 @@ categories: speech
 不同情绪的f0长度也不相同，但是可以使用一个简单的scale处理。f0模型的转化提到三种算法，包括：LMM（linear modification model），GMM，CART
 
 文章同时表明，仅仅是改变f0还是不够，也需要对频率信息进行更改。
+
+>  Tao J, Kang Y, Li A. Prosody conversion from neutral speech to emotional speech[J]. Audio, Speech, and Language Processing, IEEE Transactions on, 2006, 14(4): 1145-1154.
