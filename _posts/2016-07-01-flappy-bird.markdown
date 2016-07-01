@@ -4,7 +4,16 @@ title: "flappy bird"
 date: 2016-07-01
 categories: dl
 ---
-###1 mdp
+
+Deep Learning Flappy Bird
+===
+
+主要参考[博客](http://www.nervanasys.com/demystifying-deep-reinforcement-learning/) ， [代码](https://github.com/yenchenlin/DeepLearningFlappyBird)
+
+>
+Mnih V, Kavukcuoglu K, Silver D, et al. Playing atari with deep reinforcement learning[J]. arXiv preprint arXiv:1312.5602, 2013.
+
+###mdp
 
 ![image](http://vsooda.github.io/assets/flappy_bird/mdp.png)
 
@@ -12,14 +21,14 @@ categories: dl
 
 针对当前状态\\(s\\)做出行为\\(a\\),获得奖赏值\\(r\\),直到最终达到终止状态\\(n\\)
 
-###2 折扣奖赏
+###折扣奖赏
 在强化学习的应用场景中，通常存在直到最终状态之前不知道决策好坏的情况，称为奖赏延迟。对于这种情况，上次我们在分析pong的时候使用的是折扣奖赏。就是从最后结果中反推前面每一帧应该获得的奖赏值。
 
 \\( R\_t = \sum\_{k=0}^{\infty} \gamma^t r\_{t+1} \\)
 
 强化学习要做的就是通过某种方式得知当前状态下做出哪种行为将获得更大的奖赏值。训练方法有：Q学习，策略梯度
 
-###3 Q学习
+###Q学习
 
 Q学习中定义Q函数：\\(Q(s,a)\\)表示在状态\\(s\\)采取\\(a\\)行为所能获得的最大奖赏值。
 $$Q(s,a)=max(R\_{t+1})$$
@@ -29,13 +38,13 @@ $$Q(s,a)=max(R\_{t+1})$$
 $$Q(s,a)=r+{\gamma}max\_{a'}Q(s',a')$$
 称为`Bellman equation`
 
-在训练中，最终要的技巧是：`experience replay`。在训练时，收集大量这种四元组序列，再随机采样进行训练。这样避免了大量相似的序列，避免局部最优，而且这样与监督学习更加相似，容易调试。
+在训练中，最重要的技巧是：`experience replay`。在训练时，收集大量这种四元组序列，再随机采样进行训练。这样避免了大量相似的序列，避免局部最优，而且这样与监督学习更加相似，容易调试。
 
 在Q学习中，通常使用Bellman equation来近似Q函数。简单的Q学习（表格值函数）实现如下：
 
 ![image](http://vsooda.github.io/assets/flappy_bird/algo1.png)
 
-###4 deep Q network
+###deep Q network
 deep Q network其实就是使用神经网络来估计Q函数。神经网络的输入时图片，输出是采取各个行为所能获得的Q函数。
 
 ![image](http://vsooda.github.io/assets/flappy_bird/network.png)
@@ -63,7 +72,7 @@ deep Q network其实就是使用神经网络来估计Q函数。神经网络的�
 探索：按照一定概率选择不同的行为。这种方法不会陷入局部最优，缺点是很难收敛。
 
 以上两种方法各有优劣，称为探索-利用窘境。一般需要取折中方案。有一种方法是\\(epsilon\\)贪心探索（ε-greedy exploration）。在每次选择时候，按照\\(epsilon\\)的概率进行随机选择，\\(1-epsilon\\)选择奖赏最大的行为。在实际的操作中，\\(epsilon\\)可能随着时间慢慢减小。
-I
+
 
 ### 算法流程
 
