@@ -84,6 +84,37 @@ if(/abba/){
 }
 {% endhighlight %}
 
+在kaldi，egs/hkust/utils/pinyin_map.pl中
+
+{% highlight perl linenos %}
+$initial= $A[$i]; $final = $A[$i];
+if ($A[$i] =~ /^CH[A-Z0-9]+$/) {$initial =~ s:(CH)[A-Z0-9]+:$1:; $final =~ s:CH([A-Z0-9]+):$1:;}
+{% endhighlight %}
+
+使用以上语句对于CHANG1,这种语句提取。提取结果是$initial为CH，$final为ANG1
+
+这是怎么做到的呢？
+
+首先，perl使用 “=~”来表示命中匹配。使用“!~"来表示未命中匹配。
+
+在匹配的过程中，匹配原始字符放在等式左边，最终结果也是存在等式左边。比如说上面这个代码。$initial初始值是CHANG1，匹配后为CH。
+
+perl的正则表达式关键词有：
+
+* m 表示匹配
+* s 表示替换
+* tr 集合替换
+
+至于$1, $2的匹配提取可以参考以下链接：
+java正则表达式
+
+[参考1](http://blog.csdn.net/allwefantasy/article/details/3136570)
+
+[参考2](http://www.runoob.com/java/java-regular-expressions.html)
+
+
+
+
 <!-- 代码高亮
 {% highlight c++ linenos %}
 #include <iostream>
