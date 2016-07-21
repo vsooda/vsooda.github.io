@@ -1,0 +1,237 @@
+---
+layout: post
+title: "cmake入门"
+date: 2016-07-21
+categories: code
+---
+CMake 为“cross platform make”的缩写。
+
+### cmake的使用
+```
+mkdir build
+cd build
+cmake ..
+make -j4
+```
+
+### cmake和makefile
+
+Makefile 例子：
+
+```
+OPENCV_HOME = /usr/include/opencv/
+DLIB_HOME = /home/sooda/tools/dlib-18.16/
+
+CC = g++ -O3
+CFLAG = -std=c++11
+LIB = -lopencv_core -lopencv_objdetect -lopencv_highgui -lopencv_imgproc -lpthread -lX11
+INC = -I../include/ -I$(OPENCV_HOME) -I$(DLIB_HOME)
+OBJ = ArgumentParser.o iris.o source.o findEyeCenter.o
+EXE = test_iris test_esr_shape test_pupil test_track
+all: test_iris test_esr_shape test_pupil test_track
+test_iris :  test_iris.cpp $(OBJ)
+	$(CC) -o $@ $@.cpp  $(OBJ) $(LIB) $(INC) $(CFLAG)
+	mv $@ ../bin/
+test_pupil :  test_pupil.cpp $(OBJ)
+	$(CC) -o $@ $@.cpp  $(OBJ) $(LIB) $(INC) $(CFLAG)
+	mv $@ ../bin/
+test_esr_shape : test_esr_shape.cpp $(OBJ)
+	$(CC) -o $@ $@.cpp   $(OBJ) $(LIB) $(INC) $(CFLAG)
+	mv $@ ../bin/
+
+test_track : test_track.cpp $(OBJ)
+	$(CC) -o $@ $@.cpp   $(OBJ) $(LIB) $(INC) $(CFLAG)
+	mv $@ ../bin/
+
+source.o: $(DLIB_HOME)dlib/all/source.cpp  
+	$(CC) -c $< $(LIB) $(INC) $(CFLAG)
+
+%.o: %.cpp ../include/%.h
+	$(CC) -c $< $(LIB) $(INC) $(CFLAG)
+
+clean:
+	rm -rf *.o $(EXE)
+```
+
+Makefile的问题在于不好跨平台。而且编写复杂。cmake能够自动生成makefile文件。
+
+### cmake例子
+```
+cmake_minimum_required(VERSION 2.8)
+project(iris_segment)
+FIND_PACKAGE(OpenCV REQUIRED)
+IF (${OpenCV_VERSION} VERSION_LESS 2.3.0)
+    MESSAGE(FATAL_ERROR "OpenCV version is not compatible : ${OpenCV_VERSION}")
+ENDIF()
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+INCLUDE_DIRECTORIES(/Users/sooda/tools/dlib-18.16)
+set(SOURCE_FILES
+    iris.cpp
+    main.cpp)
+add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+TARGET_LINK_LIBRARIES(${PROJECT_NAME}  ${OpenCV_LIBS})
+```
+
+### cmake语法
+
+0. 变量使用${}方式取值,但是在`if`控制语句中是直接使用变量名
+1. 指令(参数 1 参数 2...)
+   参数使用括弧括起,参数之间使用空格或分号分开。
+2. 使用set设置变量。父目录设置的变量在子目录也可以直接使用。
+3. 使用add_executable来生成可执行文件，使用add_library来生成库，选项STATIC生成静态库，选项SHARED生成动态库。紧接着生成目标，使用target_link_libraries来设置依赖库。
+4. 使用ADD_SUBDIRECTORY包含子目录。
+5. 使用ADD_DEFINITIONS用来设置程序内部宏。
+6. INCLUDE_DIRECTORIES头文件搜索路径。LINK_DIRECTORIES库文件搜索路径。
+7. 使用install来发布。
+8. 使用MESSAGE输出调试信息
+
+### 常用变量
+1. CMAKE_BINARY_DIR 编译路径
+2. CMAKE_CXX_FLAGS 编译选项
+3. 输出路径：
+    * CMAKE_RUNTIME_OUTPUT_DIRECTORY 执行文件输出路径
+    * CMAKE_ARCHIVE_OUTPUT_DIRECTORY 静态库输出路径
+    * CMAKE_LIBRARY_OUTPUT_DIRECTORY 动态库输出路径
+4. CMAKE_INSTALL_PREFIX 输出文件安装位置
+5. PROJECT_SOURCE_DIR　最近使用project()命令的CMakeLists.txt所处路径
+6. AUX_SOURCE_DIRECTORY 某个目录下的所有源文件
+
+### 条件判断
+
+CMake的条件叙述为 if、elseif、else、endif。
+
+```
+# 当 expr 值为下列其中之一时，执行 command1：
+#    ON, 1, YES, TRUE, Y
+# 当 expr 值为下列其中之一时，执行 command2：
+#    OFF, 0, NO, FALSE, N, NOTFOUND, *-NOTFOUND, IGNORE
+
+if(expr)
+    command1(arg)
+else(expr)
+    command2(arg)
+endif(expr)
+```
+
+版本较早的 CMake 要求在 else(...) 括号内必须填上对应的条件，例如
+```
+if(WIN32)
+    ...
+else(WIN32)
+    command2(arg)
+endif(WIN32)
+```
+这种表示很容易造成误导。乍看之下会以为WIN32为TRUE时执行command2，但其实是WIN32为FALSE执行command2。在新版本中，不再强制在else处填写条件。
+```
+# 以下也合法
+if(WIN32)
+    ...
+else()
+    command2(arg)
+endif()
+```
+
+### cmake复杂项目
+1. 每个需要编译的文件夹包含一个CMakeLists。由父目录使用ADD_SUBDIRECTORY来确实是否编译该目录。
+2. 不同平台，调试或发布编译不同模块。增加变量来控制需要编译哪些模块。
+3. 核心代码和测试代码分开。核心代码编译成一个库，测试代码在外部应用该库，并测试效果。
+
+```
+cmake_minimum_required(VERSION 2.8)
+project(cppmary)
+ADD_DEFINITIONS(-DLOGGING_LEVEL=LL_DEBUG)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_DEBUG_POSTFIX d)
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/3rdparty
+        ${PROJECT_SOURCE_DIR}/include)
+set(build_ios false)
+if (build_ios)
+    set(build_demo_module false)
+    set(build_gtest_module false)
+else()
+    set(build_demo_module true)
+    set(build_gtest_module true)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+endif()
+
+set(build_gtest_module false)
+set(build_one_lib false)
+ADD_SUBDIRECTORY(3rdparty)
+ADD_SUBDIRECTORY(src)
+if (build_demo_module)
+    ADD_SUBDIRECTORY(test)
+    ADD_SUBDIRECTORY(examples)
+endif()
+
+set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/release/)
+install(DIRECTORY include/ DESTINATION include
+        FILES_MATCHING PATTERN "*.h*")
+install(DIRECTORY 3rdparty DESTINATION include
+        FILES_MATCHING PATTERN "*.h*")
+install(DIRECTORY data/ DESTINATION data)
+```
+
+### cmake 发布
+
+编译完之后，需要把include文件，lib文件，模型文件整合到一个文件夹。如果都是手动操作，很繁琐。容易出错。cmake支持自动发布。
+
+####使用install发布
+
+```
+set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/release/)
+install(DIRECTORY include/ DESTINATION include
+        FILES_MATCHING PATTERN "*.h*")
+install(DIRECTORY 3rdparty DESTINATION include
+        FILES_MATCHING PATTERN "*.h*")
+install(DIRECTORY data/ DESTINATION data)
+```
+
+CMAKE_INSTALL_PREFIX设置发布路径。
+
+需要注意的是，install(DIRECTORY data/ DESTINATION data)中，’data/‘’的‘/’不能去掉。这句表示讲data下的所有文件拷贝到目标路径下的data目录。如果把'/'去掉会多一层目录’data/data/xxx'。这个规则和rsync一致。
+
+####使用copy发布
+也可以使用copy来进行文件移动。
+
+```
+file(GLOB files "lib/local/LandmarkDetector/model/*.txt")
+foreach(file ${files})
+	if (MSVC)
+		file(COPY ${file} DESTINATION ${CMAKE_BINARY_DIR}/bin/Debug/model)
+		file(COPY ${file} DESTINATION ${CMAKE_BINARY_DIR}/bin/Release/model)
+	else(MSVC)
+		file(COPY ${file} DESTINATION ${CMAKE_BINARY_DIR}/bin/model)
+	endif(MSVC)
+endforeach()
+```
+
+以上两种发布方式的区别在于，使用install发布，只有在build目录下，使用make install才生效。使用copy则在编译的时候就生效。前者在xcode等ide下编译，可能比较不好处理。
+
+### ios交叉编译
+编译到ios需要下载对应的配置文件：IOS.cmake
+具体方法：
+
+选择平台类型，编译器
+
+![](http://vsooda.github.io/assets/cmake/ios1.png)
+
+选择IOS.cmake
+![](http://vsooda.github.io/assets/cmake/choose_ios_cmake.png)
+
+configure，generate
+
+![](http://vsooda.github.io/assets/cmake/configure.png)
+
+设置编译类型
+
+![](http://vsooda.github.io/assets/cmake/build.png)
+
+设置调试符号
+
+![](http://vsooda.github.io/assets/cmake/debug.png)
+
+设置输出路径
+
+![](http://vsooda.github.io/assets/cmake/output.png)
