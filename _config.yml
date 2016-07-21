@@ -20,4 +20,6 @@ weibo_username: vsooda
 #markdown: kramdown
 #markdown: rdiscount #对mou的支持较好
 markdown: redcarpet
+redcarpet:
+    extensions: ["tables"]
 #permalink: pretty 

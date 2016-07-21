@@ -98,6 +98,33 @@ generating speech parameter sequences (1mix)
 ---
 **HMGenS** -A -C configs/qst001/ver3/syn.cnf -D -T 1 -t 1500 100 5000 -S data/scp/gen.scp -c 0 -H models/qst001/ver3/cmp/re_clustered_all.mmf.1mix -N models/qst001/ver3/dur/re_clustered_all.mmf.1mix -M gen/qst001/ver3/1mix/0 models/qst001/ver3/cmp/tiedlist models/qst001/ver3/dur/tiedlist
 
+hmm，gv合成的参数有：weight，inc等。
+对于每个流的每一维特征使用牛顿法进行优化
+
+```
+Generating Label gen_cslt_00001.lab
+ Total number of frames = 1529
+  PdfStream[1]: 1529 frames
+  PdfStream[2]: 948 frames
+  PdfStream[3]: 1529 frames
+ Parameter generation considering global variance (GV)
+  Optimization=NEWTON  step size (init=1.000, inc=1.20, dec=0.50)
+  HMM weight=1.00, GV weight=1.00
+  Stream: 1
+  Feature: 1
+   Iteration  1: GV Obj = 4.069850e+01 (HMM:4.069850e+01 GV:-4.091874e-30)
+   Iteration  2: GV Obj = 4.069933e+01 (HMM:4.069939e+01 GV:-6.803006e-05)  Change = 0.000825
+   ...
+   Iteration 20: GV Obj = 4.070425e+01 (HMM:4.070450e+01 GV:-2.517048e-04)  Change = 0.000209
+   Iteration 21: GV Obj = 4.070434e+01 (HMM:4.070459e+01 GV:-2.497188e-04)  Change = 0.000092
+   Converged (norm=1.989407e-01, change=9.183336e-05).
+  Feature: 2
+   Iteration  1: GV Obj = 1.615898e+01 (HMM:1.615898e+01 GV:-1.044688e-29)
+   Iteration  2: GV Obj = 1.615910e+01 (HMM:1.615915e+01 GV:-4.773108e-05)  Change = 0.000121
+   Iteration  3: GV Obj = 1.615915e+01 (HMM:1.615921e+01 GV:-5.514864e-05)  Change = 0.000054
+```
+
+
 synthesizing waveforms (1mix)
 ---
 using SPTK to generate wav 

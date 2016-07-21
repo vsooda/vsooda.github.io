@@ -1,0 +1,122 @@
+---
+layout: post
+title: "mdl-based context-dependent subword modeling for speech recognition"
+date: 2016-05-26
+categories: speech
+---
+
+在hmm基于最大似然（ML）的聚类策略，很难确定最终停止条件。mdl自动判别最终聚类停止条件，在很多情况下取得很好的结果。
+文章
+> Shinoda K, Watanabe T. MDL-based context-dependent subword modeling for speech recognition[J]. The Journal of the Acoustical Society of Japan (E), 2000, 21(2): 79-86.
+
+### 1. mdl criterion
+
+假如有一组模型\\(\\{1,2,...,i,...,I\\}\\). 对于数据\\(\\{x^N=x\_1,...,x\_N\\}\\),其描述长度为\\(l\_i(x^N)\\),在模型\\(i\\)的描述长度表示为：
+
+![image](http://vsooda.github.io/assets/mdl/eq1.png)
+
+上式右边三项分别为：
+
+* 第一项：数据\\(x^N\\)在模型\\(i\\)下的最大似然概率的负log值。最大似然概率越大，其负log值越小。所以，这一项随着结点的分裂，越来越小。
+* 第二项：对于模型复杂度的惩罚项，模型越复杂，这个值越大。
+* 第三项： 常数，可忽略。
+
+mdl计算时，就是要需找一个模型使得描述长度\\(l\_i(x^N)\\)最小。第一项与第二项和最终优化目标的关系如下图所示。第一项越来越小，第二项越来越大。找一个点，使得两者的和最小。
+
+![image](http://vsooda.github.io/assets/mdl/mdl.png)
+
+###2. description length for HMMs
+对于包含\\(E\\)个句子（example）的数据，每个句子\\(e\\)内部的数据表示为\\(\\{o\_1^e,...,o\_t^e,...,o\_{T\_e}^e\\}\\),其中\\(T\_e\\)是句子\\(e\\)的帧数。
+
+
+* hmm 均值，协方差
+
+![image](http://vsooda.github.io/assets/mdl/eq2_3.png)
+
+* \\(e\\)句子，第\\(t\\)帧属于状态\\(s\_t\\)的概率\\(\gamma\_l(e,t)\\)表示如下
+
+![image](http://vsooda.github.io/assets/mdl/eq4.png)
+
+
+* 计算所有结点集合的似然概率计算代价太高，所以做了以下假设：
+
+	* 在计算似然概率时，忽略转移概率
+	* 状态集合的分裂，不改变帧和状态的对齐关系
+	* 一个状态产生数据序列o的似然概率可以表示为：各个数据点属于该状态的概率乘上高斯分布产生该数据的概率的似然值之和。这个假设是合理的原因在于，公式4中，每个样本属于某个状态的值，参考了其前向概率和后向概率。综合前后概率之后，会导致基本大部分\\(\gamma\_l(e,t)\\)的值为0，只有真实状态的概率接近为1
+
+* 在三音素模型集合中，将属于同一个结点的模型当做一个模型子集。例如\\(\\{s\_1^m,...s\_l^m,...,s\_{L\_m}^m\\}\\)构成了结点\\(S\_m\\),而\\(L\_m\\)是状态子集中状态个数。所有状态可以重新按照其子集标记为:\\(\\{s\_1^1,...,s\_{L\_1}^1,s\_1^m,...,s\_{L\_m}^m,s\_1^m,...,s\_{L\_M}^M\\}\\)。公式2，3可以重写为：
+
+![image](http://vsooda.github.io/assets/mdl/eq5_7.png)
+
+* 在第二个假设下，结点集的均值方差计算为
+
+![image](http://vsooda.github.io/assets/mdl/eq8_10.png)
+
+* 在第三假设下，由\\(s\_m\\)产生数据\\(\\{o\_1,...,o\_t,...,o\_{T\}\\}\\)的log似然概率为：
+
+![image](http://vsooda.github.io/assets/mdl/eq11_12.png)
+
+其中\\(K\\)是观测数据的维度，\\(\Gamma\_m\\)表示状态集\\(S\_m\\)总的出现次数。
+
+* 数据集对于状态集合\\(U\\)的log似然函数表示为：
+
+![image](http://vsooda.github.io/assets/mdl/eq14.png)
+
+* 公式1右边第二项模型复杂度惩罚表示为：
+
+
+![image](http://vsooda.github.io/assets/mdl/eq15.png)
+
+其中\\(W=\sum\_{m=1}^M\Gamma\_m\\)
+
+* 公式1最终转化为
+
+![image](http://vsooda.github.io/assets/mdl/eq16.png)
+
+最后一项\\(C\\)是常数。
+
+### 基于mdl进行状态集分裂
+
+* 假设\\(U\\)状态中结点\\(S\_m\\)对于问题\\(q\\)分裂为\\(S\_{mqy}\\)和\\(S\_{mqn}\\)，分裂后集合记为\\(U^{\prime}\\). 
+
+![image](http://vsooda.github.io/assets/mdl/eq17.png)
+
+注意分裂之后，结点数目标为\\(M+1\\), 所以上式模型惩罚项中更改惩罚系数。
+
+* 用\\(\Delta\_m(q)\\)表示分裂前后描述长度的差。
+
+![image](http://vsooda.github.io/assets/mdl/eq18.png)
+
+在分裂时候，首先选取一个问题\\(q^{\prime}\\),使得\\(\Delta\_m(q^{\prime})\\)最小。若\\(\Delta\_m(q^{\prime})>0\\),则不分裂。若\\(\Delta\_m(q^{\prime})<0\\)则分裂。并递归分裂下去，直到无法分裂为止。
+
+* 作为对比，在ML方法中，使用\\(\delta\_m(q)\\)来表示状态\\(S\_m\\)按照问题\\(q\\)划分为\\(S\_{mqy}\\)和\\(S\_{mqn}\\)后的log似然概率的提升值。
+
+![image](http://vsooda.github.io/assets/mdl/eq19.png)
+
+在该方法中，同样先找到一个\\(q^{\prime}\\),使得\\(\delta\_m(q^{\prime})\\)最大。在找到这个问题\\(q^{\prime}\\)需要决定是否划分。因为划分总是会使得似然概率变大，需要外部条件来帮助确定是否停止划分。常用的条件是：设定`log似然概率最小增长`阈值或`样本最小出现次数`\\(\Gamma\_m\\)阈值.
+
+
+* 权重
+
+为了调节公式1右边第一项和第二项权重，增加一个因子\\(c\\)进行调节
+
+![image](http://vsooda.github.io/assets/mdl/eq20.png)
+
+### discussion
+* 不确定三个假设的影响
+* 不一定是最优的
+* 最短描述长度未必是效果最好的
+
+相对于ML方法最大的好处是不需要手动调节停止条件。
+
+### 个人理解
+文章认为结点划分一定会使得似然概率的值增大的原因在于：
+公式4中，每个样本属于某个状态的值，参考了其前向概率和后向概率。综合前后概率之后，会导致基本大部分\\(\gamma\_l(e,t)\\)的值为0，只有真实状态的概率接近为1。也就是说，在结点划分之后，会使得左右两个结点的纯度更高，当然也就使得似然概率更大了。
+
+
+
+
+
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
