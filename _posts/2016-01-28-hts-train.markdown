@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "hts train"
+title: "hts 训练脚本解析"
 date: 2016-01-28
-categories: 
+categories:
 ---
 
 以下是对Training.pl的解析。相对路径的根目录在`train_data/hts`下
@@ -85,7 +85,7 @@ making global variance
 **HHEd** -A -C configs/qst001/ver3/trn.cnf -D -T 1 -p -i -H gv/qst001/ver3/clustered.mmf -m -a 1.0 -w gv/qst001/ver3/clustered.mmf gv/qst001/ver3/cxc_mgc.hed gv/qst001/ver3/gv.list
 * re-estimate  
 **HERest** -A -C configs/qst001/ver3/trn.cnf -D -T 1 -S gv/qst001/ver3/gv.scp -I gv/qst001/ver3/gv.mlf -m 1 -H gv/qst001/ver3/clustered.mmf -M gv/qst001/ver3 gv/qst001/ver3/gv.list
-	
+
 making unseen models (GV)
 ---
 **HHEd** -A -C configs/qst001/ver3/trn.cnf -D -T 1 -p -i -H gv/qst001/ver3/clustered.mmf -w gv/qst001/ver3/clustered_all.mmf gv/qst001/ver3/mku.hed gv/qst001/ver3/gv.list
@@ -127,7 +127,7 @@ Generating Label gen_cslt_00001.lab
 
 synthesizing waveforms (1mix)
 ---
-using SPTK to generate wav 
+using SPTK to generate wav
 
 converting mmfs to the hts_engine file format
 ---

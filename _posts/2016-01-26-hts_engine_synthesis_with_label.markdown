@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "hts engine synthesis "
+title:  "hts engine 合成流程分析 "
 date:   2016-01-26
 categories: hts
 ---
@@ -29,8 +29,8 @@ HTS\_Engine\_synthesize\_from\_fn
 replaceToBI将H-%L形式转换为：H-pc|这种形式。 hts训练时候如何识别？  
 其逆向转换函数replaceBackToBI只在GvModelSet.java:loadSwitchGvFromFile中使用。而loadSwitchGvFromFile的调用被注释掉。是否有问题？
 
-label内容： 
- 
+label内容：
+
 <img src="http://vsooda.github.io/assets/hts_train/label_format.png" width="500">
 
 <img src="http://vsooda.github.io/assets/hts_train/label_string.png" width="500">
@@ -47,4 +47,3 @@ HTS_Boolean HTS_SStreamSet_create(HTS_SStreamSet * sss, HTS_ModelSet * ms, HTS_L
 ```
 
 <!--{% endhighlight %}-->
-

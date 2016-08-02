@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "hts合成算法"
+title:  "hts，marytts模型，流程分析，adapt配置"
 date:   2015-12-16
 categories: hts
 ---
@@ -15,13 +15,13 @@ hts, hts_engine环境配置不谈。这里只提怎么用。
 	--with-fest-search-path=/home/sooda/speech/festival_all/festival/examples \
 	--with-sptk-search-path=/home/sooda/speech/marytts/lib/external/bin \
 	--with-hts-search-path=/home/sooda/speech/marytts/lib/external/bin \
-	--with-hts-engine-search-path=/home/sooda/speech/marytts/lib/external/bin 
+	--with-hts-engine-search-path=/home/sooda/speech/marytts/lib/external/bin
 ```
 各工具包的路径可能需要更改。各配置参数可修改。然后直接`make`就可以完成训练。使用以上命令可以用于测试官网[官网](http://hts.sp.nitech.ac.jp/hts-users/spool/2012/msg00393.html)例子。
 这些例子都是直接lab到声音的训练，没有给出lab的提取。这部分可以参考marytts。  
 hts训练的模型文件为：  
 
-<img src="http://vsooda.github.io/assets/hts_sythesis/hts_engine_model.png" width="500"> 
+<img src="http://vsooda.github.io/assets/hts_sythesis/hts_engine_model.png" width="500">
 
 
 ####1.2 hts_engine合成
@@ -96,7 +96,7 @@ predictAndSetDuration流程：
 * 再对每个状态对应多少帧，设置是否voiced等
 * 再设置maryxml上的“d”属性。若该属性已经存在，则累加该值
 * 各个状态的持续时间保存在htsUttModel中。可以为后面的合成所用。
- 
+
 <img src="http://vsooda.github.io/assets/hts_sythesis/acoustic.png" width="800">
 
 predictAndSetF0流程：
@@ -134,9 +134,8 @@ HTSParameterGeneration pdf2par = new HTSParameterGeneration();
 //生成声学参数
 pdf2par.htsMaximumLikelihoodParameterGeneration(um, hmmv.getHMMData());
 HTSVocoder par2speech = new HTSVocoder();
-//调用vocoder生成声音 
+//调用vocoder生成声音
 AudioInputStream ais = par2speech.htsMLSAVocoder(pdf2par, hmmv.getHMMData());
 if (tokensAndBoundaries != null)
-	setRealisedProsody(tokensAndBoundaries, um); 
+	setRealisedProsody(tokensAndBoundaries, um);
 {% endhighlight %}
-

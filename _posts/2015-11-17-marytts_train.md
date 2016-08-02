@@ -6,7 +6,7 @@ categories: marytts
 ---
 
 
-1 AllophonesExtractor 
+1 AllophonesExtractor
 -------
 
 对文本进行自然 语言处理标注， 生成结果保存在prompt_allophones。内容为参见5.
@@ -46,10 +46,14 @@ LabelPauseDeleter.threshold  =  10
 
 ![image](http://vsooda.github.io/assets/marytts_train/transcriptalign.png)
 
+`update: 2016-08-02`
+这一步骤的作用在于，根据自动对齐的结果，在纯自然语言处理预测的prompt_allophones的基础上添加一些停顿，并将结果写入allophones文件夹
+
+
 6 FeatureSelection
 ------------
 
-生成 mary/features.txt 
+生成 mary/features.txt
 
 在FeatureprocessManager里对问题集进行注册。
 
@@ -92,12 +96,12 @@ context特征的计算也是在server上，保持合成和训练一致。
 
 **FeatureProcessManager**   
 
-- 对tobiEndtone，next_cplace, next_ctype, next_cvox, next_is_pause等进行注册。 
-- `FeatureProcessManager管理每个特征的processors`。 
-- 在该类的定义中，featureProcessManager要么对应一种locale， 要么对应某种声音（通过registerAcousticModels函数进行设置）。 
-	- 语言的配置文件（如zh.config）对使用哪个manager进行定义。 例如：featuremanager.classes.list = marytts.features.FeatureProcessorManager(zh)。 德文对feature进行了重定义，则在de.config中设置: featuremanager.classes.list = marytts.language.de.features.FeatureProcessorManager, 使用新featuremanager。 
+- 对tobiEndtone，next_cplace, next_ctype, next_cvox, next_is_pause等进行注册。
+- `FeatureProcessManager管理每个特征的processors`。
+- 在该类的定义中，featureProcessManager要么对应一种locale， 要么对应某种声音（通过registerAcousticModels函数进行设置）。
+	- 语言的配置文件（如zh.config）对使用哪个manager进行定义。 例如：featuremanager.classes.list = marytts.features.FeatureProcessorManager(zh)。 德文对feature进行了重定义，则在de.config中设置: featuremanager.classes.list = marytts.language.de.features.FeatureProcessorManager, 使用新featuremanager。
 - Voice.java加载一个声音，就是加载phoneset, 声学模型和featureManager类名。
-	
+
 **TargetFeatureComputer**  
 
 - (featureProcessorManager, featureDefinition.getFeaturesNameds())   计算具体值的计算。  
@@ -114,18 +118,18 @@ if (fp == null) {
 	shortValuedFeatureProcessors.add(fp);
 } else if (fp instanceof ContinuousFeatureProcessor) {
 	continuousValuedFeatureProcessors.add(fp);
-} 
+}
 ```
 
 10 HMM 模型
 ----------
-HTSModel 每个音素或者context对应的模型。 
+HTSModel 每个音素或者context对应的模型。
 HTSUttModel 句子模型， 由 HTSModel构成
 
 HMMModel 包含HMMData（实例化为：htsData）， HMMData保存hmm模型的各种数据， 包括cartreeset， gvstream等。
 
 数据加载。  
-  
+
 ![image](http://vsooda.github.io/assets/marytts_train/loadData.png)
 
 1. data prepare  

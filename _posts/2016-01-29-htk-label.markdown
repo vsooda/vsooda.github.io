@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "htk label"
+title: "htk 对齐脚本解析"
 date: 2016-01-29
 categories: hts
 ---
@@ -14,7 +14,7 @@ sh etc/htkTrainScript.sh > log_htkTrainScript.txt
 **HERest** -A -D -V -T 1 -C htk/config/htkTrain.conf -I htk/etc/htk.phones.mlf -t 250.0 150.0 1000.0 -S htk/etc/htkTrain.list -H htk/hmm/hmm0/macros -H htk/hmm/hmm0/hmmdefs -M htk/hmm/hmm1 htk/etc/htk.phone.list >> log_herestTraining_1.txt
 
 
-phase 1: 
+phase 1:
 ---
 
 **HHEd** -A -D -V -T 1 -H htk/hmm/hmm8/macros -H htk/hmm/hmm8/hmmdefs -M htk/hmm/hmm9 htk/config/sil.hed htk/etc/htk.phone2.list >> log_herestTraining_9.txt
@@ -24,7 +24,7 @@ phase 1:
 
 phase 2:
 ---
-**HHEd** -A -D -V -T 1 -H htk/hmm/hmm15/macros -H htk/hmm/hmm15/hmmdefs -M htk/hmm/hmm16 htk/config/sil_vp.hed htk/etc/htk.phone3.list >> log_herestTraining_16.txt 
+**HHEd** -A -D -V -T 1 -H htk/hmm/hmm15/macros -H htk/hmm/hmm15/hmmdefs -M htk/hmm/hmm16 htk/config/sil_vp.hed htk/etc/htk.phone3.list >> log_herestTraining_16.txt
 
 **HERest** -A -D -V -T 1 -C htk/config/htkTrain.conf -I htk/etc/htk.phones3.mlf -t 250.0 150.0 1000.0 -S htk/etc/htkTrain.list -H htk/hmm/hmm16/macros -H htk/hmm/hmm16/hmmdefs -M htk/hmm/hmm17 htk/etc/htk.phone3.list >> log_herestTraining_17.txt
 
@@ -38,10 +38,10 @@ phase 3:
 
 HTK Align
 ---
-**HVite** -A -D -V -T 1 -b sil -l htk/lab -o W -C htk/config/htkTrain.conf -a -H htk/hmm/hmm-final/macros -H htk/hmm/hmm-final/hmmdefs -i htk/aligned.mlf -t 250.0 -y lab -I htk/etc/htk.phones3.mlf -S htk/etc/htkTrain.list htk/etc/htk.phone.dict htk/etc/htk.phone3.list > log_hviteAligning.txt 
+**HVite** -A -D -V -T 1 -b sil -l htk/lab -o W -C htk/config/htkTrain.conf -a -H htk/hmm/hmm-final/macros -H htk/hmm/hmm-final/hmmdefs -i htk/aligned.mlf -t 250.0 -y lab -I htk/etc/htk.phones3.mlf -S htk/etc/htkTrain.list htk/etc/htk.phone.dict htk/etc/htk.phone3.list > log_hviteAligning.txt
 
 build
 ---
-**HLStats** -T 1 -C htk/config/htkTrain.conf -b htk/etc/htk.phones.big -o htk/etc/htk.phone.list htk/etc/htk.phones.mlf > log_hlstats.txt 
+**HLStats** -T 1 -C htk/config/htkTrain.conf -b htk/etc/htk.phones.big -o htk/etc/htk.phone.list htk/etc/htk.phones.mlf > log_hlstats.txt
 
-**HBuild** -T 1 -C htk/config/htkTrain.conf -n htk/etc/htk.phones.big htk/etc/htk.aug.phone.list htk/etc/htk.phones.net > log_hbuild.txt 
+**HBuild** -T 1 -C htk/config/htkTrain.conf -n htk/etc/htk.phones.big htk/etc/htk.aug.phone.list htk/etc/htk.phones.net > log_hbuild.txt
