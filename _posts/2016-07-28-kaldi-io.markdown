@@ -1,0 +1,100 @@
+---
+layout: post
+title: "kaldi io 机制"
+date: 2016-07-28
+categories: speech
+---
+
+>本篇博客是从kaldi doc摘抄的笔记
+
+###input/output
+
+kaldi class : Read , Write
+
+fundamental types and STL types:  ReadBasicType, WriteBasicType, ReadToken, WriteToken
+
+### extended filename
+
+rxfilename: read file name
+
+wxfilename: write file name
+
+"-" or "" means the standard input
+
+"some command |" means an input piped command, i.e. we strip off the "|" and give the rest of the string to the shell via popen().
+
+"/some/filename:12345" means an offset into a file, i.e. we open the file and seek to position 12345.
+
+"/some/filename" ... anything not matching the patterns above is treated as a normal filename (however, some obviously wrong things will be recognized as errors before attempting to open them).
+
+### The Table concept
+Table is a concept rather than actual C++ class. It consists of a collection of objects of some known type, indexed by strings. These strings must be tokens (a token is defined as a non-empty string without whitespaces). Typical examples of Tables include:
+
+* A collection of feature files (represented as Matrix<float>) indexed by utterance id
+* A collection of transcriptions (represented as std::vector<int32>), indexed by utterance id
+* A collection of Constrained MLLR transforms (represented as Matrix<float>), indexed by speaker id.
+
+A Table can exist on disk (or indeed, in a pipe) in two possible formats: a script file, or an archive
+
+###format
+
+script file: scp
+
+some_string_identifier /some/filename
+
+archive file: ark
+
+token1 [something]token2 [something]token3 [something] ....
+
+
+### Specifying Table formats: wspecifiers and rspecifiers
+
+```cpp
+std::string rspecifier1 = "scp:data/train.scp"; // script file.
+std::string rspecifier2 = "ark:-"; // archive read from stdin.
+// write to a gzipped text archive.
+std::string wspecifier1 = "ark,t:| gzip -c > /some/dir/foo.ark.gz";
+std::string wspecifier2 = "ark,scp:data/my.ark,data/my.ark";
+```
+
+Usually, an rspecifier or wspecifier consists of a comma-separated, unordered list of one or two-letter options and one of the strings "ark" and "scp", followed by a colon, followed by an rxfilename or wxfilename respectively. The order of options before the colon doesn't matter.
+
+###option with example
+
+ark,t: the option ",t" tells it to write the data in text form
+
+utt_id_01002 foo.ark:89142[0:51,89:100] : 89142 is the offset of foo.ark file. 0:51 is row range, 89:100 is col range
+
+ark:- :  // archive read from stdin
+
+ark,scp:/some/dir/foo.ark,/some/dir/foo.scp :  "ark,scp" before the colon, and after the colon, a wxfilename for writing the archive, then a comma, then a wxfilename (for the script file)
+
+### Valid options for wspecifiers
+
+The allowable wspecifier options are:
+
+* "b" (binary) means write in binary mode (currently unnecessary as it's always the default).
+* "t" (text) means write in text mode.
+* "f" (flush) means flush the stream after each write operation.
+* "nf" (no-flush) means don't flush the stream after each write operation (would currently be pointless, but calling code can change the default).
+* "p" means permissive mode, which affects "scp:" wspecifiers where the scp file is missing some entries: the "p" option will cause it to silently not write anything for these files, and report no error.
+
+Examples of wspecifiers using a lot of options are
+
+* "ark,t,f:data/my.ark"
+* "ark,scp,t,f:data/my.ark,|gzip -c > data/my.scp.gz"
+
+### Valid options for rspecifiers
+
+* "o" (once) is the user's way of asserting to the RandomAccessTableReader code that each key will be queried only once. This stops it from having to keep already-read objects in memory just in case they are needed again.
+
+* "p" (permissive) instructs the code to ignore errors and just provide what data it can; invalid data is treated as not existing. In scp files, this means that a query to HasKey() forces the load of the corresponding file, so the code can know to return false if the file is corrupt. In archives, this option stops exceptions from being raised if the archive is corrupted or truncated (it will just stop reading at that point).
+
+* "s" (sorted) instructs the code that the keys in an archive being read are in sorted string order. For RandomAccessTableReader, this means that when HasKey() is called for some key not in the archive, it can return false as soon as it encounters a "higher" key; it won't have to read till the end.
+
+* "cs" (called-sorted) instructs the code that the calls to HasKey() and Value() will be in sorted string order. Thus, if one of these functions is called for some string, the reading code can discard the objects for lower-numbered keys. This saves memory. In effect, "cs" represents the user's assertion that some other archive that the program may be iterating over, is itself sorted.
+
+example:
+
+* "ark:o,s,cs:-"
+* "scp,p:data/my.scp"
