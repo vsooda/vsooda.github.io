@@ -71,3 +71,40 @@ idlaktxp --pretty --tpdb=/home/sooda/speech/idlak/idlak-data/en/ga/ data/full/te
 idlakcex --pretty --cex-arch=default --tpdb=/home/sooda/speech/idlak/idlak-data/en/ga/ data/full/text_anorm.xml data/full/text_afull.xml
 python /home/sooda/speech/idlak/idlak-voice-build/utils/idlak_make_lang.py --mode 2 data/full/text_afull.xml data/full/cex.ark > data/full/cex_output_dump
 ```
+
+###mlpg mlsa
+
+在训练的时候没有对cmp进行加窗处理，在预测时候，获得cmp值，对齐加窗，使用mlpg获得实际值。这个操作就是传说中的`smooth`
+
+窗口值是二进制的，可以使用`~/speech/marytts/lib/external/bin/x2x +fa mcep_d2.win`来查看窗口具体值。（x2x +fa可以将二进制文件转化为非二进制）
+
+delta：
+```
+-0.2
+-0.1
+0
+0.1
+0.2
+```
+
+delta-delta
+
+```
+0.285714
+-0.142857
+-0.285714
+-0.142857
+0.285714
+```
+
+对应hts的窗口值分别是：
+
+delta：
+```
+-0.5 0.0 0.5
+```
+
+delta-delta：
+```
+1.0 -2.0 1.0
+```
