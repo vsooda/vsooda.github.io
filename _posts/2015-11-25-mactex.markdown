@@ -1,17 +1,23 @@
 ---
 layout: post
 title:  "mactex中文配置"
-date:   2015-11-25 
+date:   2015-11-25
 categories: latex
+tags: latex mac
 ---
+* content
+{:toc}
 
 latex部分语法在markdown中不支持。今天在mac下配置了mactex环境，支持中文。
+
+
+
 
 ### 安装
 
 首先到这里[这里](https://tug.org/mactex/)下载mactex
 
-###设置texshop环境
+### 设置texshop环境
 
 使用texshop文章编辑。 引擎选用xelatex，需要设置编码，路径，否则可能报错。
 

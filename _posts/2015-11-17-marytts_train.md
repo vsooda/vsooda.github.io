@@ -3,7 +3,12 @@ layout: post
 title:  "marytts训练流程"
 date:   2015-11-17
 categories: marytts
+tags: marytts hts
 ---
+* content
+{:toc}
+
+
 
 
 1 AllophonesExtractor

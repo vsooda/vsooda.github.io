@@ -1,11 +1,17 @@
 ---
 layout: post
 title:  "最优化"
-date:   2015-12-01 
+date:   2015-12-01
 categories: math
+tags: math
 ---
+* content
+{:toc}
 
-在解很多问题的时候，其实最终结果都转化为解优化为题。 本文主要讲解一般情况下线性优化和非线性优化的求解方法。 
+在解很多问题的时候，其实最终结果都转化为解优化为题。 本文主要讲解一般情况下线性优化和非线性优化的求解方法。
+
+
+
 
 ![image](http://vsooda.github.io/assets/optimize/opnote1.jpg)
 

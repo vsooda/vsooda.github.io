@@ -3,11 +3,19 @@ layout: post
 title: "kaldi io 机制"
 date: 2016-07-28
 categories: speech
+tags: kaldi
 ---
 
->本篇博客是从kaldi doc摘抄的笔记
+* content
+{:toc}
 
-###input/output
+本篇博客是从kaldi doc摘抄的笔记
+
+
+
+
+
+### input/output
 
 kaldi class : Read , Write
 
@@ -36,7 +44,7 @@ Table is a concept rather than actual C++ class. It consists of a collection of 
 
 A Table can exist on disk (or indeed, in a pipe) in two possible formats: a script file, or an archive
 
-###format
+### format
 
 script file: scp
 
@@ -59,7 +67,7 @@ std::string wspecifier2 = "ark,scp:data/my.ark,data/my.ark";
 
 Usually, an rspecifier or wspecifier consists of a comma-separated, unordered list of one or two-letter options and one of the strings "ark" and "scp", followed by a colon, followed by an rxfilename or wxfilename respectively. The order of options before the colon doesn't matter.
 
-###option with example
+### option with example
 
 ark,t: the option ",t" tells it to write the data in text form
 

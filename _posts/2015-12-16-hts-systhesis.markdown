@@ -3,11 +3,18 @@ layout: post
 title:  "hts，marytts模型，流程分析，adapt配置"
 date:   2015-12-16
 categories: hts
+tags: hts
 ---
+* content
+{:toc}
 
-###1 hts， hts_engine合成
+
+
+
+### 1 hts， hts_engine合成
 hts, hts_engine环境配置不谈。这里只提怎么用。
-####1.1 hts训练
+
+#### 1.1 hts训练
 
 ```
 /configure MGCORDER=12 MGCLSP=1 GAMMA=1 FREQWARP=0.0  LNGAIN=0  NSTATE=7 NITER=10 WFLOOR=5  \
@@ -24,7 +31,7 @@ hts训练的模型文件为：
 <img src="http://vsooda.github.io/assets/hts_sythesis/hts_engine_model.png" width="500">
 
 
-####1.2 hts_engine合成
+#### 1.2 hts_engine合成
 从lab生成raw文件：
 
 ```
@@ -46,16 +53,22 @@ hts训练的模型文件为：
 /home/research/tools/hts23/bin/hts_engine -m voiceName.htsvoice  -ow wavName labName
 ```
 
-###2 marytts训练
-####2.1 marytts模型文件和hts_engine的不同
-marytts使用hts2.2和hts_engine1.05。 marytts在hts训练核心部分并没有做什么工作。但是marytts在合成部分增加了mix excitation， 使得合成效果更加自然。 marytts为了实现mix excitation，提取了str-mary， mag-mary等特征，与hts自带脚本不同。提取声学特征的代码写在hts/data/Makefile里面。如图：  
+### 2 marytts训练
+
+#### 2.1 marytts模型文件和hts_engine的不同
+marytts使用hts2.2和hts_engine1.05。 marytts在hts训练核心部分并没有做什么工作。但是marytts在合成部分增加了mix excitation， 使得合成效果更加自然。 marytts为了实现mix excitation，提取了str-mary， mag-mary等特征，与hts自带脚本不同。提取声学特征的代码写在hts/data/Makefile里面。如图：
+
 <img src="http://vsooda.github.io/assets/hts_sythesis/mary_feature_str.png" width="800">
+
 除了mix excitation的不同，marytts在将训练完成的模型文件打包的时候，对模型做了更改。把特征编号转化为特征名字。所以如果直接将走完整个训练流程并打包发布后， 想要用hts/voices/路径下的模型测试hts_engine合成效果是行不通的。正确的做法是，在打包之前将hts/voices模型备份，避免更改。   
+
 <img src="http://vsooda.github.io/assets/hts_sythesis/voice_model_compare.png" width="800">
-####2.2 hts adapt训练
+
+#### 2.2 hts adapt训练
 `术语`: adaptSpeaker表示训练数据较少者。adaptTrainSpeaker表示拥有大量数据者。  
 `数据准备`: phonelab， phonefeatures，ts/data/raw都要有trainer和adapter的。数据放置到对应路径。重命名，大量dirty work  
 `配置问题`: 直接看图。  
+
 <img src="http://vsooda.github.io/assets/hts_sythesis/adapt_setting_complete.png" width="550">       
 
 * 建议speaker名称用相同字母数表示，否则speakmask会出错。  
@@ -64,14 +77,18 @@ marytts使用hts2.2和hts_engine1.05。 marytts在hts训练核心部分并没有
 * 有多个步骤需要设置adaptScript为true  
 
 这样配置之后还有错误的话，估计就是某个声学特征提取的问题。 直接到hts/data/下查看。
-####2.3 marytts模型打包文件
+#### 2.3 marytts模型打包文件
 <img src="http://vsooda.github.io/assets/hts_sythesis/mary_model.png" width="500">  
+
 marytts通过读取voice.config来读取对应的文件。这里少了一些win文件，应该是被写在代码中了。
+
 <img src="http://vsooda.github.io/assets/hts_sythesis/voice_config.png" width="800">
+
 在 marytts-runtime/src/main/java/marytts/htsengine/HMMData.java的initHMMData加载模型数据
 
-###3 marytts合成流程
-####3.1 总体流程
+### 3 marytts合成流程
+
+#### 3.1 总体流程
 特征的提取，请参考之前的文章：`marytts训练流程`。 这里主要讲如何将一个lab文件转化为声音。涉及的模块主要有：acousticModel, systhesiser, signalproc等。  
 从1.2节，我们可以看到在hts_engine中，声音的合成是直接通过调用hts_engine的api合成。这样就失去了对合成过程的控制。  
 marytts的合成算法本质上也是hts_engine的算法（加入mix excitation扩展）。 marytts通过各个部分的分别合成，使得合成更加灵活。marytts合成分解如下：    
@@ -82,7 +99,8 @@ marytts的合成算法本质上也是hts_engine的算法（加入mix excitation�
 * [可选] 如果需要特殊的音效，调用effecApply对已经合成的声音进行修正。涉及信号处理signalproc。 注意：调整f0，duration不在这个步骤    
 
 以下是`源码笔记`，讲解合成细节。具体内容会根据理解变更。
-####3.2 acousticModel预测f0，duration细节
+
+#### 3.2 acousticModel预测f0，duration细节
 一些知识：
 
 * HMMModel中的成员变量 uttModel = Map<List<element>, HTSUttModel>> 保存特征和句子模型的一个映射。
@@ -107,8 +125,9 @@ predictAndSetF0流程：
 
 通过predictAndSetDuration， predictAndSetF0之后，可以应用prosody标签的变化，对声调进行修正。
 
-###3.3 合成声音
-调用关系图：  
+### 3.3 合成声音
+调用关系图：
+
 <img src="http://vsooda.github.io/assets/hts_sythesis/sythesis_stack.png" width="800">  
 
 关键代码：  

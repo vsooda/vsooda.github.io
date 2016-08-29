@@ -3,33 +3,46 @@ layout: post
 title:  "phonesets"
 date:   2015-09-30 20:14:34 +0800
 categories: marytts
+tags: phonest
 ---
+* content
+{:toc}
 
-##**元音vowel**的域有：(韵母) 
-###vlng 发音长度
+
+
+
+## **元音vowel**的域有：(韵母)
+
+### vlng 发音长度
 s : 短 short  
 l : 长 long  
 d : 双元音 diphthong  
 a : ? 非重读音节 schwa
+
 ### vheight 音高
 1 : 高  
 2 : 中  
-3 : 低 
-###vfront 发音部位
+3 : 低
+
+### vfront 发音部位
 1 : 前  
 2 : 中  
 3 : 后
-###vrnd  ？
+
+### vrnd  ？
 “+” : on  
 "-" : off  
-## **辅音consonant**的域有：（声母） 
+
+## **辅音consonant**的域有：（声母）
+
 ### ctype  ：鼻音，浊辅音，爆破音等
 s : 破裂音   Plosive   
 f : 摩擦音   Fricative   
 a : 破擦音   Affricate   
 n : 鼻音     Nasal  
 l : 清音     Liquid  
-r : 滑音     Glide 
+r : 滑音     Glide
+
 ### cplace :发音部位
 l : 唇音  
 a : 齿槽音 alveolar   
@@ -38,6 +51,7 @@ b : ？唇缝音 labio
 d : 齿音 dental  
 v : 软颚音 velar  
 g : ?
+
 ### cvox   : 是否浊音
 "+" : on
 “-” : off
@@ -48,7 +62,7 @@ g : ?
 ## 细节
 
 
-* voiced(浊音)： 
+* voiced(浊音)：
 元音或者cvox域为'+'
 
 * Diphthong（复合元音）：
@@ -104,11 +118,8 @@ vc为0 或者tone为‘-‘
 ## 其他
 
 内部标记：
-vc： 
+vc：
 vowel ： +
 consonant： -
 
 -->
-
-
-

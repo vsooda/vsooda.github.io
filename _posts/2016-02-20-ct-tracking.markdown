@@ -2,13 +2,18 @@
 layout: post
 title: "Real-time Compressive Tracking"
 date: 2016-02-20
-categories: 
+categories: image
+tags: ml  tracking
 ---
-#Real-time Compressive Tracking
+* content
+{:toc}
 
 论文主页提供源码[^project]。 CSDN上有一篇挺好的博客[^csdnblog].
 
-###本文要点
+
+
+
+### 本文要点
 1. CT压缩原理
 2. 目标跟踪框架：采样，bayes分类器训练，更新
 
@@ -25,7 +30,7 @@ categories:
 理论证明，在s=2，3时候，压缩后信息不会丢失（详见论文2.2）。这样可以节省2/3的计算量。本文更进一步，s=m/4。这样每行的只有2-4个非0值。只需要计算和存储这部分数据即可。从上图中看，R矩阵中，黑色代表1，灰色表示-1，白色这样计算次数最多为O(4n).若降维为n=50维，那么只需要200次乘法.这就是CT压缩提高效率的秘密。而且，很重要的一点，这是边采集边压缩，与通常使用的先采集再压缩不同，可以节省大量的空间，计算，传输资源。
 
 
-###整体流程
+### 整体流程
 <img src="http://vsooda.github.io/assets/ct/framework.png" width="600">
 
 在a中，对于当前人脸的位置，较近位置采集正样本，远离位置采集负样本。 然后通过滤波器获取特征值。这里通过不同的卷积核获取特征值，因为特征值数目较多（10的6次方级），需要降维（压缩感知的作用，降到50维）。将特征降维后，使用朴素贝叶斯进行分类。
@@ -44,7 +49,7 @@ categories:
 
 <img src="http://vsooda.github.io/assets/ct/algo.png" width="600">
 
-###代码细节
+### 代码细节
 
 压缩感知权重，滤波器组位置
 
@@ -91,8 +96,8 @@ for (int i=0; i<featureNum; i++)
 	}
 }
 ```
-	
-	
+
+
 更新高斯模型
 
 ```cpp
@@ -100,16 +105,16 @@ for (int i=0; i<featureNum; i++)
 {
 	meanStdDev(_sampleFeatureValue.row(i), muTemp, sigmaTemp);
 	_sigma[i] = (float)sqrt( _learnRate*_sigma[i]*_sigma[i]
-	+ (1.0f-_learnRate)*sigmaTemp.val[0]*sigmaTemp.val[0] 
+	+ (1.0f-_learnRate)*sigmaTemp.val[0]*sigmaTemp.val[0]
 	+ _learnRate*(1.0f-_learnRate)
 	*(_mu[i]-muTemp.val[0])*(_mu[i]-muTemp.val[0]));	// equation 6 in paper
 	_mu[i] = _mu[i]*_learnRate + (1.0f-_learnRate)*muTemp.val[0];	// equation 6 in paper
 }
 ```
-	
-	
+
+
 最大似然估计
-	
+
 ```cpp
 for (int j=0; j<sampleBoxNum; j++)
 {
@@ -117,10 +122,10 @@ for (int j=0; j<sampleBoxNum; j++)
 	for (int i=0; i<featureNum; i++)
 	{
 		pPos = exp( (_sampleFeatureValue.at<float>(i,j)-_muPos[i])
-		*(_sampleFeatureValue.at<float>(i,j)-_muPos[i]) 
+		*(_sampleFeatureValue.at<float>(i,j)-_muPos[i])
 		/ -(2.0f*_sigmaPos[i]*_sigmaPos[i]+1e-30) ) / (_sigmaPos[i]+1e-30);
 		pNeg = exp( (_sampleFeatureValue.at<float>(i,j)-_muNeg[i])
-		*(_sampleFeatureValue.at<float>(i,j)-_muNeg[i]) 
+		*(_sampleFeatureValue.at<float>(i,j)-_muNeg[i])
 		/ -(2.0f*_sigmaNeg[i]*_sigmaNeg[i]+1e-30) ) / (_sigmaNeg[i]+1e-30);
 		sumRadio += log(pPos+1e-30) - log(pNeg+1e-30);// equation 4
 	}

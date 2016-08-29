@@ -1,11 +1,17 @@
 ---
 layout: post
 title:  "High-Dimensional Local Binary Patterns for Face Verification"
-date:   2015-01-23 
+date:   2015-01-23
 categories: ML
+tags: lbp landmark
 ---
+* content
+{:toc}
 
 HD-LBP用于人脸识别取得接近人类的结果。几乎是目前最好的算法。
+
+
+
 
 主要流程是人脸检测，再对齐。在标定点附近找高维特征，最后根据这个特征可以用cos来计算人脸的相似性。
 

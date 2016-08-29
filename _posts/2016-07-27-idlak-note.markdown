@@ -3,9 +3,17 @@ layout: post
 title: "idlak笔记"
 date: 2016-07-27
 categories: speech
+tags: kaldi
 ---
 
-### 数据准备　idlak\_make\_lang mode ０
+* content
+{:toc}
+
+
+
+
+### 数据准备　idlak_make_lang mode ０
+
 ```
 idlak-voice-build/utils/idlak_make_lang.py --mode 0 /home/sooda/speech/idlak/egs/tts_dnn_arctic/s1/data/full/text_norm.xml /home/sooda/speech/idlak/egs/tts_dnn_arctic/s1/data/full /home/sooda/speech/idlak/egs/tts_dnn_arctic/s1/data/local/dict1
 ```
@@ -15,7 +23,7 @@ idlak-voice-build/utils/idlak_make_lang.py --mode 0 /home/sooda/speech/idlak/egs
 >
 characters.txt  extra_questions.txt  lexicon.txt  nonsilence_phones.txt  oov.txt  optional_silence.txt  silence_phones.txt
 
-###构造fst语言模型
+### 构造fst语言模型
 
 ```
 utils/prepare_lang.sh --num-nonsil-states 5 --share-silence-phones true $dict "<OOV>" data/local/lang_tmp $lang
@@ -23,7 +31,7 @@ utils/prepare_lang.sh --num-nonsil-states 5 --share-silence-phones true $dict "<
 
 同时生成lexiconp.txt. lexiconp.txt是带概率的lexicon.txt
 
-###生成带对齐信息的xml : idlak\_make\_lang mode 1
+### 生成带对齐信息的xml : idlak_make_lang mode 1
 ```
 python $KALDI_ROOT/idlak-voice-build/utils/idlak_make_lang.py --mode 1 "2:0.03,3:0.2" "4" $ali/phones.txt $ali/wrdalign.dat data/$step/text_align.xml
 ```
@@ -42,7 +50,7 @@ python /home/sooda/speech/idlak/idlak-voice-build/utils/idlak_make_lang.py --mod
 slt_arctic_a0001 sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E ah1_B ah1_B ah1_B ah1_B ah1_B ah1_B ah1_B ah1_B ah1_B v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E dh_B dh_B dh_B dh_B dh_B dh_B dh_B dh_B ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E d_B d_B d_B d_B d_B d_B d_B d_B d_B d_B d_B d_B d_B d_B d_B d_B d_B ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I n_I n_I n_I n_I n_I n_I n_I n_I n_I n_I n_I n_I n_I jh_I jh_I jh_I jh_I jh_I jh_I jh_I jh_I jh_I er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B r_I r_I r_I r_I r_I r_I r_I r_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B ih1_I ih1_I ih1_I ih1_I ih1_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I ah0_I ah0_I ah0_I ah0_I ah0_I p_E p_E p_E p_E p_E p_E p_E p_E p_E p_E p_E p_E p_E s_B s_B s_B s_B s_B s_B s_B s_B s_B s_B s_B s_B s_B s_B s_B s_B s_B s_B s_B s_B s_B t_I t_I t_I t_I t_I t_I t_I t_I t_I t_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E sp sp sp sp sp sp sp sp sp sp eh2_B eh2_B eh2_B eh2_B eh2_B t_I t_I t_I t_I t_I t_I t_I t_I s_I s_I s_I s_I s_I s_I s_I s_I s_I s_I s_I s_I s_I s_I s_I s_I s_I s_I s_I s_I eh1_I eh1_I eh1_I eh1_I eh1_I eh1_I eh1_I eh1_I eh1_I eh1_I eh1_I eh1_I eh1_I eh1_I eh1_I eh1_I t_I t_I t_I t_I t_I t_I t_I t_I t_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp
 ```
 
-exp-align/quin\_ali\_full/wrdalign.dat给出每个单词的时间对齐信息
+exp-align/quin_ali_full/wrdalign.dat给出每个单词的时间对齐信息
 
 格式为：
 
@@ -56,7 +64,7 @@ slt_arctic_a0001 1 1.230 0.440 TRAIL
 
 load_lablels之后，每个label的格式为：[0.205 0.34 ao_B]
 
-### 生成context label : idlak\_make\_lang mode 2
+### 生成context label : idlak_make_lang mode 2
 
 ```
 idlaktxp --pretty --tpdb=$tpdb data/$step/text_align.xml data/$step/text_anorm.xml
@@ -72,13 +80,14 @@ idlakcex --pretty --cex-arch=default --tpdb=/home/sooda/speech/idlak/idlak-data/
 python /home/sooda/speech/idlak/idlak-voice-build/utils/idlak_make_lang.py --mode 2 data/full/text_afull.xml data/full/cex.ark > data/full/cex_output_dump
 ```
 
-###mlpg mlsa
+### mlpg mlsa
 
 在训练的时候没有对cmp进行加窗处理，在预测时候，获得cmp值，对齐加窗，使用mlpg获得实际值。这个操作就是传说中的`smooth`
 
 窗口值是二进制的，可以使用`~/speech/marytts/lib/external/bin/x2x +fa mcep_d2.win`来查看窗口具体值。（x2x +fa可以将二进制文件转化为非二进制）
 
 delta：
+
 ```
 -0.2
 -0.1
@@ -100,11 +109,36 @@ delta-delta
 对应hts的窗口值分别是：
 
 delta：
+
 ```
 -0.5 0.0 0.5
 ```
 
 delta-delta：
+
 ```
 1.0 -2.0 1.0
+```
+
+### delta计算
+kaldi中通过featbin/add-deltas进行加窗处理
+
+```
+-0.2
+-0.1
+0
+0.1
+0.2
+```
+
+```
+0.04
+0.04
+0.01
+-0.04
+-0.1
+-0.04
+0.01
+0.04
+0.04
 ```

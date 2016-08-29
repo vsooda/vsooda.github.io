@@ -3,11 +3,19 @@ layout: post
 title: "cmake入门"
 date: 2016-07-21
 categories: code
+tags: cmake
 ---
+
+* content
+{:toc}
 
 CMake 为“cross platform make”的缩写。是开源的跨平台的自动化构建系统。
 
+
+
+
 ### cmake的使用
+
 ```
 mkdir build
 cd build
@@ -27,7 +35,7 @@ CFLAG = -std=c++11
 LIB = -lopencv_core -lopencv_objdetect -lopencv_highgui -lopencv_imgproc -lpthread -lX11
 INC = -I../include/ -I$(OPENCV_HOME) -I$(DLIB_HOME)
 OBJ = ArgumentParser.o iris.o source.o findEyeCenter.o
-EXE = test_iris 
+EXE = test_iris
 all: test_iris
 test_iris :  test_iris.cpp $(OBJ)
 	$(CC) -o $@ $@.cpp  $(OBJ) $(LIB) $(INC) $(CFLAG)
@@ -43,6 +51,7 @@ clean:
 Makefile不容易跨平台，编写复杂。cmake能够自动生成makefile文件。
 
 ### cmake例子
+
 ```
 cmake_minimum_required(VERSION 2.8)
 project(iris_segment)
@@ -72,6 +81,7 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}  ${OpenCV_LIBS})
 8. 使用MESSAGE输出调试信息
 
 ### 常用变量
+
 1. `CMAKE_BINARY_DIR` 编译路径
 2. `CMAKE_CXX_FLAGS` 编译选项
 3. 输出路径：
@@ -181,7 +191,7 @@ install(DIRECTORY data/ DESTINATION data)
 
 需要注意的是，install(DIRECTORY data/ DESTINATION data)中，’data/‘’的‘/’不能去掉。这句表示讲data下的所有文件拷贝到目标路径下的data目录。如果把'/'去掉会多一层目录’data/data/xxx'。这个规则和rsync一致。
 
-####使用copy发布
+#### 使用copy发布
 也可以使用copy来进行文件移动。
 
 ```

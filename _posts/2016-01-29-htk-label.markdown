@@ -3,7 +3,12 @@ layout: post
 title: "htk 对齐脚本解析"
 date: 2016-01-29
 categories: hts
+tags: hts align
 ---
+* content
+{:toc}
+
+
 
 
 cd htk/ ; mkdir hmm/hmm-dummy ;  mkdir hmm/hmm-final ;   

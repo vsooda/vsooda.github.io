@@ -7,22 +7,22 @@ categories: hts
 
 
 #### 合成代码框架
-HTS\_Engine\_synthesize\_from\_fn      
+HTS_Engine_synthesize_from_fn      
 
-* HTS\_Label\_load\_from\_fn
-* HTS\_Engine\_synthesize
-	* HTS\_Engine\_generate\_state\_sequence
-		* HTS_SStreamSet\_create : `parse label and determine state duration`
-	* HTS\_Engine\_generate\_parameter\_sequence
-	* HTS\_Engine\_generate\_sample\_sequence
+* HTS_Label_load_from_fn
+* HTS_Engine_synthesize
+	* HTS_Engine_generate_state_sequence
+		* HTS_SStreamSet_create : `parse label and determine state duration`
+	* HTS_Engine_generate_parameter_sequence
+	* HTS_Engine_generate_sample_sequence
 
 
 #### label细节
 <img src="http://vsooda.github.io/assets/hts_train/question.png" width="500">
 
-左边是questions\_qst001.hed 右边是questions\_utt\_qst001.hed  
+左边是questions_qst001.hed 右边是questions_utt_qst001.hed  
 左边是正常属性的问题集。包括当前音素，下一个音素，当前音素属性，下一个音素属性。。  
-右边是gv的问题集合。其属性更多的是句子统计信息。 // sentence\_numwords  sentence\_numphrases  phrase\_numsyls，  phrase\_numwords
+右边是gv的问题集合。其属性更多的是句子统计信息。 // sentence_numwords  sentence_numphrases  phrase_numsyls，  phrase_numwords
 
 代码中， hmmfeaAlias指的是特征编号
 

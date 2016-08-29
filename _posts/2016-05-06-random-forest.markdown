@@ -3,15 +3,18 @@ layout: post
 title: "random forest"
 date: 2016-05-06
 categories: ML
+tags: ml 随机森林
 ---
 
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
-
-## 随机森林
+* content
+{:toc}
 
 随机森林是有多颗决策树组成的。由于其速度快，效果好，在很多kaggle等很多大数据竞赛中，取得非常好的结果。随机森林被认为代表集成学习水平的方法。
 
-###样例
+
+
+
+### 样例
 
 图1，2，3分别是单棵决策树，100棵决策树，1000棵决策树的分类结果。在每张图中左图为决策树分类结果；中图为采样N/2个样本后使用决策树分类结果；右图是多个采样的决策树联合的结果。[^lxt]
 
@@ -37,7 +40,7 @@ categories: ML
 </div>
 
 
-###随机森林原理
+### 随机森林原理
 <div class="imgcap">
 <div>
 <img src="http://vsooda.github.io/assets/rf/rf.png" style="width:500px">
@@ -68,7 +71,7 @@ boosting主要关注的是降低偏差。因此boosting能基于泛化性能相�
 2. 属性投影  
 多个属性组合
 
-###oob(包外估计)
+### oob(包外估计)
 oob: out-of-bag estimate
 
 $$(1-\frac{1}{N})^N\approx\frac{1}{e}$$
@@ -83,16 +86,16 @@ $$(1-\frac{1}{N})^N\approx\frac{1}{e}$$
 </div>
 </div>
 
-$$E\_{oob}(G)=\frac{1}{N}\sum\_{n=1}^Nerr(y\_n,G\_n^-(x_n))$$
+$$E_{oob}(G)=\frac{1}{N}\sum_{n=1}^Nerr(y_n,G_n^-(x_n))$$
 
-其中\\(G\_n^-\\)是那些不包含\\(x_n\\)的决策树。用那些树来验证分类器在数据集上的对于\\(x_n\\)的分类错误。
+其中\\(G_n^-\\)是那些不包含\\(x_n\\)的决策树。用那些树来验证分类器在数据集上的对于\\(x_n\\)的分类错误。
 
-$$G\_n^-(x_n)=average(g\_2,g\_3,g\_T)$$
-	
+$$G_n^-(x_n)=average(g_2,g_3,g_T)$$
+
 ### 属性裁剪  
 如果有很多属性，有冗余。比如说，年龄和生日。要将其中冗余属性去掉，留下真正对训练有用的属性。例如原本有10000个属性，需要选择300个。
 
-如果是线性模型，\\(score=w^Tx=\sum\_{i=1}^{d}w_ix_i\\), \\(w\\)越大，代表其重要性更大。
+如果是线性模型，\\(score=w^Tx=\sum_{i=1}^{d}w_ix_i\\), \\(w\\)越大，代表其重要性更大。
 
 对于非线性模型一般使用Permutation Test
 测试属性重要的方法是，在该属性上去一个错误的值，如果正确率不受影响，那么说明该属性是不必要的。如果正确率收到较大影响，则保留该属性。
@@ -102,5 +105,6 @@ $$G\_n^-(x_n)=average(g\_2,g\_3,g\_T)$$
 [^zzh]: 周志华 机器学习
 
 [^lxt]: 林轩田 机器学习技法
-	
 
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>

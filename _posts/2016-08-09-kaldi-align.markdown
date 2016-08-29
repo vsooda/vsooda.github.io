@@ -3,7 +3,14 @@ layout: post
 title: "kaldi对齐"
 date: 2016-08-09
 categories: speech
+tags: kaldi
 ---
+
+* content
+{:toc}
+
+
+
 
 align 需要 feats.scp text mono/final.mdl oov.txt
 
@@ -55,7 +62,7 @@ hs_zh_arctic_lbx_00001 3 12 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 1
 slt_arctic_a0001 sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B ao1_B th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I th_I er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E ah1_B ah1_B ah1_B ah1_B ah1_B ah1_B ah1_B ah1_B ah1_B ah1_B ah1_B v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E v_E dh_B dh_B dh_B dh_B dh_B dh_B dh_B dh_B ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E d_B d_B d_B d_B d_B d_B d_B d_B d_B d_B d_B d_B d_B d_B d_B d_B ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I n_I n_I n_I n_I n_I n_I n_I n_I n_I n_I n_I n_I jh_I jh_I jh_I jh_I jh_I jh_I jh_I jh_I jh_I jh_I er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E er0_E t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B t_B r_I r_I r_I r_I r_I r_I r_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I ey1_I l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E l_E f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B f_B ih1_I ih1_I ih1_I ih1_I ih1_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I ah0_I ah0_I ah0_I ah0_I ah0_I p_E p_E p_E p_E p_E p_E p_E p_E p_E p_E p_E p_E p_E s_B s_B s_B s_B s_B s_B s_B s_B s_B s_B s_B s_B s_B s_B s_B s_B s_B s_B s_B s_B t_I t_I t_I t_I t_I t_I t_I t_I t_I t_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I iy1_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I l_I z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E z_E sp sp sp sp sp sp sp sp sp eh2_B eh2_B eh2_B eh2_B eh2_B t_I t_I t_I t_I t_I t_I t_I t_I t_I t_I s_I s_I s_I s_I s_I s_I s_I s_I s_I s_I s_I s_I s_I s_I s_I s_I s_I s_I s_I eh1_I eh1_I eh1_I eh1_I eh1_I eh1_I eh1_I eh1_I eh1_I eh1_I eh1_I eh1_I eh1_I eh1_I eh1_I eh1_I t_I t_I t_I t_I t_I t_I t_I t_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I er0_I ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E ah0_E sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp sp
 ```
 
-注意这里的音素都是类似于s\_B，t\_I，p\_E这种格式，B表示词的开头，I表示内部，E表示结束。在prepare\_lang.sh内部，会生成lang/phones/align\_lexicon.txt。 内容如下：
+注意这里的音素都是类似于s_B，t_I，p_E这种格式，B表示词的开头，I表示内部，E表示结束。在prepare_lang.sh内部，会生成lang/phones/align_lexicon.txt。 内容如下：
 
 ```
 ABSTRACTIONS ABSTRACTIONS ae0_B b_I s_I t_I r_I ae1_I k_I sh_I ah0_I n_I z_E

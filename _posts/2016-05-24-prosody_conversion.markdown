@@ -3,7 +3,16 @@ layout: post
 title: "prosody conversion from neutral speech to emotional speech"
 date: 2016-05-24
 categories: speech
+tags: speech
 ---
+
+* content
+{:toc}
+
+音色转化
+
+
+
 
 ###  数据准备
 * 准备1500句子，每种句子用五种情绪读出：neutral，happiness，sadness，fear，anger

@@ -1,14 +1,20 @@
 ---
 layout: post
 title:  "neuraltalk源码分析"
-date:   2015-08-21 
+date:   2015-08-21
 categories: ML
+tags: rnn
 ---
+* content
+{:toc}
 
-###与论文的异同
-没有实现BRNN对齐等等， MultiModal RNN其实就是RNN里面将图像特征作为输入偏置。然后使用单词作为RNN的输入，希望的输出是该单词序列+end 
 
-###总体框架
+
+
+### 与论文的异同
+没有实现BRNN对齐等等， MultiModal RNN其实就是RNN里面将图像特征作为输入偏置。然后使用单词作为RNN的输入，希望的输出是该单词序列+end
+
+### 总体框架
 - driver.py 用于驱动整个训练过程
 - predict_on_images.py 用于驱动测试。
 - eval_sentence_predictions.py进行评估.
@@ -46,5 +52,3 @@ categories: ML
 - costfun（RNNGenCost）内部， 调用batchDecodeGenerator进行forward，获取预测值。再backward获取梯度值
 - 在batchDecodeGenerator把语句，图片都编码为相同维度。对于每个语句，特征对调用rnn_decode.decodeGenerator的forward进行前向计算。
 - decodGenerator后向获取梯度
-
-

@@ -2,12 +2,19 @@
 layout: post
 title: "python package version"
 date: 2016-03-27
-categories: 
+categories: code python
+tags: ml python
 ---
+
+* content
+{:toc}
 
 今天在测试flappy bird代码时候，一直报numpy没有stack函数。通过参看文档，发现stack是numpy 1.10新增的函数。在之前的版本没有。通过pip将numpy更新到最新版本，还是不行。
 
+
+
 参看numpy版本方法：
+
 import numpy
 numpy.version.version
 

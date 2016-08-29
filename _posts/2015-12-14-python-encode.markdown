@@ -3,9 +3,15 @@ layout: post
 title:  "python字符编码"
 date:   2015-12-14
 categories: python
+tags: python code unicode utf8
 ---
+* content
+{:toc}
 
 python2饱受诟病的问题就是字符编码的问题，但是现在很多包还是使用python2...
+
+
+
 
 本文总结python2字符编码的问题。总的一个原则：在python内部，将字符串都转化为unicode。
 
@@ -18,7 +24,7 @@ decode的作用是将其他编码的字符串转换成unicode编码，如str1.de
 
 encode的作用是将unicode编码转换成其他编码的字符串，如str2.encode('gb2312')，表示将unicode编码的字符串str2转换成gb2312编码。
 
-####修改默认编码：
+#### 修改默认编码：
 修改ubuntu python默认编码为utf-8： 在/usr/lib/python2.7/sitecustomize.py添加：
 
 mac中的路径为：/usr/local/lib/python2.7/site-packages/sitecustomize.py
@@ -26,16 +32,17 @@ mac中的路径为：/usr/local/lib/python2.7/site-packages/sitecustomize.py
 ```
 import sys
 reload(sys)  
-sys.setdefaultencoding('utf-8') 
+sys.setdefaultencoding('utf-8')
 ```
-####py文件头设置
+
+#### py文件头设置
 
 ```
 #! /usr/bin/env python2.7
 #coding=utf-8
 ```
 
-###utf-8 和unicode
+### utf-8 和unicode
 先看一张图，很清除表示python的编码问题。
 
 ![image](/assets/python_encode/python_utf_unicode.png )

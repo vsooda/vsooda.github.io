@@ -2,8 +2,14 @@
 layout: post
 title: "hts 训练脚本解析"
 date: 2016-01-28
-categories:
+categories: hts
+tags: train speech
 ---
+* content
+{:toc}
+
+
+
 
 以下是对Training.pl的解析。相对路径的根目录在`train_data/hts`下
 
@@ -21,6 +27,7 @@ initialization & reestimation
 
 
 并行化
+
 > ~/speech/marytts/lib/external/bin/HERest -A -C configs/qst001/ver3/trn.cnf -D -T 1 -S data/scp/train.scp.part05 -I data/labels/mono.mlf -m 1 -u tmvwdmv -w 5000 -t 1500 100 5000 -p 6 -H  models/qst001/ver3/cmp/monophone.mmf -N models/qst001/ver3/dur/monophone.mmf -M models/qst001/ver3/cmp -R models/qst001/ver3/dur data/lists/mono.list data/lists/mono.list
 
 > ~/speech/marytts/lib/external/bin/HERest -p 0 -A -C configs/qst001/ver3/trn.cnf -D -T 1   -m 1 -u tmvwdmv -w 5000 -t 1500 100 5000  -H  models/qst001/ver3/cmp/monophone.mmf -N models/qst001/ver3/dur/monophone.mmf -M models/qst001/ver3/cmp -R models/qst001/ver3/dur data/lists/mono.list data/lists/mono.list models/qst001/ver3/cmp/HER1.hmm.acc models/qst001/ver3/cmp/HER1.dur.acc models/qst001/ver3/cmp/HER2.hmm.acc models/qst001/ver3/cmp/HER2.dur.acc models/qst001/ver3/cmp/HER3.hmm.acc models/qst001/ver3/cmp/HER3.dur.acc models/qst001/ver3/cmp/HER4.hmm.acc models/qst001/ver3/cmp/HER4.dur.acc models/qst001/ver3/cmp/HER5.hmm.acc models/qst001/ver3/cmp/HER5.dur.acc models/qst001/ver3/cmp/HER6.hmm.acc models/qst001/ver3/cmp/HER6.dur.acc

@@ -6,20 +6,39 @@
 # 'jekyll serve'. If you change this file, please restart the server process.
 
 # Site settings
-title: Machine Learning
+title: Liu Shouda
+brief-intro: coder
 email: liushouda@qq.com
 description: > # this means to ignore newlines until "baseurl:"
   关注计算机视觉，自然语言处理，语音识别。
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://yourdomain.com" # the base hostname & protocol for your site
+url: "http://vsooda.github.io" # the base hostname & protocol for your site
 #twitter_username: vsooda
 github_username:  vsooda
-weibo_username: vsooda
+weibo_username: 2522302875
+
+permalink: /:year/:month/:day/:title/
+
+disqus_shortname: vsooda
 
 # Build settings
-#markdown: kramdown
+markdown: kramdown
 #markdown: rdiscount #对mou的支持较好
-markdown: redcarpet
-redcarpet:
-    extensions: ["tables"]
-#permalink: pretty 
+#markdown: redcarpet
+#redcarpet:
+#    extensions: ["tables"]
+#markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+#permalink: pretty
+excerpt_separator: "\n\n\n\n"
+
+category_dir: category/
+tag_dir: tag/
+
+gems: [jekyll-paginate]
+paginate: 6
+
+#find . -name "*.markdown" | xargs -i sed -i "s/\\\_/_/g" {}

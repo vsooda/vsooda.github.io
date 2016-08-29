@@ -1,39 +1,44 @@
 ---
 layout: post
 title:  "opencv vtk 安装"
-date:   2014-12-23 
+date:   2014-12-23
 categories: tools
+tags: tools
 ---
+* content
+{:toc}
 
-##安装vtk
+
+
+## 安装vtk
 下载源码， cmake， make install
 [参考这里](http://www.vtk.org/Wiki/VTK/Building/MacOSX)
 
-##使用cmake配置
-[参考这里](http://sysmagazine.com/posts/217021/) 
+## 使用cmake配置
+[参考这里](http://sysmagazine.com/posts/217021/)
 
 注意这里的vtk path指的不是安装位置，写成/usr/local/是错误的。命令行cmake并不报错。如果有cmake-gui，会更好。钩上
 
-![image](http://vsooda.github.io/assets/vtk/12919.png) 
+![image](http://vsooda.github.io/assets/vtk/12919.png)
 
 点击configure：
 
-![image](http://vsooda.github.io/assets/vtk/133535.png) 
+![image](http://vsooda.github.io/assets/vtk/133535.png)
 
 自动找到对应的cmake文件。
 
-再configure 
+再configure
 
-![image](http://vsooda.github.io/assets/vtk/36229.png) 
+![image](http://vsooda.github.io/assets/vtk/36229.png)
 
 没有红色，说明没有没有问题了。可以点击Generate。  
 make -j8  
 这里可以看出设置的路径应该是cmake文件的路径。
 
-##opencv编译完成后。
+## opencv编译完成后。
 sudo make install 完成安装
 
-##编译样例：
+## 编译样例：
 刚开始一直找不到头文件，找不到库文件，后来看到vtk实际上是有cmake使用例的：http://www.vtk.org/Wiki/VTK/Examples/Cxx/CMakeTechniques/CheckForModule
 总结一个原因主要是对cmake不够熟悉。unix下手动编译安装链接不熟悉造成的。
 

@@ -3,10 +3,14 @@ layout: post
 title: "条件随机场入门"
 date: 2016-03-15
 categories: ML
+tags: ml crf
 ---
 
+* content
+{:toc}
 
-# 条件随机场入门
+
+
 
 理论大部分内容来自统计学习方法[^lihang]
 
@@ -17,7 +21,7 @@ categories: ML
 3. crf用于跟踪
 4. crf与rnn结合：CRFasRNN
 
-###1 概率无向图模型
+### 1 概率无向图模型
 概率无向图模型又称马尔可夫随机场，是一个可以用无向图表示的联合概率分布。
 
 概率无向图的随机变量满足：成对马尔可夫性，局部马尔可夫性，全局马尔可夫性。
@@ -42,7 +46,7 @@ categories: ML
 
 
 
-###2 条件随机场
+### 2 条件随机场
 条件随机场是给定随机变量X的条件下，随机变量Y的马尔可夫随机场。学习P(Y|X), 预测时，给定输入序列x，求其概率最大的p(y|x)的输出序列y
 
 <img src="http://vsooda.github.io/assets/crf/crf.png" width="300">
@@ -55,7 +59,7 @@ categories: ML
 
 <img src="http://vsooda.github.io/assets/crf/calculate.png" width="350">
 
-其中\\(t\_k\\)和\\(s\_l\\)是特征函数，\\(\lambda\_k\\)和\\(\mu\_l\\)是对应的权值。求和是在所有可能的输出序列上进行的。\\(t\_k\\)是转移特征，依赖于前一个位置和当前位置。\\(s\_l\\)是状态特征，依赖于当前位置。通常特征函数\\(t\_k\\)和\\(s\_l\\)定义为1或0，满足特征取1，不满足则取0. 条件随机场完全由特征函数\\(t\_k\\)，\\(s\_l\\)和对应的权值\\(\lambda\_k\\)，\\(\mu\_l\\)确定。
+其中\\(t_k\\)和\\(s_l\\)是特征函数，\\(\lambda_k\\)和\\(\mu_l\\)是对应的权值。求和是在所有可能的输出序列上进行的。\\(t_k\\)是转移特征，依赖于前一个位置和当前位置。\\(s_l\\)是状态特征，依赖于当前位置。通常特征函数\\(t_k\\)和\\(s_l\\)定义为1或0，满足特征取1，不满足则取0. 条件随机场完全由特征函数\\(t_k\\)，\\(s_l\\)和对应的权值\\(\lambda_k\\)，\\(\mu_l\\)确定。
 
 词性标注例子[^zzh]
 
@@ -65,13 +69,14 @@ categories: ML
 
 <img src="http://vsooda.github.io/assets/crf/feature.jpg" width="300">
 
-###3 概率计算
+### 3 概率计算
 <img src="http://vsooda.github.io/assets/crf/eg.png" width="500">
 
 计算如下：
 
 <img src="http://vsooda.github.io/assets/crf/cal_eg.jpg" width="350">
-###4 crf在分词的应用
+
+### 4 crf在分词的应用
 参考这篇[博客](http://www.52nlp.cn/%E4%B8%AD%E6%96%87%E5%88%86%E8%AF%8D%E5%85%A5%E9%97%A8%E4%B9%8B%E5%AD%97%E6%A0%87%E6%B3%A8%E6%B3%954)
 
 分词语料一般采用采用4-tag(B(Begin，词首), E(End，词尾), M(Middle，词中), S(Single,单字词))标记集.
@@ -91,7 +96,7 @@ B  E  S S  B  E S  S  S B  M  E
 
 **数据集**：[bakeoff2005](http://sighan.cs.uchicago.edu/bakeoff2005/)
 
-####特征模板
+#### 特征模板
 特征模板就是用来自动生成特征函数。
 
 ```
@@ -125,9 +130,9 @@ B
 
 <img src="http://vsooda.github.io/assets/crf/result.png" width="250">
 
-###5 总结
+### 5 总结
 1. 从上面分词例子看来，nlp的很多任务实际上是数据问题。即使算法差不多，不同的数据会导致结果差别很大
-2. 依照上面的crf框架，应该可以用来对句子语调，停顿，轻重音预测 
+2. 依照上面的crf框架，应该可以用来对句子语调，停顿，轻重音预测
 
 [^lihang]: 李航 统计学习方法
 

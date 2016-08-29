@@ -2,8 +2,17 @@
 layout: post
 title: "tensorflow note"
 date: 2016-03-27
-categories: 
+categories: ml code
+tags: ml
 ---
+
+* content
+{:toc}
+
+tensorflow基础语法
+
+
+
 
 * 变量 variable
 * 常量 constant

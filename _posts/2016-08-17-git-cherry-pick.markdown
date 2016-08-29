@@ -3,9 +3,17 @@ layout: post
 title: "git cherry pick"
 date: 2016-08-17
 categories: code
+tags: git code
 ---
 
+* content
+{:toc}
+
 考虑一个问题： 使用git做版本管理。如何在保持自己分支代码与主分支一致尽量一致的情况下，随时将可应用与主分支的bug修复提交的主分支，而其余feature代码则保留在自己分支上。
+
+
+
+
 
 以`kaldi`为例子。原始仓库是`kaldi-asr/kaldi`， fork到`vsooda/kaldi`。然后在`vsooda/kaldi`下开分支`tts`作为功能开发。`master`分支作为与原来仓库的同步作用。在`tts`整个分支成熟之前，肯定是不能提交到`master`分支的。
 

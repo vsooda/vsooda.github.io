@@ -3,39 +3,44 @@ layout: post
 title: "flappy bird"
 date: 2016-07-01
 categories: dl
+tags: reinforcement
 ---
 
+* content
+{:toc}
+
 Deep Learning Flappy Bird
-===
 
 主要参考[博客](http://www.nervanasys.com/demystifying-deep-reinforcement-learning/) ， [代码](https://github.com/yenchenlin/DeepLearningFlappyBird)
+
+
 
 >
 Mnih V, Kavukcuoglu K, Silver D, et al. Playing atari with deep reinforcement learning[J]. arXiv preprint arXiv:1312.5602, 2013.
 
-###mdp
+### mdp
 
 ![image](http://vsooda.github.io/assets/flappy_bird/mdp.png)
 
-\\(s\_0,a\_0,r\_1,s\_1,a\_1,r\_2,...,s\_{n-1},a\_{n-1},r\_n,s\_n\\)
+\\(s_0,a_0,r_1,s_1,a_1,r_2,...,s_{n-1},a_{n-1},r_n,s_n\\)
 
 针对当前状态\\(s\\)做出行为\\(a\\),获得奖赏值\\(r\\),直到最终达到终止状态\\(n\\)
 
-###折扣奖赏
+### 折扣奖赏
 在强化学习的应用场景中，通常存在直到最终状态之前不知道决策好坏的情况，称为奖赏延迟。对于这种情况，上次我们在分析pong的时候使用的是折扣奖赏。就是从最后结果中反推前面每一帧应该获得的奖赏值。
 
-\\( R\_t = \sum\_{k=0}^{\infty} \gamma^t r\_{t+1} \\)
+\\( R_t = \sum_{k=0}^{\infty} \gamma^t r_{t+1} \\)
 
 强化学习要做的就是通过某种方式得知当前状态下做出哪种行为将获得更大的奖赏值。训练方法有：Q学习，策略梯度
 
-###Q学习
+### Q学习
 
 Q学习中定义Q函数：\\(Q(s,a)\\)表示在状态\\(s\\)采取\\(a\\)行为所能获得的最大奖赏值。
-$$Q(s,a)=max(R\_{t+1})$$
+$$Q(s,a)=max(R_{t+1})$$
 可以理解Q函数为：在s状态下采取了a行为后，游戏结束所能获得的最高得分。之所以叫做Q函数`Q-function`,因为他代表了在某种状态下采取某种行为的质量`quality`。这是一种值函数近似。
 
 在训练时候我们采集\\(\<s,a,r,s'\>\\)序列，那么，Q函数可表示为：
-$$Q(s,a)=r+{\gamma}max\_{a'}Q(s',a')$$
+$$Q(s,a)=r+{\gamma}max_{a'}Q(s',a')$$
 称为`Bellman equation`
 
 在训练中，最重要的技巧是：`experience replay`。在训练时，收集大量这种四元组序列，再随机采样进行训练。这样避免了大量相似的序列，避免局部最优，而且这样与监督学习更加相似，容易调试。
@@ -44,7 +49,7 @@ $$Q(s,a)=r+{\gamma}max\_{a'}Q(s',a')$$
 
 ![image](http://vsooda.github.io/assets/flappy_bird/algo1.png)
 
-###deep Q network
+### deep Q network
 deep Q network其实就是使用神经网络来估计Q函数。神经网络的输入时图片，输出是采取各个行为所能获得的Q函数。
 
 ![image](http://vsooda.github.io/assets/flappy_bird/network.png)
@@ -83,18 +88,6 @@ deep Q network其实就是使用神经网络来估计Q函数。神经网络的�
 * 策略梯度：奖赏值是从结束状态往回传递。要学习的目标是：`当前估计的行为的概率和实际采取行为的误差`乘以`反向奖赏值`.
 
 <script src="https://gist.github.com/vsooda/ebe1a8aababadfb2404724247b903fcd.js"></script>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>

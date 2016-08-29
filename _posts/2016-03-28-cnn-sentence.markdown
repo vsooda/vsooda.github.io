@@ -2,22 +2,30 @@
 layout: post
 title: "cnn sentence"
 date: 2016-03-28
-categories: 
+categories: ml deep
+tags: cnn
 ---
+
+* content
+{:toc}
+
+
+
+
 Convolutional Neural Networks for Sentence Classification
 
 本文发表在emnlp2014上，目前引入158次。将cnn用在自然语言处理，在情感分析等任务中取得不错的结果，本文的处理流程，已经成为深度学习文本分析的基本流程。
 
 
-###处理流程
+### 处理流程
 
 <img src="http://vsooda.github.io/assets/cnn_sentence/framework.png" width="600">
 
 最左边是句子基于词向量的表示（词向量：将每个字表示为相同维度的向量，而且向量之间的距离可以用来表达词意距离）。词向量可以直接选取word2vec训练结果，也可以先直接随机初始化，再在学习的过程中不断优化。本文用到两个通道，每个通道是一种词向量表示。其中一个通道保持不变，另外一个通道则接受bp的调整。
 
-这里的卷积和图片的卷积略有不同，一般采用narrow convolution。也就是，卷积核的宽度采用与词向量相同的宽度。这样，每个句子的卷积结果为：1 x (sentence\_length - filter\_size + 1 )
+这里的卷积和图片的卷积略有不同，一般采用narrow convolution。也就是，卷积核的宽度采用与词向量相同的宽度。这样，每个句子的卷积结果为：1 x (sentence_length - filter_size + 1 )
 
-通过max\_pooling将这个不同sentence\_length - filter\_size + 1维的数据降为1维。再把所有卷积核的结果连成长向量，放入全连接层，使用softmax进行分类任务。
+通过max_pooling将这个不同sentence_length - filter_size + 1维的数据降为1维。再把所有卷积核的结果连成长向量，放入全连接层，使用softmax进行分类任务。
 
 从下图可以更清楚看出这个流程。需要注意的是，卷积核大小各部相同，一般采用3，4，5大小的卷积核。
 

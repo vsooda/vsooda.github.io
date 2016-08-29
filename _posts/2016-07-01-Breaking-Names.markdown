@@ -3,10 +3,19 @@ layout: post
 title: "命名大事件"
 date: 2016-07-01
 categories: code
+tags: c++
 ---
-*引言：头文件命名与g++头文件冲突真是太悲剧了。*
 
-###事件1
+* content
+{:toc}
+
+引言：头文件命名与g++头文件冲突真是太悲剧了。
+
+
+
+
+
+### 事件1
 事情的起因是，我在mac上开发的c++跨平台程序（使用CMake构建）在linux上编译不通过。严重影响了跨平台这个出发点。于是就想要解决他。
 
 主要提示的错误是：
@@ -23,11 +32,9 @@ categories: code
 
 后来，再一次搜到这个答案，仔细一看之下发现，其中的关键词`features.h`，而这个文件在我自己的项目也有！！！`命名冲突`。把features.h改掉之后编译通过。再把之前的.cpp改回.c，编译依然通过。
 
-###事件2
-命名大事件，无独有偶。 之前在用QT写[测试程序](http://blog.csdn.net/vsooda/article/details/9329969)的时候，把工程名命名为`first`。 
+### 事件2
+命名大事件，无独有偶。 之前在用QT写[测试程序](http://blog.csdn.net/vsooda/article/details/9329969)的时候，把工程名命名为`first`。
 
 报错：**-1: error: Circular all <- first dependency dropped. **
 
 貌似qt自己的程序有一个first，你再建一个first就粗事了，会造成循环依赖。
-
-

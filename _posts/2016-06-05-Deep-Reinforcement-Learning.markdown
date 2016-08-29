@@ -2,17 +2,21 @@
 layout: post
 title: "Deep Reinforcement Learning"
 date: 2016-06-05
-categories:
-mathjax: true 
+categories: ml
+tags: reinforcement
 ---
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 
-Deep Reinforcement Learning: Pong from Pixels
----
+* content
+{:toc}
+
+本文探讨使用强化学习的方法，自动玩Pong游戏。
+
+
+
 
 本文主要参考: [Deep Reinforcement Learning: Pong from Pixels](http://karpathy.github.io/2016/05/31/rl/)
 
-本文探讨使用强化学习的方法，自动玩Pong游戏。Pong游戏如下图所示，两个玩家各控制一个挡板，操作对象是一个小球，在游戏过程中，白球从哪一方穿过，哪一方算失败。
+Pong游戏如下图所示，两个玩家各控制一个挡板，操作对象是一个小球，在游戏过程中，白球从哪一方穿过，哪一方算失败。
 
 ![image](http://vsooda.github.io/assets/rl/pong.gif)
 
@@ -55,28 +59,26 @@ Deep Reinforcement Learning: Pong from Pixels
 * 问题2：如何处理前面很好，后面由于失误导致的失败呢？答案是: 在不断重复的游戏过程中，前面正确的决策更可能使得最终取得胜利，所以，平均来说，正确决策的所获得的正向更新会高于获得的负向更新。这样，我们的策略最终还是会做出正确的选择。
 
 
-到目前为止，我们只分胜负，对于胜利+1，对于失败-1。实际上，一般来说，更靠近最终结束的action所造成的影响越大。前面的影响相对较小。应该对此加以区分。用\\(r\_t\\)来标记\\(t\\)帧所应该获得奖赏。在原来的做法中，\\(r\_t\\)只有获得胜负时候才有，其他的都取为0. 一个做法是：\\( R\_t = \sum\_{k=0}^{\infty} \gamma^t r\_{t+1} \\). 称为"\\(gama\\)折扣累积奖赏"。
+到目前为止，我们只分胜负，对于胜利+1，对于失败-1。实际上，一般来说，更靠近最终结束的action所造成的影响越大。前面的影响相对较小。应该对此加以区分。用\\(r_t\\)来标记\\(t\\)帧所应该获得奖赏。在原来的做法中，\\(r_t\\)只有获得胜负时候才有，其他的都取为0. 一个做法是：\\( R_t = \sum_{k=0}^{\infty} \gamma^t r_{t+1} \\). 称为"\\(gama\\)折扣累积奖赏"。
 
 
 
 
 ### 策略梯度推导
 
-<!--$$
+$$
 \begin{align}
-\nabla\_{\theta} E\_x[f(x)] &= \nabla\_{\theta} \sum_x p(x) f(x) & \text{definition of expectation} \\
-& = \sum_x \nabla\_{\theta} p(x) f(x) & \text{swap sum and gradient} \\
-& = \sum_x p(x) \frac{\nabla\_{\theta} p(x)}{p(x)} f(x) & \text{both multiply and divide by } p(x) \\
-& = \sum_x p(x) \nabla\_{\theta} \log p(x) f(x) & \text{use the fact that } \nabla\_{\theta} \log(z) = \frac{1}{z} \nabla_{\theta} z \\
+\nabla_{\theta} E_x[f(x)] &= \nabla_{\theta} \sum_x p(x) f(x) & \text{definition of expectation} \\
+& = \sum_x \nabla_{\theta} p(x) f(x) & \text{swap sum and gradient} \\
+& = \sum_x p(x) \frac{\nabla_{\theta} p(x)}{p(x)} f(x) & \text{both multiply and divide by } p(x) \\
+& = \sum_x p(x) \nabla_{\theta} \log p(x) f(x) & \text{use the fact that } \nabla_{\theta} \log(z) = \frac{1}{z} \nabla_{\theta} z \\
 & = E_x[f(x) \nabla_{\theta} \log p(x) ] & \text{definition of expectation}
 \end{align}
-$$-->
+$$
+
 ![image](http://vsooda.github.io/assets/rl/pg.png)
 
 <script src="https://gist.github.com/vsooda/68b0b07ea31c441684ac73af3dea449c.js"></script>
 
 
-
-
-
-<!--<script src="https://gist.github.com/vsooda/68b0b07ea31c441684ac73af3dea449c.js"></script>-->
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>

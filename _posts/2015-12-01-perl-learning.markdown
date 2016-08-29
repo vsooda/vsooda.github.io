@@ -1,9 +1,17 @@
 ---
 layout: post
 title:  "Perl学习"
-date:   2015-12-01 
+date:   2015-12-01
 categories: code
+tags: code perl
 ---
+* content
+{:toc}
+
+perl 语法知识
+
+
+
 
 - 使用变量要加上$, 这点与php类似。 对整个数组的引用要加上@。 变量和数组对应标量和列表。
 - 单引号，双引号都可以用来表示字符串。与shell类似，单引号指标是字面值，双引号会对实际值进行求解，例如变量，“\n"等。
@@ -19,7 +27,7 @@ categories: code
   pop @array; $barney 为 8, @array 现在为(5,6,7)
   pop @array; #@array 现在为(5,6)  
   ```
-  
+
 
 - foreach遍历列表的所有元素。foreach $rocks(@rocks)。 控制变量不是这些元素的拷贝，而是元素的引用。如果在循环中修改了这些值。则原始列表中的元素也会被修改。如果省略了控制变量，则使用默认变量$_
 - 列表上下文。一个给定的表达式在不同的上下文环境中其含义是不相同的。例如对于一个数组，在列表context中，返回列表元素。在标量context中，返回数组元素个数。
@@ -27,10 +35,12 @@ categories: code
 chomp： 去掉所有换行符
 
 - 函数定义： sub
+
 ``
 sub foo {
 }
 ``
+
 子程序最后计算的值将被返回。
 perl自动将参数列表自动存放在@_的数组中。
 使用my创建私有变量
@@ -61,7 +71,7 @@ my %last_name = (
 hash常用操作：
 {% highlight perl linenos %}
 
-while (($key, $value) = each %hash){ 
+while (($key, $value) = each %hash){
 	print “$key => $value\n”;
 }
 
@@ -78,7 +88,7 @@ if(exists $books{$dino}){
 - 正则表达式
 要匹配某个模式(正则表达式)和$_的关系,可以将模式放在正斜线(//)之间， 如：
 {% highlight perl linenos %}
-$_ = “yabba dabba doo”; 
+$_ = “yabba dabba doo”;
 if(/abba/){
 	print “It matched!\n”;
 }
@@ -125,7 +135,7 @@ int main() {
 {% endhighlight %}
 -->
 
-<!-- 
+<!--
 {% highlight perl linenos %}
 {% endhighlight %}
  -->
