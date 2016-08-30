@@ -25,7 +25,9 @@ ali-to-hmmstate
 
 查看alignment：
 
+```
 show-alignments data/lang/phones.txt $dir/30.mdl "ark:gunzip -c $dir/ali.0.gz|" | head -4
+```
 
 之所以还使用老版本的脚本，是因为新版本将ali-to-phones写到steps/nnet/train.sh。没办法获取到音素级别的对齐信息。而老版本的steps/train_nnet_basic.h可以先在外面对齐，获取对齐信息后，再训练网络。
 新版本的调用关系是：run.sh -> local/nnet/run_dnn.sh -> steps/nnet/train.sh
