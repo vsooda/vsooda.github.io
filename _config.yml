@@ -12,7 +12,7 @@ email: liushouda@qq.com
 description: > # this means to ignore newlines until "baseurl:"
   关注计算机视觉，自然语言处理，语音识别。
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://yourdomain.com" # the base hostname & protocol for your site
+url: "" # the base hostname & protocol for your site
 #twitter_username: vsooda
 github_username:  vsooda
 weibo_username: 2522302875
