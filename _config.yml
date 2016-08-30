@@ -12,7 +12,7 @@ email: liushouda@qq.com
 description: > # this means to ignore newlines until "baseurl:"
   关注计算机视觉，自然语言处理，语音识别。
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://vsooda.github.io" # the base hostname & protocol for your site
+url: "http://yourdomain.com" # the base hostname & protocol for your site
 #twitter_username: vsooda
 github_username:  vsooda
 weibo_username: 2522302875
@@ -20,6 +20,7 @@ weibo_username: 2522302875
 permalink: /:year/:month/:day/:title/
 
 disqus_shortname: vsooda
+
 
 # Build settings
 markdown: kramdown
@@ -31,6 +32,9 @@ markdown: kramdown
 kramdown:
   input: GFM
   syntax_highlighter: rouge
+  auto_ids: true
+
+rouge: true
 
 #permalink: pretty
 excerpt_separator: "\n\n\n\n"
