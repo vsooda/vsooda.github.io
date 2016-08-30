@@ -18,7 +18,7 @@ shared_ptr<Base> pbb(pb);
 shared_ptr<Base> pbbb = pbb; 允许
 ```
 
-```cpp 
+```cpp
 shared_ptr<Base> pbbb = shared_ptr<Base>(pb); 错误
 shared_ptr<Base> pbbb(pb); 错误
 ```

@@ -21,7 +21,7 @@ perl 语法知识
 - perl中使用索引操作，效率很低。一般使用push和pop。例如：
 
 
-  ```
+  ```perl
   @array=5..9;
   $fred = pop(@array); #$fred 得到 9,@array 现在为(5,6,7,8)
   pop @array; $barney 为 8, @array 现在为(5,6,7)
@@ -29,20 +29,20 @@ perl 语法知识
   ```
 
 
-- foreach遍历列表的所有元素。foreach $rocks(@rocks)。 控制变量不是这些元素的拷贝，而是元素的引用。如果在循环中修改了这些值。则原始列表中的元素也会被修改。如果省略了控制变量，则使用默认变量$_
+- foreach遍历列表的所有元素。`foreach $rocks(@rocks)`。 控制变量不是这些元素的拷贝，而是元素的引用。如果在循环中修改了这些值。则原始列表中的元素也会被修改。如果省略了控制变量，则使用默认变量$_
 - 列表上下文。一个给定的表达式在不同的上下文环境中其含义是不相同的。例如对于一个数组，在列表context中，返回列表元素。在标量context中，返回数组元素个数。
 - 常用函数
 chomp： 去掉所有换行符
 
 - 函数定义： sub
 
-``
-sub foo {
-}
-``
+  ```perl
+  sub foo {
+  }
+  ```
 
 子程序最后计算的值将被返回。
-perl自动将参数列表自动存放在@_的数组中。
+perl自动将参数列表自动存放在`@_`的数组中。
 使用my创建私有变量
 使用return可以从函数中返回
 
@@ -51,55 +51,60 @@ perl自动将参数列表自动存放在@_的数组中。
 - 对于优先级不确定的建议加括号。比如： print (2+3) * 4; 将输出5。 然后将print的返回值1，乘以4，其结果被丢弃。在程序开发调试阶段可以打开-w选项，遇到上诉问题会发出警告。
 - 句柄，一般用于读写文件。
 
-{% highlight perl linenos %}
-open CONFIG, '1.txt'
-open CONFIG, '>1.txt' #读出
-open CONFIG, '<1.txt' #写入
-close CONFIG #关闭句柄
-{% endhighlight %}
+  ```perl
+  open CONFIG, '1.txt'
+  open CONFIG, '>1.txt' #读出
+  open CONFIG, '<1.txt' #写入
+  close CONFIG #关闭句柄
+  ```
 
 - 哈希表
 $table{"foo"} = “bar”;
 要引用整个hash，使用%作为前缀。
 也可以使用大箭头"=>"来定义哈希表。（这不是php吗？？）例如：
-{% highlight perl linenos %}
-my %last_name = (
-	“fred” => “flintstone”, “dino” => undef, “barney”=> “rubble”; “betty”=> “rubble”,
-);
-{% endhighlight %}
 
-hash常用操作：
-{% highlight perl linenos %}
+  ```perl
+  my %last_name = (
+  	“fred” => “flintstone”, “dino” => undef, “barney”=> “rubble”; “betty”=> “rubble”,
+  );
+  ```
 
-while (($key, $value) = each %hash){
-	print “$key => $value\n”;
-}
+  hash常用操作：
 
-foreach $key (sort keys %hash){
-	print “$key => $hash{key}\n”;
-}
+  ```perl
+  while (($key, $value) = each %hash){
+  	print “$key => $value\n”;
+  }
 
-if(exists $books{$dino}){
-	print “Hey, there’s a libaray card for dino!\n”;
-}
+  foreach $key (sort keys %hash){
+  	print “$key => $hash{key}\n”;
+  }
 
-{% endhighlight %}
+  if(exists $books{$dino}){
+  	print “Hey, there’s a libaray card for dino!\n”;
+  }
+  ```
 
 - 正则表达式
-要匹配某个模式(正则表达式)和$_的关系,可以将模式放在正斜线(//)之间， 如：
-{% highlight perl linenos %}
-$_ = “yabba dabba doo”;
-if(/abba/){
-	print “It matched!\n”;
-}
-{% endhighlight %}
+要匹配某个模式(正则表达式)和`$_`的关系,可以将模式放在正斜线(//)之间， 如：
 
-在kaldi，egs/hkust/utils/pinyin_map.pl中
+  ```perl
+  $_ = “yabba dabba doo”;
+  if(/abba/){
+  	print “It matched!\n”;
+  }
+  ```
 
-{% highlight perl linenos %}
-$initial= $A[$i]; $final = $A[$i];
-if ($A[$i] =~ /^CH[A-Z0-9]+$/) {$initial =~ s:(CH)[A-Z0-9]+:$1:; $final =~ s:CH([A-Z0-9]+):$1:;}
-{% endhighlight %}
+  在kaldi，egs/hkust/utils/pinyin_map.pl中
+
+  ```perl
+  $initial= $A[$i];
+  $final = $A[$i];
+  if ($A[$i] =~ /^CH[A-Z0-9]+$/) {
+    $initial =~ s:(CH)[A-Z0-9]+:$1:;
+    $final =~ s:CH([A-Z0-9]+):$1:;
+  }
+  ```
 
 使用以上语句对于CHANG1,这种语句提取。提取结果是$initial为CH，$final为ANG1
 
@@ -121,21 +126,3 @@ java正则表达式
 [参考1](http://blog.csdn.net/allwefantasy/article/details/3136570)
 
 [参考2](http://www.runoob.com/java/java-regular-expressions.html)
-
-
-
-
-<!-- 代码高亮
-{% highlight c++ linenos %}
-#include <iostream>
-using namespace std;
-int main() {
-	std::cout << "hello world" << std::endl;
-}
-{% endhighlight %}
--->
-
-<!--
-{% highlight perl linenos %}
-{% endhighlight %}
- -->

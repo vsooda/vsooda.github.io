@@ -29,7 +29,7 @@ wxfilename: write file name
 
 "-" or "" means the standard input
 
-"some command |" means an input piped command, i.e. we strip off the "|" and give the rest of the string to the shell via popen().
+"some command \|" means an input piped command, i.e. we strip off the "\|" and give the rest of the string to the shell via popen().
 
 "/some/filename:12345" means an offset into a file, i.e. we open the file and seek to position 12345.
 
@@ -89,8 +89,11 @@ The allowable wspecifier options are:
 
 Examples of wspecifiers using a lot of options are
 
-* "ark,t,f:data/my.ark"
-* "ark,scp,t,f:data/my.ark,|gzip -c > data/my.scp.gz"
+```bash
+"ark,t,f:data/my.ark"
+"ark,scp,t,f:data/my.ark,|gzip -c > data/my.scp.gz"
+```
+
 
 ### Valid options for rspecifiers
 
@@ -104,5 +107,7 @@ Examples of wspecifiers using a lot of options are
 
 example:
 
-* "ark:o,s,cs:-"
-* "scp,p:data/my.scp"
+```bash
+"ark:o,s,cs:-"
+"scp,p:data/my.scp"
+```
