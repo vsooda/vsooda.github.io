@@ -16,7 +16,7 @@ hts, hts_engine环境配置不谈。这里只提怎么用。
 
 #### 1.1 hts训练
 
-```
+```bash
 /configure MGCORDER=12 MGCLSP=1 GAMMA=1 FREQWARP=0.0  LNGAIN=0  NSTATE=7 NITER=10 WFLOOR=5  \
 	--with-tcl-search-path=/home/sooda/speech/marytts/lib/external/bin \
 	--with-fest-search-path=/home/sooda/speech/festival_all/festival/examples \
@@ -24,6 +24,7 @@ hts, hts_engine环境配置不谈。这里只提怎么用。
 	--with-hts-search-path=/home/sooda/speech/marytts/lib/external/bin \
 	--with-hts-engine-search-path=/home/sooda/speech/marytts/lib/external/bin
 ```
+
 各工具包的路径可能需要更改。各配置参数可修改。然后直接`make`就可以完成训练。使用以上命令可以用于测试官网[官网](http://hts.sp.nitech.ac.jp/hts-users/spool/2012/msg00393.html)例子。
 这些例子都是直接lab到声音的训练，没有给出lab的提取。这部分可以参考marytts。  
 hts训练的模型文件为：  
@@ -34,9 +35,10 @@ hts训练的模型文件为：
 #### 1.2 hts_engine合成
 从lab生成raw文件：
 
-```
+```bash
 /home/sooda/speech/marytts/lib/external/bin/hts_engine -td  tree-dur.inf -tf  tree-lf0.inf -tm  tree-mgc.inf -tl  tree-lpf.inf -md  dur.pdf -mf  lf0.pdf -mm  mgc.pdf -ml  lpf.pdf -dm  mgc.win1 -dm  mgc.win2 -dm  mgc.win3 -df  lf0.win1 -df  lf0.win2 -df  lf0.win3 -dl  lpf.win1 -s 44100 -p 221 -a 0.53 -g 0 -l -b 0.4 -cm  gv-mgc.pdf -cf  gv-lf0.pdf -k  gv-switch.inf -em  tree-gv-mgc.inf -ef  tree-gv-lf0.inf -b 0.0 -or rawName labName
 ```
+
 从raw到wav：
 
 ```
@@ -49,6 +51,7 @@ hts训练的模型文件为：
 ```
 
 新版本的hts 2.3 alpha 和hts engine 1.07以后，支持将模型文件整合成一个`htsvoice`文件。合成命令为：  
+
 ```
 /home/research/tools/hts23/bin/hts_engine -m voiceName.htsvoice  -ow wavName labName
 ```
@@ -133,7 +136,7 @@ predictAndSetF0流程：
 关键代码：  
 Synthesis：`synthesizeOneSection`
 
-{% highlight java linenos %}
+```java
 EffectsApplier ef = new EffectsApplier();
 //如果效果器是hmm类型的（duration，f0等），则直接修改模型
 ef.setHMMEffectParameters(voice, currentEffect);  //解析字符串，实例化效果器
@@ -144,11 +147,11 @@ ais = voice.synthesize(tokensAndBoundaries, outputParams);
 if (currentEffect != null && !currentEffect.equals("")) {
 	ais = ef.apply(ais, currentEffect);
 }
-{% endhighlight %}
+```
 
 HTSEngine：`process`
 
-{% highlight java linenos %}
+```java
 HTSParameterGeneration pdf2par = new HTSParameterGeneration();
 //生成声学参数
 pdf2par.htsMaximumLikelihoodParameterGeneration(um, hmmv.getHMMData());
@@ -157,4 +160,4 @@ HTSVocoder par2speech = new HTSVocoder();
 AudioInputStream ais = par2speech.htsMLSAVocoder(pdf2par, hmmv.getHMMData());
 if (tokensAndBoundaries != null)
 	setRealisedProsody(tokensAndBoundaries, um);
-{% endhighlight %}
+```

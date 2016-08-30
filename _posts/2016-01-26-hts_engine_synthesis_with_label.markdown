@@ -39,11 +39,7 @@ label内容：
 
 <img src="http://vsooda.github.io/assets/hts_train/label_parse.png" width="500">
 
-<!--{% highlight c++ linenos %}-->
-
 ```
 /* HTS_SStreamSet_create: parse label and determine state duration */
 HTS_Boolean HTS_SStreamSet_create(HTS_SStreamSet * sss, HTS_ModelSet * ms, HTS_Label * label, HTS_Boolean phoneme_alignment_flag, double speed, double *duration_iw, double **parameter_iw, double **gv_iw)
 ```
-
-<!--{% endhighlight %}-->

@@ -24,17 +24,16 @@ disqus_shortname: vsooda
 
 # Build settings
 markdown: kramdown
+highlighter: rouge
 #markdown: rdiscount #对mou的支持较好
 #markdown: redcarpet
 #redcarpet:
 #    extensions: ["tables"]
 #markdown: kramdown
 kramdown:
-  input: GFM
-  syntax_highlighter: rouge
-  auto_ids: true
+    input: GFM
+    syntax_highlighter: rouge
 
-rouge: true
 
 #permalink: pretty
 excerpt_separator: "\n\n\n\n"
@@ -43,6 +42,6 @@ category_dir: category/
 tag_dir: tag/
 
 gems: [jekyll-paginate]
-paginate: 6
+paginate: 10
 
 #find . -name "*.markdown" | xargs -i sed -i "s/\\\_/_/g" {}
