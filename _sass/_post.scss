@@ -16,6 +16,15 @@
                 padding-right: 5px;
                 color: #6b6a6a;
             }
+            a {
+                border: 1px solid #c9e6f2;
+                color: #68777d;
+                padding: 0 5px;
+                transition: 0.3s ease;
+                &:hover {
+                    color: deepPink;
+                }
+            }
         }
     }
     a {
