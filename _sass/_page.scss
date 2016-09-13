@@ -52,12 +52,13 @@
                 .categories {
                     padding: 0 15px;
                     i {
-                        color: #888888;
+                        color: #68777d;
                     }
                     a {
+                        border: 1px solid #c9e6f2;
                         padding: 0 5px;
-                        background-color: #f8f8fd;
-                        color: #888888;
+                        background-color: #f2f9fc;
+                        color: #68777d;
                         font-size: 90%;
                         transition: 0.3s ease;
                         &:hover {
@@ -67,13 +68,12 @@
                 }
                 .pageTag {
                     i {
-                        color: #000;
+                        color: #68777d;
                     }
                     a {
-
-                        // border: 1px solid #aaa;
+                        border: 1px solid #c9e6f2;
                         padding: 0 5px;
-                        background-color: #f8f8fd;
+                        background-color: #f2f9fc;
                         border-radius: 4px;
                         color: #888888;
                         font-size: 90%;
