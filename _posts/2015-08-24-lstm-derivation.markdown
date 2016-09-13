@@ -3,7 +3,7 @@ layout: post
 title:  "lstm推导"
 date:   2015-08-24
 categories: ML deep
-tags: lstm
+tags: lstm python
 ---
 * content
 {:toc}
@@ -18,7 +18,7 @@ cs231上有一篇关于[非常好的文章](http://cs231n.github.io/optimization
 一个例子：
 $$f(x,y) = \frac{x + \sigma(y)}{\sigma(x) + (x+y)^2}$$
 
-```
+```python
 x = 3 # example values
 y = -4
 # forward pass
@@ -34,7 +34,7 @@ f = num * invden # done!                                 #(8)
 
 对应的后向传播为：
 
-```
+```python
 # backprop f = num * invden
 dnum = invden # gradient on numerator                             #(8)
 dinvden = num                                                     #(8)

@@ -2,8 +2,8 @@
 layout: post
 title: "cnn sentence"
 date: 2016-03-28
-categories: ml deep
-tags: cnn
+categories: ml deep nlp
+tags: cnn python nlp
 ---
 
 * content
@@ -35,7 +35,7 @@ Convolutional Neural Networks for Sentence Classification
 
 原文参考[这里](http://www.wildml.com/2015/12/implementing-a-cnn-for-text-classification-in-tensorflow/)
 
-Embedding layer
+#### Embedding layer
 
 ```python
 with tf.device('/cpu:0'), tf.name_scope("embedding"):
@@ -46,7 +46,7 @@ with tf.device('/cpu:0'), tf.name_scope("embedding"):
     self.embedded_chars_expanded = tf.expand_dims(self.embedded_chars, -1)
 ```
 
-conv + pooling
+#### conv + pooling
 
 ```python
 for i, filter_size in enumerate(filter_sizes):
@@ -73,14 +73,14 @@ for i, filter_size in enumerate(filter_sizes):
         pooled_outputs.append(pooled)
 ```
 
-dropout
+#### dropout
 
 ```python
 with tf.name_scope("dropout"):
     self.h_drop = tf.nn.dropout(self.h_pool_flat, self.dropout_keep_prob)
 ```
 
-output
+#### output
 
 ```python
 with tf.name_scope("output"):
@@ -92,7 +92,7 @@ with tf.name_scope("output"):
     self.predictions = tf.argmax(self.scores, 1, name="predictions")
 ```
 
-cross-entropy loss
+#### cross-entropy loss
 
 ```python
 with tf.name_scope("loss"):
@@ -100,7 +100,7 @@ with tf.name_scope("loss"):
    self.loss = tf.reduce_mean(losses) + l2_reg_lambda * l2_loss
 ```
 
-主流程：
+#### 主流程：
 
 ```python
 with tf.Graph().as_default():

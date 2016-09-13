@@ -29,7 +29,7 @@ encode的作用是将unicode编码转换成其他编码的字符串，如str2.en
 
 mac中的路径为：/usr/local/lib/python2.7/site-packages/sitecustomize.py
 
-```
+```python
 import sys
 reload(sys)  
 sys.setdefaultencoding('utf-8')
@@ -37,7 +37,7 @@ sys.setdefaultencoding('utf-8')
 
 #### py文件头设置
 
-```
+```python
 #! /usr/bin/env python2.7
 #coding=utf-8
 ```

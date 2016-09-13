@@ -19,7 +19,7 @@ tags: ml
 
 基于最大熵的中文分词参考[这里](http://www.52nlp.cn/%E4%B8%AD%E6%96%87%E5%88%86%E8%AF%8D%E5%85%A5%E9%97%A8%E4%B9%8B%E5%AD%97%E6%A0%87%E6%B3%A8%E6%B3%953)
 
-```
+```python
 #!/usr/bin/python
 #coding=utf8
 import sys;
@@ -130,7 +130,6 @@ if __name__ == "__main__":
     print maxent.predict("overcast\thot\thigh\tFALSE");
     print maxent.predict("sunny\tcool\thigh\tTRUE");
     sys.exit(0);
-
 ```
 
 上面用到的公式：

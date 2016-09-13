@@ -15,8 +15,10 @@ tags: ml python
 
 参看numpy版本方法：
 
+```python
 import numpy
 numpy.version.version
+```
 
 输出1.8.2。 就是说，系统中还存在其他版本的numpy。怀疑是通过apt-get 安装的。所以尝试sudo apt-get remove python-numpy。但是这样又会把python-pygame一起卸载。简单搜索了一下，发现从源码安装pygame不是太容易。暂时放弃这条路。
 
@@ -30,7 +32,7 @@ pip install 安装的python包： /usr/local/lib/python2.7/dist-packages
 
 在文件头就作以上设置。如：
 
-```
+```python
 import cv2
 import sys
 sys.path.insert(1, '/usr/local/lib/python2.7/dist-packages')
@@ -42,7 +44,7 @@ print np.version.version
 
 这时候忽然想起，cv2对numpy有依赖。
 
-```
+```python
 import sys
 sys.path.insert(1, '/usr/local/lib/python2.7/dist-packages')
 import numpy

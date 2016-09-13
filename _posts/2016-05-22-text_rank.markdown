@@ -9,12 +9,13 @@ tags: nlp
 * content
 {:toc}
 
-TextRank: Bringing order into texts
+## TextRank: Bringing order into texts
 
 
 
 
 textrank基于pagerank算法，用于生成文本关键字和摘要。
+
 >Mihalcea R, Tarau P. TextRank: Bringing order into texts[C]. Association for Computational Linguistics, 2004
 
 ### 1. page rank
@@ -36,7 +37,6 @@ PageRank需要使用上面的公式多次迭代才能得到结果。初始时，
 上图表示三张网页之间的连接关系。直觉上认为A最重要。根据连接关系可以得到下表：
 
 | 结束\起始	| A     | B  	| C  	|
-| ---------	|:-----:| ----:| ------|
 | A      	|  0	| 1		| 1
 | B      	|  0	| 0		| 0
 | C		 	|  0   	| 0		| 0
