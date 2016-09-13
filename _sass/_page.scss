@@ -13,6 +13,7 @@
     margin: 0 auto;
     // word-break: break-all;
     .left {
+        border: 1px solid #ddd;
         width: 75%;
         float: left;
         padding: 20px 30px;
@@ -51,16 +52,16 @@
                 .categories {
                     padding: 0 15px;
                     i {
-                        color: #9e9d9d;
+                        color: #888888;
                     }
                     a {
                         padding: 0 5px;
                         background-color: #f8f8fd;
-                        color: deepPink;
+                        color: #888888;
                         font-size: 90%;
                         transition: 0.3s ease;
                         &:hover {
-                            background-color: #b6b6b9;
+                            color:deepPink;
                         }
                     }
                 }
@@ -74,11 +75,11 @@
                         padding: 0 5px;
                         background-color: #f8f8fd;
                         border-radius: 4px;
-                        color: deepPink;
+                        color: #888888;
                         font-size: 90%;
                         transition: 0.3s ease;
                         &:hover {
-                            background-color: #c0ddc7;
+                            color:deepPink;
                         }
                     }
                 }
