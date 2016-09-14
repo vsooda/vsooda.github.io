@@ -2,10 +2,9 @@
 layout: post
 title: "flappy bird"
 date: 2016-07-01
-categories: dl
+categories: ml
 tags: reinforcement
 ---
-
 * content
 {:toc}
 

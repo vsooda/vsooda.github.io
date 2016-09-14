@@ -2,13 +2,13 @@
 layout: post
 title: "hts parallel"
 date: 2016-02-04
-categories: hts
+categories: speech
 tags: hts
 ---
 * content
 {:toc}
 
-
+修改hts训练脚本，使其支持并行训练
 
 
 ### hts并行化 -p 选项

@@ -2,8 +2,8 @@
 layout: post
 title:  "phonesets"
 date:   2015-09-30 20:14:34 +0800
-categories: marytts
-tags: phonest
+categories: speech
+tags: phonest marytts
 ---
 * content
 {:toc}

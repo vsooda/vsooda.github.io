@@ -2,8 +2,12 @@
 layout: post
 title:  "hts engine 合成流程分析 "
 date:   2016-01-26
-categories: hts
+categories: speech
+tags: hts
 ---
+* content
+{:toc}
+
 
 
 #### 合成代码框架

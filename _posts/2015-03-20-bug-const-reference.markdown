@@ -2,7 +2,7 @@
 layout: post
 title:  "debug：返回错误引用"
 date:   2015-03-20
-categories: debug
+categories: code
 tags: code
 ---
 * content

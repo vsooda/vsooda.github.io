@@ -2,7 +2,7 @@
 layout: post
 title:  "neuraltalk源码分析"
 date:   2015-08-21
-categories: ML
+categories: ml
 tags: rnn
 ---
 * content

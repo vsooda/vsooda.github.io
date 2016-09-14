@@ -2,17 +2,15 @@
 layout: post
 title: "条件随机场入门"
 date: 2016-03-15
-categories: ML
-tags: ml crf
+categories: ml
+tags: crf
 ---
 
 * content
 {:toc}
 
+理论大部分内容来自统计学习方法[^lihang]。谈谈自己粗浅的理解。
 
-
-
-理论大部分内容来自统计学习方法[^lihang]
 
 条件随机场应用场合：
 

@@ -2,15 +2,13 @@
 layout: post
 title: "Real-time Compressive Tracking"
 date: 2016-02-20
-categories: image
-tags: ml  tracking
+categories: cv
+tags: ct  tracking
 ---
 * content
 {:toc}
 
 论文主页提供源码[^project]。 CSDN上有一篇挺好的博客[^csdnblog].
-
-
 
 
 ### 本文要点

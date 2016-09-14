@@ -3,15 +3,13 @@ layout: post
 title: "tensorflow note"
 date: 2016-03-27
 categories: ml code
-tags: ml
+tags: ml tensorflow
 ---
 
 * content
 {:toc}
 
 tensorflow基础语法
-
-
 
 
 * 变量 variable

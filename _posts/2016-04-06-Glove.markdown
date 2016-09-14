@@ -3,16 +3,13 @@ layout: post
 title: "Glove"
 date: 2016-04-06
 categories: nlp
-tags: ml Embedding nlp
+tags: ml word2vec nlp
 ---
 
 * content
 {:toc}
 
-GloVe: Global Vectors for Word Representation
-
-
-
+glove词向量。GloVe: Global Vectors for Word Representation
 
 
 ### 词向量是什么

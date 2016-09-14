@@ -2,7 +2,7 @@
 layout: post
 title:  "High-Dimensional Local Binary Patterns for Face Verification"
 date:   2015-01-23
-categories: ML
+categories: cv
 tags: lbp landmark
 ---
 * content

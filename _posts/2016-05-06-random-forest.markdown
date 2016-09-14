@@ -2,16 +2,13 @@
 layout: post
 title: "random forest"
 date: 2016-05-06
-categories: ML
+categories: ml
 tags: ml 随机森林
 ---
-
 * content
 {:toc}
 
 随机森林是有多颗决策树组成的。由于其速度快，效果好，在很多kaggle等很多大数据竞赛中，取得非常好的结果。随机森林被认为代表集成学习水平的方法。
-
-
 
 
 ### 样例
@@ -83,7 +80,6 @@ $$(1-\frac{1}{N})^N\approx\frac{1}{e}$$
 <img src="http://vsooda.github.io/assets/rf/oob.png" style="width:500px">
 </div>
 <div class="thecap">oob</div>
-</div>
 </div>
 
 $$E_{oob}(G)=\frac{1}{N}\sum_{n=1}^Nerr(y_n,G_n^-(x_n))$$

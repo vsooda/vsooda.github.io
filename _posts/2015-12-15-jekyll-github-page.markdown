@@ -2,7 +2,7 @@
 layout: post
 title:  " github page Jekyll"
 date:   2015-12-15
-categories: code
+categories: tools
 tags: jekyll page
 ---
 * content

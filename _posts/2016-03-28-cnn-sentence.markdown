@@ -2,15 +2,12 @@
 layout: post
 title: "cnn sentence"
 date: 2016-03-28
-categories: ml deep nlp
-tags: cnn python nlp
+categories: nlp
+tags: cnn python nlp tensorflow
 ---
 
 * content
 {:toc}
-
-
-
 
 Convolutional Neural Networks for Sentence Classification
 

@@ -2,15 +2,15 @@
 layout: post
 title:  "2015年度总结"
 date:   2016-01-03
-categories:  summary
-tags: life run
+categories:  life
+tags: summary run
 ---
 * content
 {:toc}
 
-
-
 2015年的年度关键词：工作。其他的基本什么都没发生。曾经连续加班50天。脖子有点问题了。今年要更加注重锻炼了。
+
+
 
 2015年涉及的领域最广：除了一直在做的图像之外，还涉及了3D， ios开发， 大数据，nlp， 深度学习， 语音。
 

@@ -5,14 +5,10 @@ date: 2016-07-28
 categories: speech
 tags: kaldi
 ---
-
 * content
 {:toc}
 
 本篇博客是从kaldi doc摘抄的笔记
-
-
-
 
 
 ### input/output

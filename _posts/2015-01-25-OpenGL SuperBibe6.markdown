@@ -2,7 +2,7 @@
 layout: post
 title:  "OpenGL SuperBibe：第六章 非存储着色器"
 date:   2015-01-25
-categories: opengl
+categories: code
 tags: opengl
 ---
 * content

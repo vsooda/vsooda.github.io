@@ -2,19 +2,14 @@
 layout: post
 title: "text rank"
 date: 2016-05-22
-categories: ml
+categories: nlp
 tags: nlp
 ---
-
 * content
 {:toc}
 
-## TextRank: Bringing order into texts
-
-
-
-
 textrank基于pagerank算法，用于生成文本关键字和摘要。
+
 
 >Mihalcea R, Tarau P. TextRank: Bringing order into texts[C]. Association for Computational Linguistics, 2004
 

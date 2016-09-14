@@ -2,7 +2,7 @@
 layout: post
 title:  "python字符编码"
 date:   2015-12-14
-categories: python
+categories: code
 tags: python code unicode utf8
 ---
 * content

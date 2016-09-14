@@ -2,7 +2,7 @@
 layout: post
 title: "hts misc"
 date: 2016-05-10
-categories: ml
+categories: speech
 tags: hts
 ---
 
@@ -10,8 +10,6 @@ tags: hts
 {:toc}
 
 hts 相关记录
-
-
 
 
 ### 聚类结果

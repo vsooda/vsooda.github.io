@@ -5,14 +5,10 @@ date: 2016-07-01
 categories: code
 tags: c++
 ---
-
 * content
 {:toc}
 
 引言：头文件命名与g++头文件冲突真是太悲剧了。
-
-
-
 
 
 ### 事件1

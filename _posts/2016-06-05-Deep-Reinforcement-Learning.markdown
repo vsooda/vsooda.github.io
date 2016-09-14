@@ -5,13 +5,10 @@ date: 2016-06-05
 categories: ml
 tags: reinforcement
 ---
-
 * content
 {:toc}
 
 本文探讨使用强化学习的方法，自动玩Pong游戏。
-
-
 
 
 本文主要参考: [Deep Reinforcement Learning: Pong from Pixels](http://karpathy.github.io/2016/05/31/rl/)

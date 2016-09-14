@@ -1,14 +1,12 @@
 ---
 layout: post
-title:  "hts，marytts模型，流程分析，adapt配置"
+title:  "marytts剖析"
 date:   2015-12-16
-categories: hts
+categories: speech
 tags: hts
 ---
 * content
 {:toc}
-
-
 
 
 ### 1 hts， hts_engine合成

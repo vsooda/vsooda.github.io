@@ -3,13 +3,12 @@ layout: post
 title: "idlak笔记"
 date: 2016-07-27
 categories: speech
-tags: kaldi
+tags: kaldi idlak
 ---
-
 * content
 {:toc}
 
-
+idlak相关记录
 
 
 ### 数据准备　idlak_make_lang mode ０

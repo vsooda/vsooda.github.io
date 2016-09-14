@@ -2,7 +2,7 @@
 layout: post
 title:  "lstm推导"
 date:   2015-08-24
-categories: ML deep
+categories: ml
 tags: lstm python
 ---
 * content

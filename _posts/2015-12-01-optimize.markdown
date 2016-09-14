@@ -2,7 +2,7 @@
 layout: post
 title:  "最优化"
 date:   2015-12-01
-categories: math
+categories: ml
 tags: math
 ---
 * content

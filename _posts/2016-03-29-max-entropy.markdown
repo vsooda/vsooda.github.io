@@ -3,13 +3,13 @@ layout: post
 title: "max entropy"
 date: 2016-03-29
 categories: ml
-tags: ml
+tags: ml python
 ---
 
 * content
 {:toc}
 
-
+结合代码谈谈最大熵
 
 
 吴军数学之美：

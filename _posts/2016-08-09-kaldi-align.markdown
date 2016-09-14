@@ -3,13 +3,12 @@ layout: post
 title: "kaldi对齐"
 date: 2016-08-09
 categories: speech
-tags: kaldi
+tags: kaldi align
 ---
-
 * content
 {:toc}
 
-
+kaldi对齐实践
 
 
 align 需要 feats.scp text mono/final.mdl oov.txt

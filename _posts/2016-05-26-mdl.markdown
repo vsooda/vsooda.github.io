@@ -5,15 +5,10 @@ date: 2016-05-26
 categories: speech
 tags: mdl speech
 ---
-
 * content
 {:toc}
 
-
 在hmm基于最大似然（ML）的聚类策略，很难确定最终停止条件。mdl自动判别最终聚类停止条件，在很多情况下取得很好的结果。
-文章
-
-
 
 
 > Shinoda K, Watanabe T. MDL-based context-dependent subword modeling for speech recognition[J]. The Journal of the Acoustical Society of Japan (E), 2000, 21(2): 79-86.

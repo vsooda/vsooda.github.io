@@ -5,13 +5,10 @@ date: 2016-07-21
 categories: code
 tags: cmake
 ---
-
 * content
 {:toc}
 
 CMake 为“cross platform make”的缩写。是开源的跨平台的自动化构建系统。
-
-
 
 
 ### cmake的使用

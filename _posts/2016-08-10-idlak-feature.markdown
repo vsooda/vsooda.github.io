@@ -3,13 +3,12 @@ layout: post
 title: "idlak特征解析"
 date: 2016-08-10
 categories: speech
-tags: kaldi
+tags: kaldi idlak
 ---
-
 * content
 {:toc}
 
-
+剖析idlak特征
 
 
 `先source path.sh 再运行以下代码`

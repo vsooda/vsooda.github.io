@@ -5,13 +5,10 @@ date: 2016-08-17
 categories: code
 tags: git code
 ---
-
 * content
 {:toc}
 
 考虑一个问题： 使用git做版本管理。如何在保持自己分支代码与主分支一致尽量一致的情况下，随时将可应用与主分支的bug修复提交的主分支，而其余feature代码则保留在自己分支上。
-
-
 
 
 

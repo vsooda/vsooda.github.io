@@ -2,13 +2,11 @@
 layout: post
 title: "SGE NFS kaldi 计算集群环境搭建"
 date: 2016-02-01
-categories: sge
+categories: speech tools
 tags: code kaldi sge nfs
 ---
 * content
 {:toc}
-
-
 
 
 主要参考：[kaldi-parallel](http://kaldi-asr.org/doc/queue.html)

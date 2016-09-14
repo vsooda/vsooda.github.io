@@ -2,16 +2,14 @@
 layout: post
 title: "hts 训练脚本解析"
 date: 2016-01-28
-categories: hts
-tags: train speech
+categories: speech
+tags: train hts
 ---
 * content
 {:toc}
 
-
-
-
 以下是对Training.pl的解析。相对路径的根目录在`train_data/hts`下
+
 
 computing variance floors
 ---
