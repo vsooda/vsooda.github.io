@@ -82,7 +82,7 @@ The driver installation is unable to locate the kernel source. Please make sure 
 If you know that the kernel source packages are installed and set up correctly, you may pass the location of the kernel source with the '--kernel-source-path' flag.
 ```
 
-google查到的方案比如：`apt-get install linux-headers-$(uname -r)`, 编译器降级都是无效的。也有说是内核版本错误。故使用ubuntu14.04进行测试。
+google查到的方案比如：~~apt-get install linux-headers-$(uname -r)~~, ~~编译器降级~~, 都是无效的。也有说是内核版本错误。故使用ubuntu14.04进行测试。
 
 #### ubuntu14.04
 
