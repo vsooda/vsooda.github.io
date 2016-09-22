@@ -11,4 +11,7 @@ echo "layout: post"  >> $FILE
 echo "title: \""$1"\""  >> $FILE
 echo "date: "$NOW  >> $FILE
 echo "categories: "  >> $FILE
+echo "tags: " >> $FILE
 echo "---" >> $FILE
+echo "* content" >> $FILE
+echo "{:toc}" >> $FILE
