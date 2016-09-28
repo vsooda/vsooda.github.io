@@ -145,4 +145,27 @@ tmux attach -t session_name #进入某个会话
 
 在pane内部，无法使用上下键鼠标键进行滚动查看bash历史。需要按**prefix+[**进入复制模式，再去滚动。
 
+#### 会话保存
+
+**Tmux Resurrect**
+
+Tmux Resurrect 能够备份 Tmux 会话的各种细节，包括所有会话、窗口、窗格以及它们的顺序，每个窗格的当前工作目录，精确的窗格布局，活动及替代的会话和窗口，窗口聚焦，活动窗格，窗格中运行的程序等等，非常贴心。
+
+要安装 Tmux Resurrect，可执行：
+
+```
+$ cd ~/.tmux
+$ git clone https://github.com/tmux-plugins/tmux-resurrect.git
+```
+
+在 ~/.tmux.conf 中添加下列内容：
+
+run-shell ~/.tmux/tmux-resurrect/resurrect.tmux
+
+保存后，重载 Tmux 配置： prefix+r
+
+使用方法：
+
+* prefix + ctrl-s - 保存
+* prefix + ctrl-r - 恢复
 
