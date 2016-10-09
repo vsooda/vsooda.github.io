@@ -37,7 +37,7 @@ SSD：512G 三星(SAMSUNG) 850 EVO 500G SATA3 固态硬盘
 ### 正常流程
 
 ```
-1. sudo apt-get install mesa-common-dev freeglut3-dev build-essential
+1. sudo apt-get install mesa-common-dev freeglut3-dev build-essential libx11-dev libxmu-dev libxi-dev libgl1-mesa-glx libglu1-mesa libglu1-mesa-dev
 
 2. /etc/modprobe.d/blacklist.conf添加:
 blacklist amd76x_edac
@@ -98,9 +98,9 @@ google查到的方案比如：~~apt-get install linux-headers-$(uname -r)~~, ~~�
 sudo add-apt-repository ppa:graphics-drivers/ppa
 sudo apt-get update
 sudo apt-get install nvidia-367
-sudo apt-get install mesa-common-dev freeglut3-dev build-essential 
+sudo apt-get install mesa-common-dev freeglut3-dev build-essential libx11-dev libxmu-dev libxi-dev libgl1-mesa-glx libglu1-mesa libglu1-mesa-dev
 sudo service lightdm stop
-sudo sh cuda_8.0.27_linux.run --tmpdir=/opt/temp/ --no-opengl-libs --verbose
+sudo sh cuda_8.0.27_linux.run --tmpdir=/tmp --no-opengl-libs --verbose
 注意在提示安装显卡驱动时候，选择N
 其他安装环境变量等，与正常流程相同
 ```
