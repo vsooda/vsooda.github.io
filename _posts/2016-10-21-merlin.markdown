@@ -1,0 +1,113 @@
+---
+layout: post
+title: "merlin"
+date: 2016-10-21
+categories: speech
+tags: tts merlin
+---
+* content
+{:toc}
+本文讲解merlin的基本数据准备，训练流程,参数生成
+
+
+
+### 数据预处理
+
+#### 归一化方法
+
+lab输入采用minmax归一化，cmp输出采用mvn归一化。
+
+### 训练阶段
+
+merlin的输出特征是时长模型输出是5维。有没有通过一个平滑？ **没有**
+
+####　时长模型
+
+dur： 416 -->  5 (各个状态的帧数..这里使用5状态hmm，所以这里是5个数字)
+
+在处理时长模型的时候，不需要帧级别的特征。
+
+#### 声学模型
+
+**状态级别label构造**：增加以下９维数据
+
+```python
+## Zhizheng's original 9 subphone features:
+## state_duration_base表示每个状态在音素内部的起始帧数。
+current_block_binary_array[i, self.dict_size] = float(i+1) / float(frame_number)   ## fraction through state (forwards)
+current_block_binary_array[i, self.dict_size+1] = float(frame_number - i) / float(frame_number)  ## fraction through state (backwards)
+current_block_binary_array[i, self.dict_size+2] = float(frame_number)  ## length of state in frames
+current_block_binary_array[i, self.dict_size+3] = float(state_index)   ## state index (counting forwards)
+current_block_binary_array[i, self.dict_size+4] = float(state_index_backward) ## state index (counting backwards)
+
+current_block_binary_array[i, self.dict_size+5] = float(phone_duration)   ## length of phone in frames
+current_block_binary_array[i, self.dict_size+6] = float(frame_number) / float(phone_duration)   ## fraction of the phone made up by current state
+current_block_binary_array[i, self.dict_size+7] = float(phone_duration - i - state_duration_base) / float(phone_duration) ## fraction through phone (forwards)
+current_block_binary_array[i, self.dict_size+8] = float(state_duration_base + i + 1) / float(phone_duration)  ## fraction through phone (backwards)
+```
+
+binary_label_file_list 保存是否发音信息。trim_silence根据这个文件信息进行操作..
+
+acoustic_model/data/binary_label_425/arctic_a0001.lab
+
+#### f0 插值， voice，unvoice设定
+
+在**acoustic_base.py**中的interpolate_f0对f0进行插值
+
+```python
+for i in xrange(frame_number):
+	if data[i] <= 0.0:
+	    j = i+1
+	    for j in range(i+1, frame_number):
+	        if data[j] > 0.0:
+	            break
+	    if j < frame_number-1:
+	        if last_value > 0.0:
+	            step = (data[j] - data[i-1]) / float(j - i)
+	            for k in range(i, j):
+	                ip_data[k] = data[i-1] + step * (k - i + 1)
+	        else: #句首
+	            for k in range(i, j):
+	                ip_data[k] = data[j]
+	    else: #句末
+	        for k in range(i, frame_number):
+	            ip_data[k] = last_value
+	else:
+	    ip_data[i] = data[i]
+	    last_value = data[i]
+```
+
+而vuv的设置voice，unvoiced则根据f0值设置为0或者1.
+
+```python
+vuv_vector = numpy.zeros((data.size, 1))
+vuv_vector[data > 0.0] = 1.0
+vuv_vector[data <= 0.0] = 0.0
+```
+
+### 参数生成
+
+#### 时长模型参数生成
+
+1. 输入lab数据，加载minmax数据进行归一化
+2. 将归一化数据输入到dnn，产生输出数据
+3. 对输出数据使用mvn去归一化
+4.  构造acoustic的输入lab
+   * duration decomposition 对去归一化数据取整
+   * 将去归一化的数据和原lab数据组合构造新lab
+
+#### 声学模型参数生成
+
+1. 输入时长模型产生的lab，加载minmax数据进行归一化
+2. 将归一化输入输入到声学dnn，产生输出数据
+3. 对输出数据使用mvn去归一化
+4. acoustic decomposition
+   * 使用fast mlpg： gen_features = mlpg_algo.generation(current_features, var, out_dimension_dict[feature_name]/3)
+   * 在参数生成的时候，使用以下vuv值来判断是否讲f0设置为0。将0.5这个值提高可以在一定程度上减少音频断裂现象
+
+```python
+if vuv_feature[i, 0] < 0.5:
+	gen_features[i, 0] = self.inf_float
+```
+
+其中self.inf_float = -1.0e+10， 在合成的时候根据vuv的阈值将没发生部分的lf0设置为负无穷。f0=exp(负无穷)=0.
