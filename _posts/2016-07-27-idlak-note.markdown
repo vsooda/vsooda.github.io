@@ -11,7 +11,9 @@ tags: kaldi idlak
 idlak相关记录
 
 
-### 数据准备　idlak_make_lang mode ０
+### 数据准备
+
+**　idlak_make_lang mode ０**
 
 ```
 idlak-voice-build/utils/idlak_make_lang.py --mode 0 /home/sooda/speech/idlak/egs/tts_dnn_arctic/s1/data/full/text_norm.xml /home/sooda/speech/idlak/egs/tts_dnn_arctic/s1/data/full /home/sooda/speech/idlak/egs/tts_dnn_arctic/s1/data/local/dict1
@@ -30,7 +32,10 @@ utils/prepare_lang.sh --num-nonsil-states 5 --share-silence-phones true $dict "<
 
 同时生成lexiconp.txt. lexiconp.txt是带概率的lexicon.txt
 
-### 生成带对齐信息的xml : idlak_make_lang mode 1
+### 生成带对齐信息的xml
+
+**idlak_make_lang mode 1**
+
 ```
 python $KALDI_ROOT/idlak-voice-build/utils/idlak_make_lang.py --mode 1 "2:0.03,3:0.2" "4" $ali/phones.txt $ali/wrdalign.dat data/$step/text_align.xml
 ```
@@ -63,7 +68,9 @@ slt_arctic_a0001 1 1.230 0.440 TRAIL
 
 load_lablels之后，每个label的格式为：[0.205 0.34 ao_B]
 
-### 生成context label : idlak_make_lang mode 2
+### 生成context label 
+
+**idlak_make_lang mode 2**
 
 ```
 idlaktxp --pretty --tpdb=$tpdb data/$step/text_align.xml data/$step/text_anorm.xml
@@ -120,6 +127,7 @@ delta-delta：
 ```
 
 ### delta计算
+
 kaldi中通过featbin/add-deltas进行加窗处理
 
 ```
