@@ -14,15 +14,15 @@ tags:
 
 **生成单类别图像**
 
-![](/assets/pixelrnn/condition_class.png)
+![](http://vsooda.github.io/assets/pixelrnn/condition_class.png)
 
 **生成单个人图像**
 
-![](/assets/pixelrnn/condition_person.png)
+![](http://vsooda.github.io/assets/pixelrnn/condition_person.png)
 
 **两个人插值(熊孩子机？)**
 
-![](/assets/pixelrnn/interplot.png)
+![](http://vsooda.github.io/assets/pixelrnn/interplot.png)
 
 ### 1. 基本原理
 
@@ -47,7 +47,7 @@ $$p(x_{i,R}\mid X_{<i})p(x_{i,G}\mid X_{<i},{x_{i,R}})p(x_{i,B}\mid X_{<i},{x_{i
 
 预测B通道时候，可以参考RG值。预测G通道可以参考R值，预测R通道时候只能参考前面的像素值。这种规则构成了mask a。如下图所示。
 
-![](/assets/pixelrnn/pixelrnn_masks_highlevel.png)
+![](http://vsooda.github.io/assets/pixelrnn/pixelrnn_masks_highlevel.png)
 
 本文还介绍了另一种mask：mask b。mask b既可以参考前面像素值，也能参考当前像素值。
 
@@ -57,18 +57,18 @@ mask的具体形式如下：
 
 **Mask A**
 
-![](/assets/pixelrnn/pixelrnn_masks_A.png)
+![](http://vsooda.github.io/assets/pixelrnn/pixelrnn_masks_A.png)
 
 **Mask B**
 
-![](/assets/pixelrnn/pixelrnn_masks_B.png)
+![](http://vsooda.github.io/assets/pixelrnn/pixelrnn_masks_B.png)
 
 
 ### 2 pixelrnn & 原始pixelcnn [^pixelRNN]
 
 作者提出了两种结构：row lstm，diagonal BiLSTM来预测当前像素值。主要计算当前点像素值的影响区域(receptive field)来对比两种结构的不同。
 
-![](/assets/pixelrnn/pixelrnn_full_context.png)
+![](http://vsooda.github.io/assets/pixelrnn/pixelrnn_full_context.png)
 
 上图中，左图是理想的影响区域：所有当前像素点之前的所有结点都参与到当前像素值的预测。下面分别介绍两种rnn的影响域。
 
@@ -97,13 +97,15 @@ mask的具体形式如下：
 
 作者发现通过简单的带mask的cnn会有盲点（blind spot）。比如下图右图种的灰色部分。在预测当前位置像素的时候，和灰色部分不会有任何关系。
 
-![](/assets/pixelrnn/blind_spot.png)
+![](http://vsooda.github.io/assets/pixelrnn/blind_spot.png)
 
 在这篇文章种，作者将cnn拆成两部分。使用vertical，hozizon cnn来进行计算。
 
-![](/assets/pixelrnn/vertical_horizon.png)
+![](http://vsooda.github.io/assets/pixelrnn/vertical_horizon.png)
 
-从上图的网络结构中，vertical cnn作为horizon cnn的一个分量参与计算。vertical cnn使用\\(n\ast n\\)的卷积核（当前行以上的n/2行），horizon cnn使用\\(n\ast 1\\)的卷积核
+从上图的网络结构中，vertical cnn作为horizon cnn的一个分量参与计算。vertical cnn使用\\(n\ast n\\)的卷积核（当前行以上的n/2行），horizon cnn使用\\(n\ast 1\\)的卷积核。
+
+上图红色标注部分可与后文代码一一对应。
 
 **vertical stack**
 
@@ -143,15 +145,15 @@ h也可以是人脸的隐含层表示。使用triplet loss（可以与center los
 
 20次迭代，损失0.143：
 
-![](/assets/pixelrnn/epoch_20_val_error_0.143_gen_images.jpg)
+![](http://vsooda.github.io/assets/pixelrnn/epoch_20_val_error_0.143_gen_images.jpg)
 
 100次迭代，损失0.141：
 
-![](/assets/pixelrnn/epoch_100_val_error_0.141_gen_images.jpg)
+![](http://vsooda.github.io/assets/pixelrnn/epoch_100_val_error_0.141_gen_images.jpg)
 
 600次迭代，损失0.142：
 
-![](/assets/pixelrnn/epoch_600_val_error_0.142_gen_images.jpg)
+![](http://vsooda.github.io/assets/pixelrnn/epoch_600_val_error_0.142_gen_images.jpg)
 
 另一份[tensorflow代码](https://github.com/carpedm20/pixel-rnn-tensorflow.git),本地测试rnn效果不佳。暂时不知道原因。
 
