@@ -1,0 +1,102 @@
+1. simple: 使用make，可以产生.so文件。而实际在工程上想生成cxx文件，则命令为：swig -lua -c++ example.i
+
+2. embed:
+c-lua-c最简单的例子
+    1) 在c中要执行lua，调用lua_dostring, luaL_dostring（不同版本的api略有不同。这里做了简单的封装）
+    2) 在c中使用lua_State保存上下文环境。 使用luaopen_base(L)等来加载响应的库。如果这里想在lua里调用自定义的c函数，需要swig生成xx_warp.c文件。如这里luaopen_example即可
+    3) c中加载lua文件使用luaL_loadfile, lua_pcall. 
+    4) 在lua中想调用swig后的c函数。需要指定模块。因为这里example.i里设置了module example。所有在使用的时候需要加上example。比如这里已经luaopen_example. 在lua中想调用example的gcd函数，需要example.gcd
+    5)【还未解决的问题】lua与c之间数据传输，数据类型统一问题
+
+
+3. embed2:
+1) 主要展示参数的传递。很重要的一个概念是c和lua通过栈传递对象。
+      top=lua_gettop(L);  /* for later */
+      lua_getglobal(L, "add");               /* function to be called */
+      if (!lua_isfunction(L,-1)) {
+        printf("[C] error: cannot find function 'add'\n");
+        lua_settop(L,top);
+        return 0;
+      }
+      lua_pushnumber(L,a);
+      lua_pushnumber(L,b);
+      if (lua_pcall(L, 2, 1, 0) != 0)  /* call function with 2 arguments and 1 result */
+2) 其中可变参数call_va部分只不过是简单的字符串解析
+3) 为了让以上代码顺利运行，还需要在lua里将函数设定为全局
+    for k,v in pairs(example) do _G[k]=v end
+
+4. embed3:
+引擎，事件，事件处理函数的。非常接近实际使用场景了
+    1) Event::STARTUP 给c++用的。在lua中被swig为Event_xxx(if e.mType==example.Event_STARTUP the),而且使用example进行引用即可。(注意这里的Event_STARTUP, 这是swig自动将类和其静态成员进行拼接生成的。在class Examples里，Shape_nshapes指的是Shape类的静态成员nShape)
+    2) 而如果是函数，则调用方法不一样。pEngine:start(). 使用pEngine进行调用。这里与之前的教程调用不同主要在于，之前都只是普通函数。这里有类的概念。需要传入Engine实例才能对类函数进行调用。注意这里的函数调用使用的是":"
+    3) 那么传递给lua一个类的实例，是通过对象指针完成的。这里在传递的时候需要制定是否需要lua对该对象进行回收。最后这个参数为0表示不需要lua进行回收。
+      push_pointer(L,&engine,"Engine *",0); 
+
+    4) event机制的使用。
+        Event ev;
+        ev.mType = Event::STARTUP;
+        call_onEvent(L, ev);
+        在call_onEvent需要指定lua方面的对事件的解析函数。并且需要将event指针传到压栈，从而传递给lua
+      
+        int call_onEvent(lua_State *L, Event e) {
+          int top;
+          /* ok, here we go:
+          push a, push b, call 'add' check & return res
+          */
+          top = lua_gettop(L);  /* for later */
+          lua_getglobal(L, "onEvent");               /* function to be called */
+          if (!lua_isfunction(L, -1)) {
+            printf("[C++] error: cannot find function 'OnEvent'\n");
+            lua_settop(L, top);  // reset
+            return 0;
+          }
+          // push the event object
+          push_pointer(L, &e, "Event *", 0);
+          if (lua_pcall(L, 1, 0, 0) != 0)  /* call function with 1 arguments and no result */
+          {
+            printf("[C++] error running function `OnEvent': %s\n", lua_tostring(L, -1));
+            lua_settop(L, top);  // reset
+            return 0;
+          }
+          lua_settop(L, top);  /* reset stack */
+          return 1;   // ok
+        }
+
+    5) 综上，简而言之，c++调用lua，还是使用push stack的方式。而封装内容，让lua调用c/c++，则使用的是swig
+
+5. arrays 
+.i文件包含了几种封装方法。所有以上的所有前提是.i文件怎么写。不同的.i文件如何影响调用方式？？
+
+6. variables
+    1) lua操作c++中的变量.需要遵循变量定义。如果定义为只读，则不能进行修改。也可以在.i中将变量定义为只读%immutable;
+    2) 可以在c++中封装分配内存函数。可以在lua中调用该函数进行操作。
+    int *new_int(int value) {
+      int *ip = (int *) malloc(sizeof(int));
+      *ip = value;
+      return ip;
+    }
+
+7. funtest
+函数测试。可以使用返回值，也可以用参数来返回需要的值。add1和add5分别表示这两种情况。若需要额外的返回值，可以使用额外的参数列表。add3有两个返回值。add4通过y返回。
+    int add1(int x, int y)
+    void add2(int x, int *y, int *z)
+    int add3(int x, int y, int *z)
+    void add4(int x, int *y)
+    void add5(int x, int y, int *z) //add5是我自己加的
+对应的.i文件的定义。注意这里的INPUT, OUTPUT, INOUT
+    extern int add1(int x, int y);
+    extern void add2(int x, int *INPUT, int *OUTPUT); 
+    extern int add3(int x, int y, int *OUTPUT);    
+    extern void add4(int x, int *INOUT); 
+    extern void add5(int x, int y, int* OUTPUT);
+%}
+
+8. class
+展示了lua使用普通c++类。
+    1) 直接调用构造函数进行初始化
+    2) 可以直接对成员赋值，直接调用函数
+    3) 不同之处在与调用collectgarbage()进行垃圾回收。
+    4) 静态成员使用"类名_变量"进行表示, 比如，Shape_nShape
+
+
+
