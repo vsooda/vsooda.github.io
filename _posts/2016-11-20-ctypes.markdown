@@ -1,0 +1,122 @@
+---
+layout: post
+title: "python ctypes"
+date: 2016-11-20
+categories: 
+tags: 
+---
+* content
+{:toc}
+
+本文根据mxnet speech demo[^mxnet_speech_demo]的python封装来介绍ctypes的使用。更多细节可以参考python ctypes官方文档[^ctypes_manual]。也可以使用swig来进行跨语言绑定。[这篇博客](http://vsooda.github.io/2015/05/25/swig/)介绍了lua swig绑定及具体案例。
+
+
+
+### 1. c,c++库
+
+```cpp
+class Foo{
+    public:
+        Foo() {
+            x[0] = 0.5f;
+            x[1] = 1.5f;
+            x[2] = 2.5f;
+            x[3] = 3.5f;
+            x[4] = 4.5f;
+        }
+        void bar(){
+            std::cout << "Hello" << std::endl;
+        }
+        float * getx() {
+            return x;
+        }
+        int sizex() {
+            return sizeof(x) / sizeof(float);
+        }
+    private:
+        float x[5];
+};
+```
+
+为了支持ctypes，进行c封装：
+
+```cpp
+extern "C" {
+  Foo* Foo_new(){ return new Foo(); }
+  void Foo_bar(Foo* foo){ foo->bar(); }
+  float * Foo_getx(Foo* foo) { return foo->getx(); }
+  int Foo_sizex(Foo* foo) { return foo->sizex(); }
+}
+```
+
+可以看出以上这种封装方式，需要将很多函数重新用c语言的方式表示一遍。貌似很麻烦，其实只需要将用于python的部分重新封装c api接口即可，无需全部。可以参考mxnet的c api并没有很多内容。
+
+将以上代码编译成.so动态库。
+
+
+### 2. c库加载
+
+在python中使用`LoadLibrary`进行加载：
+
+```python
+kaldi = ctypes.cdll.LoadLibrary("libkaldi-python-wrap.so")
+```
+
+
+### 3. 基本数据类型
+
+全部类型参考[&ctypes_manual]。int 对应到ctypes.c_int
+
+在speech demo中用到以下数据类型
+
+```python
+c_float_ptr = ctypes.POINTER(ctypes.c_float)
+c_int_ptr = ctypes.POINTER(ctypes.c_int)
+c_void_p = ctypes.c_void_p
+c_int = ctypes.c_int
+c_char_p = ctypes.c_char_p
+c_float = ctypes.c_float
+```
+
+### 4. 声明参数类型，返回类型
+
+* 参数类型： argtypes
+* 返回类型： restype [可以是类型，也可以是一个函数]
+
+
+```python
+def decl(f, restype, argtypes):
+    f.restype = restype
+    if argtypes is not None and len(argtypes) != 0:
+        f.argtypes = argtypes        
+decl(kaldi.Foo_new, c_void_p, [])
+decl(kaldi.Foo_bar, None, [c_void_p])
+decl(kaldi.Foo_getx, c_float_ptr, [c_void_p])
+decl(kaldi.Foo_sizex, c_int, [c_void_p])
+```
+
+### 5. 调用
+
+使用以上代码对c库进行声明，接下来在python就可以直接调用了。
+
+```python
+if __name__ == "__main__":
+    print "-------- Foo class example --------"
+    a = kaldi.Foo_new()
+    print "Calling Foo_bar(): ",
+    kaldi.Foo_bar(a)
+    print
+    print "Result of Foo_getx(): ", kaldi.Foo_getx(a)
+    print "Result of Foo_sizex(): ", kaldi.Foo_sizex(a)
+```
+
+### 6. python kaldi
+
+在该demo中，还包含了kaldi数据格式(SequentialBaseFloatMatrixReader, Matrix, RandomAccessPosteriorReader)等的封装。有了这些封装就可以使用python读取kaldi的数据格式。同时该样例提供mxnet网络模型到kaldi网络模型的转换！！
+
+
+### 7. 引用
+
+[^ctypes_manual]: https://docs.python.org/2/library/ctypes.html
+
+[^mxnet_speech_demo]: https://github.com/dmlc/mxnet/tree/master/example/speech-demo
