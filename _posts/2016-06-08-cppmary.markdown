@@ -1,0 +1,52 @@
+---
+layout: post
+title: "cppmary"
+date: 2016-06-08
+categories: 
+---
+* 静态函数继承
+在这个例子中，子类调用getInstance无法获取子类对象
+
+![image](../assets/cppmary/static_inherit.png)
+
+
+
+什么时候转化为target，什么时候出发计算特征..
+
+
+
+```
+Map<String, List<Element>> elementLists = parseDocument(doc);
+Model durationModel = voice.getDurationModel();
+List<Element> durationElements = elementLists.get(durationModel.getApplyTo());
+durationModel.applyTo(durationElements);
+	HTSUttModel um = predictAndSetDuration(elements, elements);
+		List<Target> predictorTargets = getTargets(predictorElements);
+			String phone = UnitSelector.getPhoneSymbol(element);
+			Target target = new Target(phone, element);
+			targets.add(target);
+			FeatureVector targetFeatureVector = featureComputer.computeFeatureVector(target);
+			target.setFeatureVector(targetFeatureVector); // this is critical!
+		FeatureDefinition feaDef = htsData.getFeatureDefinition();
+		for (int i = 0; i < predictorTargets.size(); i++) {
+			fv = predictorTargets.get(i).getFeatureVector();
+		}
+
+```
+
+
+TargetFeatureLister:
+
+```
+features = ((HMMVoice) voice).getHMMData().getFeatureDefinition().getFeatureNames();
+featureComputer = FeatureRegistry.getTargetFeatureComputer(locale, features);
+String out = listTargetFeatures(featureComputer, segmentsAndBoundaries);
+	List<Target> targets = overridableCreateTargetsWithPauses(segmentsAndBoundaries, pauseSymbol);
+	// Third, compute the feature vectors and convert them to text
+	String header = featureComputer.getAllFeatureProcessorNamesAndValues();
+	for (Target target : targets) {
+		FeatureVector features = featureComputer.computeFeatureVector(target);
+		text.append(featureComputer.toStringValues(features)).append("\n");
+		bin.append(features.toString()).append("\n");
+	}
+```
