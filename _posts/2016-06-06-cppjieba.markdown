@@ -2,12 +2,17 @@
 layout: post
 title: "cppjieba"
 date: 2016-06-06
-categories: 
+categories: code
+tags: nlp
 ---
+* content
+{:toc}
 
 读取utf8文本，解析成unicode编号进行处理。
 
-![image](../assets/cppjieba/decode.png)
+
+
+![image](http://vsooda.github.io/assets/cppjieba/decode.png)
 
 
 主要函数：

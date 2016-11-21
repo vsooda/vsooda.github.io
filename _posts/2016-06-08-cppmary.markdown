@@ -2,12 +2,18 @@
 layout: post
 title: "cppmary"
 date: 2016-06-08
-categories: 
+categories: code
+tags: nlp
 ---
-* 静态函数继承
+* content
+{:toc}
+
+
+
+**静态函数继承**
 在这个例子中，子类调用getInstance无法获取子类对象
 
-![image](../assets/cppmary/static_inherit.png)
+![image](http://vsooda.github.io/assets/cppmary/static_inherit.png)
 
 
 
