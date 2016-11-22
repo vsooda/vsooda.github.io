@@ -20,3 +20,15 @@ tags: math
 1. 如果使用梯度下降，怎么处理Xi和Xi+1的关系。两者的效率对比如何？
 2. 建模问题. 在泊松融合， wls滤波， tls里面各个部分分别代表什么？在3D里面Xi，Xi+1通常表示3d点。怎么添加新约束， 比如添加一个二次项。
 3. 什么情况下不能用这种优化算法。
+
+
+在mlpg语音参数合成中的应用：
+
+
+![image](/assets/optimize/linear_eq.png)
+
+推导如下：
+
+![image](/assets/optimize/linear_solver.jpg)
+
+**注意**: 由于书写错误，图中标志部分需要对调。结果是正确的。
