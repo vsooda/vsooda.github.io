@@ -16,11 +16,11 @@ tags:
 
 ## 论文
 
-现在常用的做法是把分词当做一种分类任务。对每个字分别给一个b,m,e,s标签，分别用来表示词语的开头，中间，结束，已经单字成词。基于crf的分词可以参考[这篇文章](http://vsooda.github.io/2016/03/15/crf-primer/)
+现在常用的做法是把分词当做一种分类任务。对每个字分别给一个b,m,e,s标签，分别用来表示词语的开头，中间，结束，以及单字成词。基于crf的分词可以参考[这篇文章](http://vsooda.github.io/2016/03/15/crf-primer/)
 
 ### 模型
 
-本文提出另一种表示方法，用L，R分别表示词语的左右边界。之所以用LR表示，是因为LR信息很容易从标点符号获得。作为一种先验知识还是挺有用的。
+本文提出另一种表示方法，用L，R分别表示词语的左右边界。之所以用LR表示，是因为LR信息很容易从标点符号获得。
 
 $$b=L\bar{R}, m=\bar{L}\bar{R}, e=\bar{L}R, s=LR$$
 
@@ -42,7 +42,7 @@ $$P(T\mid S)=\prod_{i=1}^{n}Pr(t_i\mid context_i)$$
 
 ![](http://vsooda.github.io/assets/thulac/method.png)
 
-至此，其实需要的就是大量<context, 标签>的数据。然后训练最大熵模型
+至此，其实需要的就是大量<context, 标签>的数据。然后训练最大熵模型。
 
 ### 训练数据
 
@@ -139,17 +139,21 @@ def do_crack(self, depth, base, data_size, word):
     depth = depth + 1
     ind = base * 2
     if base > data_size or depth > 8:
-        return word
+        return [word]
     else:
+        words = []
         for j in xrange(1, data_size):
             index = self.dat[ind] + j
             if index < data_size and self.dat[2 * index + 1] == base:
                 word = word + unichr(j)
                 base = index
-                return self.do_crack(depth, base, data_size, word) #注意，这里只是返回第一个条件的词，实际上有可能有相同前缀，所以这里需要用一个list保存。
+                words =  words + self.do_crack(depth, base, data_size, word)
             else:
                 continue
-        return word
+        if len(words) == 0:
+            return [word]
+        else:
+            return words
 
 def crack(self):
     self.crack_fid = open(self.crack_name, 'w')
@@ -159,7 +163,8 @@ def crack(self):
             word = unichr(i)
             base = i
             result = self.do_crack(1, base, data_size, word)
-            self.crack_fid.write(result+"\n")
+            for w in result:
+                self.crack_fid.write(w+"\n")
     self.crack_fid.close()
 ```
 
