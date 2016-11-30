@@ -1,0 +1,29 @@
+---
+layout: post
+title: "cppjieba"
+date: 2016-06-06
+categories: code
+tags: nlp
+---
+* content
+{:toc}
+
+读取utf8文本，解析成unicode编号进行处理。
+
+
+
+![image](http://vsooda.github.io/assets/cppjieba/decode.png)
+
+
+主要函数：
+
+utf8转化的unicode在结巴中称为rune。每个rune对应一个字。不仅保存了unicode编号，还保存了该字符在原字符串的起始位置和长度信息
+
+GetStringsFromWords： 从word结构体中，提取utf8字符串
+
+GetWordsFromWordRanges： 根据单词的左右边界，获取词。
+
+
+在SegmentBase.hpp中用symbols_定义了标点符号列表。在实际分词中，如果遇到这个列表中的符号，则以这个符号作为划分进行分词。
+
+词性标注只是简单的查找字典。如果在字典中没有，则用简单的规则匹配（统计unicode值小于0x80的个数及占比）看是否是英文或数字。
