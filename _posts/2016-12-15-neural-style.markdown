@@ -13,7 +13,7 @@ tags: deep mxnet
 
 
 
-![](/assets/neural_style/result.png)
+![](http://vsooda.github.io/assets/neural_style/result.png)
 
 
 
@@ -23,27 +23,29 @@ tags: deep mxnet
 
 #### 原理
 
-![](/assets/neural_style/neural_style.png)
+![](http://vsooda.github.io/assets/neural_style/neural_style.png)
 
 
 
-通过将用于物体识别的vgg网络不同层进行可视化，可以发现在输入图片之后，低层cnn保存更多的细节（content）。高层cnn保留更多风格（style）相关的内容。neural style的一个直观思路就是尝试结合不同层次的特征，将一张图片的风格传输另一张图片，并保持传输后图片的内容基本保持不变。
+通过将用于物体识别的vgg网络不同层进行可视化，可以发现在输入图片之后，低层cnn保存更多的细节。高层cnn保留更多风格相关的内容。利用高层cnn输出基本上可以判别是什么东西，但是不保留所有像素特征。所以，在neural style中，使用高层cnn输出作为content。并且根据相关文献研究，用各层cnn输出可以构成特征空间用来表示style。使用gram矩阵表示各层cnn输出之间的关系。
+
+在实际应用中，content一般采用**relu3\_3**(实际代码中也有采用relu3\_1)特征。style采用**'relu1\_2', 'relu2\_2', 'relu3\_3', 'relu4\_3'**
 
 下图是更能说明问题：
 
 对于content图片，将vgg各层输出重建图像的结果：
 
-![](/assets/neural_style/content_in_cnn.png)
+![](http://vsooda.github.io/assets/neural_style/content_in_cnn.png)
 
 
 
 对于风格图片，各层输出重建结果：
 
-![](/assets/neural_style/style_in_cnn.png)
+![](http://vsooda.github.io/assets/neural_style/style_in_cnn.png)
 
 
 
-在实际应用中，content一般采用**relu3\_3**(实际代码中也有采用relu3\_1)特征。style采用**'relu1\_2', 'relu2\_2', 'relu3\_3', 'relu4\_3'**
+
 
 
 
@@ -58,13 +60,13 @@ tags: deep mxnet
 
 #### 算法
 
-![](/assets/neural_style/content_loss.png)
+![](http://vsooda.github.io/assets/neural_style/content_loss.png)
 
 
 
 
 
-![](/assets/neural_style/style_loss.png)
+![](http://vsooda.github.io/assets/neural_style/style_loss.png)
 
 其中G是style_cnn的gram矩阵。**ps** : gram矩阵的计算见后文。
 
@@ -72,7 +74,7 @@ tags: deep mxnet
 
 
 
-![](/assets/neural_style/neural_style_loss.png)
+![](http://vsooda.github.io/assets/neural_style/neural_style_loss.png)
 
 
 
@@ -88,7 +90,7 @@ tags: deep mxnet
 
 #### 原理
 
-![](/assets/neural_style/perceptual_loss_neural_style.png)
+![](http://vsooda.github.io/assets/neural_style/perceptual_loss_neural_style.png)
 
 
 
@@ -104,27 +106,41 @@ tags: deep mxnet
 
 
 
+在transform network的网络结构中，还加入了down sample 和up sample层。download sample的cnn stride为2，up sample的stride为0.5。通过这两层图片大小保持不变，但是得到两个好处：1. 计算效率更高；2. 可以观察到更大的范围。
+
+
+
 #### 细节
 
-![](/assets/neural_style/feat_loss.png)
+![](http://vsooda.github.io/assets/neural_style/feat_loss.png)
 
 
 
-![](/assets/neural_style/gram.png)
+![](http://vsooda.github.io/assets/neural_style/gram.png)
 
 
 
-![](/assets/neural_style/perceptual_style_loss.png)\
+![](http://vsooda.github.io/assets/neural_style/perceptual_style_loss.png)
 
-**gram 矩阵意义**
+**gram 矩阵意义**: 在第l层cnn输出$c*h*w$的feature map。 也就是在$h*w$的网格上，每个点都有$c$维特征。gram矩阵（$c*c$),  就是这c维特征的非中心化协方差。gram矩阵同时保证了输入图片shape和style shape无关。
 
-在第l层cnn输出$c*h*w$的feature map。 也就是在$h*w$的网格上，每个点都有$c$维特征。gram矩阵（$c*c$),  就是这c维特征的非中心化协方差。
+![](http://vsooda.github.io/assets/neural_style/style_transfer.png)
 
-![](/assets/neural_style/style_transfer.png)
+
+
+### texture net
+
+
 
 ### neural style audio
 
 参考[这篇文章](http://dmitryulyanov.github.io/audio-texture-synthesis-and-style-transfer/), [tensorflow代码](https://github.com/DmitryUlyanov/neural-style-audio-tf)。
+
+
+
+### 思考
+
+* 这个[代码](https://github.com/jcjohnson/neural-style)中的style transfer without color是怎么实现的？
 
 
 ### 参考
@@ -134,4 +150,4 @@ tags: deep mxnet
 * [end2end mxnet](http://dmlc.ml/mxnet/2016/06/20/end-to-end-neural-style.html)
 * [mxnet perceptual loss](https://github.com/zhaw/neural_style)
 * [mxnet neural style](https://github.com/dmlc/mxnet/tree/master/example/neural-style)
-* [mxnet zhihu](https://zhuanlan.zhihu.com/p/24205969?refer=gomxnet)
+* [deep 2min demo in zhihu](https://zhuanlan.zhihu.com/p/24205969?refer=gomxnet)
