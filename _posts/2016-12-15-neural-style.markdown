@@ -3,12 +3,12 @@ layout: post
 title: "neural style, fast neural style, texture net, audio style"
 date: 2016-12-15
 categories: ml
-tags: deep mxnet
+tags: deep mxnet gram
 ---
 * content
 {:toc}
 
-本文介绍neural style 进行风格传输。先介绍原始论文，再介绍加速版本基于Perceptual Loss的风格传输。最后介绍该方法在语音传输上的应用。
+本文介绍neural style 进行风格传输。先介绍Gatys等人的原始论文，再介绍加速版本基于Perceptual Loss的风格传输。同时介绍另一种加速算法texture net。最后介绍该方法在语音传输上的应用。
 
 ![](http://vsooda.github.io/assets/neural_style/result.png)
 
@@ -63,7 +63,7 @@ tags: deep mxnet
 **ps**: 知乎评论@罗若天评论这个不是GAN。后文也将介绍texture net。按照这个说法，texture net合成texture是生成模型，但是进行style传输，需要一张content图片，也不叫生成模型？`生成模型，判别式模型待考证`。
 
 > Perceptual loss是encoder decoder模型，和gan有点距离，因为gan的输入有一个随机向量，而encoder decoder的输入没有。更像gan的有另外一篇做style的paper，texturenet。
-其次，生成模型不是一个严谨的说法。generative model指的是对p(x, y)进行建模。讲道理perceptual loss这个模型更像是判别模型。
+> 其次，生成模型不是一个严谨的说法。generative model指的是对p(x, y)进行建模。讲道理perceptual loss这个模型更像是判别模型。
 
 #### 原理
 
@@ -96,6 +96,45 @@ tags: deep mxnet
 
 ### texture net
 
+纹理合成就是给定一块纹理，使其生成更大的符合该图片纹理结构的图片。如下图所示，左边是原始图片，对齐采样，生成右边的纹理图片。如果图片合成让人看不出来，则说明纹理合成效果很好。
+
+将cnn用于纹理合成最初也是由Gatys等人提出的。这篇文章发表在其neural style之前，是neural style的初期版本。网络结构与neural style一样，只是不是用于风格传输，所以不需要content loss。
+
+![](http://vsooda.github.io/assets/neural_style/texture_synthesis.png)
+
+
+
+Dmitry Ulyanov等人提出texture net，既可以用于快速纹理合成，也可以用于fast neural style风格传输。下面介绍论文细节。
+
+#### 原理
+
+![](http://vsooda.github.io/assets/neural_style/texturenet.png)
+
+
+
+上图是texturenet的网络结构图。左边是生成网络，右边是判别网络。判别网络采用的是与neural style论文相同的vgg网络。在计算完损失函数之后，与Perceptual Loss neural style一样，不更新vgg网络参数。
+
+texture synthesis任务和style transfer 任务的输入和损失函数不同。
+
+**texture synthesis**:
+
+高斯噪声图片输入左边的生成网络生成texture, 右边的判别网络计算gram loss，并更新左边的网络参数。训练完毕之后即可输出texture synthesis结果。没有离线预先训练模型，所以对于生成图片没有加速作用。
+
+**style transfer**:
+
+高斯噪声图片和content image输入左边的生成网络生成style image，右边的判别网络计算gram loss和content loss，再更新左边的网络参数。与Perceptual Loss neural style的transform network一样，可以现在一个数据集上预训练某个style的网络参数并保存，在真实style合成的时候，只要一个前向过程就可以得到style image。
+
+
+
+**细节**:
+
+![](http://vsooda.github.io/assets/neural_style/texturenet_detail.png)
+
+在texture synthesis任务中，输入Z是各个尺度的噪声图片。
+
+在style transfer任务中，输入是各个尺度噪声图片和各个尺度content image的**concat**。
+
+
 
 ### neural style audio
 
@@ -104,6 +143,7 @@ tags: deep mxnet
 ### 思考
 
 * 这个[代码](https://github.com/jcjohnson/neural-style)中的style transfer without color是怎么实现的？
+* 生成模型，判别式模型？
 
 
 ### 参考
