@@ -71,7 +71,7 @@ tags: deep mxnet gram
 
 **训练**:
 
-在上图中，输入图片通过一个网络transform net转化为目标图片\\(\hat{y}\\)。并将这张图片输入到loss network中，获取feat层输出\\(y_c\\)，style层输出\\(y_s\\)。这个目标图片输入到loss network中，获得style输出和feat输出。这两个输出与原始图片在网络中的输出对比，构造loss，反向传播优化transform net，loss network保持不变。
+在上图中，输入图片通过一个网络transform net转化为目标图片$\hat{y}$。并将这张图片输入到loss network中，获取feat层输出$y_c$，style层输出$y_s$。这个目标图片输入到loss network中，获得style输出和feat输出。这两个输出与原始图片在网络中的输出对比，构造loss，反向传播优化transform net，loss network保持不变。
 
 使用mscoco数据集，对于每种风格训练一个transform net。并将transform network的参数保存下来。有了这样的训练过程，可以保证对于大多数输入图片的对应风格输出都较好。transform network学习的其实就是neural network loss的最小化参数。
 
@@ -89,7 +89,7 @@ tags: deep mxnet gram
 
 ![](http://vsooda.github.io/assets/neural_style/perceptual_style_loss.png)
 
-**gram 矩阵意义**: 在第l层cnn输出\\(c\*h\*w\\)的feature map。 也就是在\\(h\*w\\)的网格上，每个点都有\\(c\\)维特征。gram矩阵\\(c\*c\\),  就是这c维特征的非中心化协方差。gram矩阵同时保证了输入图片shape和style shape无关。
+**gram 矩阵意义**: 在第l层cnn输出$c\*h\*w$的feature map。 也就是在$h\*w$的网格上，每个点都有$c$维特征。gram矩阵$c\*c$,  就是这c维特征的非中心化协方差。gram矩阵同时保证了输入图片shape和style shape无关。
 
 ![](http://vsooda.github.io/assets/neural_style/style_transfer.png)
 
@@ -157,5 +157,12 @@ texture synthesis任务和style transfer 任务的输入和损失函数不同。
 * [Texture Synthesis Using Convolutional Neural Networks](https://arxiv.org/abs/1505.07376)
 * [Texture Networks: Feed-forward Synthesis of Textures and Stylized Images](http://arxiv.org/abs/1603.03417)
 
-
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
 <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
