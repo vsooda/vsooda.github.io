@@ -50,12 +50,12 @@ Glove是stanford nlp组出品，效果比word2vec更好。
 最出名的例子是：
 
 >
-man - woman = king - queen
+>man - woman = king - queen
 
 同样可以用来解决：
 
 >
-中国 - 北京 = 法国 - 巴黎
+>中国 - 北京 = 法国 - 巴黎
 
 
 2 相似性
@@ -106,12 +106,13 @@ $$J=\sum_{i,j=1}^{V}f(X_{ij})(w_i^T\tilde{w_k}+b_i+\tilde{b_k}-log(X_{ik}))^2 \q
 
 通过作者的实验，
 
-
-<div class="imgcap">
-<div>
-<img src="http://vsooda.github.io/assets/glove/eq9.png" style="width:300px">
-</div>
-</div>
+$$
+f(x) =
+\begin{cases}
+(x/x_{max})^a  & \text{if $x<x_{max}$ } \\
+1 & \text{otherwise}
+\end{cases} \qquad(9)
+$$
 
 其中\\(x_{max}=100\\)， \\(\alpha=0.75\\)取得很好的效果。
 

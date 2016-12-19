@@ -127,14 +127,13 @@ texture synthesis任务和style transfer 任务的输入和损失函数不同。
 
 
 
-**细节**:
+#### 细节
 
 ![](http://vsooda.github.io/assets/neural_style/texturenet_detail.png)
 
 在texture synthesis任务中，输入Z是各个尺度的噪声图片。
 
 在style transfer任务中，输入是各个尺度噪声图片和各个尺度content image的**concat**。
-
 
 
 ### neural style audio
