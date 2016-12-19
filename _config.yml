@@ -19,7 +19,7 @@ weibo_username: 2522302875
 
 permalink: /:year/:month/:day/:title/
 
-disqus_shortname: vsooda
+#disqus_shortname: vsooda
 
 
 # Build settings
