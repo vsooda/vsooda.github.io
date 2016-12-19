@@ -4,6 +4,7 @@ title: "Glove"
 date: 2016-04-06
 categories: nlp
 tags: ml word2vec nlp
+mathjax: true
 ---
 
 * content
@@ -170,8 +171,6 @@ W中的顺序为：word1 词向量，偏置1， word2 词向量， 偏置2，...
 </div>
 <div class="thecap">源码笔记</div>
 </div>
-
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
 
 
 <!--

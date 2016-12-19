@@ -4,6 +4,7 @@ title: "基于平均感知机的分词和词性标注"
 date: 2016-12-18
 categories: code
 tags: nlp cws
+mathjax: true
 ---
 * content
 {:toc}
@@ -19,15 +20,15 @@ tags: nlp cws
 
 ### 感知机
 
-设输入\\(n\\)维输入的单个感知机(如下图所以)。\\(a_1\\)至\\(a_n\\)为\\(n\\)维输入向量的各个分量。\\(w_1\\)至\\(w_n\\)为各个输入分量连接到感知机的权重。\\(b\\)为偏置，\\(f(.)\\)为激活函数(\\(f\\)一般为符号函数)。\\(t\\)为标量输出。
+设输入$n$维输入的单个感知机(如下图所以)。$a_1$至$a_n$为$n$维输入向量的各个分量。$w_1$至$w_n$为各个输入分量连接到感知机的权重。$b$为偏置，$f(.)$为激活函数($f$一般为符号函数)。$t$为标量输出。
 
 $$t=f(\sum_{i=1}^{n}w_ix_i+b)=f(w^Tx)$$
 
-![](/assets/ap_cws/perceptron.png)
+![](http://vsooda.github.io/assets/ap_cws/perceptron.png)
 
 权重迭代：
 
-对于每个\\(D_n=[(x_1,y_1),(x_2,y_2),(x_3,y_3),...,(x_m,y_m)]\\)中的每个\\((x,y)\\)对，进行权重更新：
+对于每个$D_n=[(x_1,y_1),(x_2,y_2),(x_3,y_3),...,(x_m,y_m)]$中的每个$(x,y)$对，进行权重更新：
 
 $$w(j)=w(j)+\alpha(y-f(x))x(j)$$
 
@@ -35,7 +36,7 @@ $$w(j)=w(j)+\alpha(y-f(x))x(j)$$
 
 模型与感知机相似。只是在训练每个样本的时候，记录其权重，并且更新其当前权重。等到所有迭代完毕之后，计算整个过程的平均权重。这样做的好处是更加鲁棒。
 
-![](/assets/ap_cws/ap.png)
+![](http://vsooda.github.io/assets/ap_cws/ap.png)
 
 ### 基于平均感知机的分词和词性标注
 
@@ -133,5 +134,3 @@ def update(self, truth, guess, features):
 * [200行Python代码实现感知机词性标注器](http://www.hankcs.com/nlp/averaged-perceptron-tagger.html)
 * [zhangkaixu cws](https://github.com/zhangkaixu/minitools/blob/master/cws.py)
 * [thulac](https://github.com/thunlp/THULAC)
-
-<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">

@@ -69,6 +69,18 @@ layout: default
         <!--<h2 id="comments">评论</h2>
         {% include comments.html %}
         -->
+        <!-- mathjax -->
+        {% if page.mathjax %}
+        <script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+			  processEscapes: true
+			}
+		  });
+		</script>
+		<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        {% endif %}   
 
 
     </div>

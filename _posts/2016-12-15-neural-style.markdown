@@ -4,6 +4,7 @@ title: "neural style, fast neural style, texture net, audio style"
 date: 2016-12-15
 categories: ml
 tags: deep mxnet gram
+mathjax: true
 ---
 * content
 {:toc}
@@ -156,13 +157,3 @@ texture synthesis任务和style transfer 任务的输入和损失函数不同。
 * [deep 2min demo in zhihu](https://zhuanlan.zhihu.com/p/24205969?refer=gomxnet)
 * [Texture Synthesis Using Convolutional Neural Networks](https://arxiv.org/abs/1505.07376)
 * [Texture Networks: Feed-forward Synthesis of Textures and Stylized Images](http://arxiv.org/abs/1603.03417)
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-      processEscapes: true
-    }
-  });
-</script>
-<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
