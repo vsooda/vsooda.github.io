@@ -8,7 +8,7 @@ tags: mxnet deep lua nnvm
 * content
 {:toc}
 
-本文简单记录tinyflow阅读源码笔记。待进一步整理。dmlc的lua封装，parameter宏，any，nnvm还有许多需要学习的地方。
+本文简单记录tinyflow阅读源码笔记。待进一步整理。文末已列出待完善部分。
 
 ```
 ├── src
@@ -421,3 +421,16 @@ NNVM_REGISTER_OP(matmul)
 ```
 
 torch部分NNVM_REGISTER_OP, 只设置FLuaCreateNNModule, FLuaCompute
+
+
+
+### TODO
+
+* nnvm　register具体完成什么。nnvm的工作机制是什么
+* nnvm torch？
+* tinyflow整个流程如何串起来？自己能写这个代码吗？
+* dmlc parameter， 宏，singleton
+* dmlc 其他代码。any等
+* mxnet与nnvm
+* lua.h对lua的封装？如何在其余场所中使用
+* gpu？
