@@ -40,7 +40,7 @@ mathjax: true
 
 * 将输入图片（content）扔到网络中，计算content_cnn。
 * 将style输入到cnn中得到各层style_cnn, 再计算各层style_cnn的gram矩阵：style_gram
-* 将当前迭代的图片current_image输入到cnn（在第一次迭代中，该图片由高斯白噪声随机初始化）。获取content cnn输出记为image_content_cnn, 输入style 中获得image_style_cnn并计算gram矩阵image_gram。 以（content_cnn - image_content_cnn)^2 + （style_gram-image_gram)^2作为loss。反向传播修改vgg各层网络参数，并修改current_image
+* 将当前迭代的图片current_image输入到cnn（在第一次迭代中，该图片由高斯白噪声随机初始化）。获取content cnn输出记为image_content_cnn, 输入style 中获得image_style_cnn并计算gram矩阵image_gram。 以（content_cnn - image_content_cnn)^2 + （style_gram-image_gram)^2作为loss。反向传播~~修改vgg各层网络参数~~，并修改current_image
 * 重复以上步骤
 
 #### 算法
