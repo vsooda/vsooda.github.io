@@ -25,10 +25,35 @@ tags: summary
   * 理论上，学习张志华两门课补充数学，陈希孺概率论与梳理统计，微积分，prml，mlapp，凸优化
   * 实践上，tts上线，研究情感化tts，以及更好的adapt。语音识别，构造识别到合成的闭环。深度学习mxnet，kaldi，并贡献10个高质量pr。
   * 团队。提高沟通能力，更好的统一团队目标。
-
 * 生活。多走出去。学习一项技能，乐器？绘画？练出腹肌。
-
 * 一定要脱单...
 
-  ​
+
+
+**附：语音合成效果**
+
+角色：
+
+<audio controls> 
+<source src="/assets/summary2016/labixx.wav" type="audio/wav">
+</audio>
+
+<audio controls> 
+<source src="/assets/summary2016/hfnn.wav" type="audio/wav">
+</audio>
+
+<audio controls> 
+<source src="/assets/summary2016/xll.wav" type="audio/wav">
+</audio>
+
+<audio controls> 
+<source src="/assets/summary2016/hmbb.wav" type="audio/wav">
+</audio>
+
+adapt:
+
+采集同事300句说话语音，经过adapt训练，顺利解开其微信声纹密码。:)
+<audio controls> 
+<source src="/assets/summary2016/xhl.wav" type="audio/wav">
+</audio>
 
