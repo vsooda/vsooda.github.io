@@ -1,0 +1,373 @@
+---
+layout: post
+title: "c++11特性"
+date: 2017-01-28
+categories: code
+tags: c++11
+---
+* content
+{:toc}
+
+本文简单记录碰到的c++11特性。不是全部。持续更新
+
+
+## c++ 11
+
+### lambda
+
+```
+[捕获列表](参数列表)(->返回类型)（函数体）
+```
+返回类型可被忽略。(->返回类型)这种声明方式称为尾置声明。c++ primer 第五版p206。
+
+捕获列表表示获取lambda所在的外部函数体的值。不指定则是隐式捕获，指定则是显示。&表示引用捕获，=表示值捕获。
+
+使用lambda来调用find_if
+
+```cpp
+auto wc = find_if(words.begin(), words.end(),
+				[sz](const string& a) {
+					return a.size() > ze;
+				});
+```
+
+
+
+### bind，placeholder
+
+```cpp
+std::string back_op_name = "_backward_" + reg->name;
+Op& back_op = ::dmlc::Registry<::nnvm::Op>::Get()->__REGISTER__(back_op_name);
+op.set_attr<nnvm::FGradient>("FGradient", std::bind(
+  OpPropGradient, &back_op,
+  std::placeholders::_1, std::placeholders::_2));
+```
+
+
+
+对于那种只在一两个地方使用的简单操作，使用lambda是最有用的。出现更多次数还是需要使用函数。如果lambda的捕获列表为空，则可以用函数代替它。但是如果依赖局部变量，捕获列表不为空转化为函数后需要传入多个变量，这种情况无法直接使用。
+
+
+
+比如，比较字符串长度：
+
+```cpp
+bool check_size(const string& s, string::size_type sz) {
+	return s.size() > sz;
+}
+```
+
+
+
+这个函数接收两个参数，而find_if只接受一个一元谓词，因此传递给find_if的可调用对象必须接受单一参数。
+
+
+
+c++11 bind可以解决上面问题。bind的作用是在可调用对象上再封装一层，固定住某些参数，从而形成新的较少参数的可调用对象。语法如下：
+
+```cpp
+auto newCallable = bind(callable, arg_list);
+```
+
+arg_list中可能包含\_n这种名字，这些表示占位符。表示newCallable的参数。
+
+
+
+例子：
+
+```cpp
+auto check6 = bind(check_size, _1, 6);
+```
+
+现在check6可以接收一个参数了：
+
+```cpp
+string s = "hello";
+bool b = check6(s);
+```
+
+有了bind之后，find_if可以就可以使用接受两个变量的函数了。
+
+```cpp
+auto wc = find_if(words.begin(), words.end(), bind(check_size, -1, sz));
+```
+
+
+
+上面用到的\_n定义在std::placeholders中，所以使用的时候：std::placeholders::_1
+
+
+
+**bind还可以用来重新排列参数列表**
+
+```cpp
+auto g = bind(f, a, b, _2, c, _1)
+```
+
+f的第三，第五个参数分别变成新函数的第二，第一个参数。
+
+
+
+**在绑定引用时候，需要加上ref**
+
+
+
+```cpp
+for_each(words.begin(), words.end(),
+	[&os, c](const string& s) {
+		os << s << c;
+	}
+);
+```
+
+编写成函数：
+
+```cpp
+ostream& print(ostream& os, const string& s, char c) {
+	return os << s << c;
+}
+```
+
+在对os捕获的时候，需要用到引用。
+
+```cpp
+for_each(words.begin(), words.end(),
+	bind(print, ref(os), _1, ' ')
+);
+```
+
+
+
+###  std::function
+
+```cpp
+typedef std::function<IIterator<DataBatch> *()> DataIteratorFactory;
+```
+
+表示接受0个参数，返回IIterator<DataBatch> *的函数对象。
+
+
+
+c++ primer第五版 p511
+
+```cpp
+#include <iostream>
+#include <map>
+#include <functional>
+using namespace std;
+
+// 普通函数
+int add(int i, int j) { return i + j; }
+// lambda，产生一个未命名的函数对象类
+auto mod = [](int i, int j){return i % j; };
+// 函数对象类
+struct divide {
+  	//函数对象可以简单理解为普通类实现operator()
+	int operator() (int denominator, int divisor) {
+		return denominator / divisor;
+	}
+};
+
+int main(int argc, char *argv[]) {
+	map<char, function<int(int, int)> > binops = {
+		{ '+', add },
+		{ '-', minus<int>() },
+		{ '*', [](int i, int j){return i - j; } },
+		{ '/', divide() },
+		{ '%', mod },
+	};
+	cout << binops['+'](10, 5) << endl;
+	cout << binops['-'](10, 5) << endl;
+	cout << binops['*'](10, 5) << endl;
+	cout << binops['/'](10, 5) << endl;
+	cout << binops['%'](10, 5) << endl;
+	return 0;
+}
+```
+
+add，mod，divide原型为int(int, int).
+
+用函数指针表示为int(*)(int, int). 但是三者不是相同的类型，使用**std::function**可以将其转化为相同类型，使得上面的函数指针，函数对象，lambda可以统一。
+
+
+
+### 右值引用，std::move
+
+**左值，右值**
+
+左值lvalue，右值rvalue最初源自c语言，原本是为了帮助记忆：左值可以位于赋值操作语句的左侧，右值则不能。
+
+
+
+在c++中，则不那么简单了。例如，以常量对象为代表的某些左值对象实际上不能作为赋值语句的左侧运算对象。此外，虽然某些表达式的求值结果是对象，但是它们可能是右值而非左值。
+
+
+
+判断左值右值的标准为：当一个对象被用作右值的时候，用的是对象的值（内容），而当对象被用作左值的时候，实际使用的对象的身份（地址）。
+
+**右值引用**
+
+为了支持移动操作，c++11增加新的引用类型：右值引用。右值引用就是绑定到右值上的引用。使用&&表示来获得。右值引用的一个重要性质是：只能绑定到即将被销毁的对象。
+
+```cpp
+int i = 42;
+int &r = i; //正确: r引用i
+int &&r = i; //错误: 不能将一个右值引用绑定到左值上
+int &r2 = i * 42; //错误： i * 42是一个右值
+const int &r3 = i * 42; //正确： 允许将const引用绑定到右值上
+int &&rr2 = i * 42; //正确: 右值引用
+```
+
+
+
+考虑：
+
+```cpp
+int &&rr1 = 42; //正确：　右值引用
+int &&rr2 = rr1; //错误：表达式rr1是左值
+```
+
+从上面样例中，可以看出，rr1实际上是一个右值引用。但是由于它是一个变量，所以是左值，没办法赋值给另一个右值引用。在需要这个操作的地方，可以使用std::move
+
+
+
+**std::move**
+
+```cpp
+int &&rr3 = std::move(rr1);
+```
+
+move是用来获得绑定在左值上的右值引用。调用move等于告诉编译器：我们有一个左值，但是我们希望像右值一样处理它。需要注意的是，我们必须保证使用move之后的rr1，只能用于赋值和销毁，不能有其他操作。
+
+
+
+用户自定义的类想使用move则需要实现移动构造函数，如：
+
+```cpp
+StrVec::StrVec(StrVec &&s) noexcept //移动构造函数不应抛出异常
+		: elements(s.elments), first_free(s.first_free), cap(s.cap) { //接管资源
+	//令s进入可析构状态
+	s.elments = s.first_free = s.cap = nullptr;
+}
+```
+
+
+
+移动构造函数，拷贝构造函数等选择。
+
+移动迭代器： **make_move_iterator**
+
+**引用限定符**
+
+c++ primer 第五版 p483
+
+
+
+c++旧标准允许对右值赋值：
+
+```cpp
+string s1 = "a value";
+string s2 = "another value";
+s1 + s2 = "wow!";
+```
+
+为了兼容，仍然允许上面语法。但是引入引用限定符，使得我们可以对其用法进行限制。
+
+& 或&&，分别指出this可以指向一个左值或右值。
+
+```cpp
+class Foo {
+public:
+	Foo sorted() &&; //可用于可改变的右值
+	Foo sorted() const &; //可用于任何类型的Foo
+private:
+	vector<int> data;
+};
+
+//本对象为右值，所以可以对原地址进行排序
+Foo Foo::sorted() && {
+	sort(data.begin(), data.end());
+	return *this;
+}
+
+//本对象是const或一个左值，哪种情况都不能对原地址进行排序
+Foo Foo::sorted() const & {
+	Foo ret(*this); //拷贝副本
+	sort(ret.data.begin(), ret.data.end());
+	return ret;
+}
+```
+
+
+
+```cpp
+Foo &retFoo();
+Foo retVal();
+retVal().sorted(); //retVal()是一个右值，调用Foo::sorted() &&
+retFoo().sorted(); //retFoo()是一个左值，调用Foo::sorted() const&
+```
+
+
+
+### 继承构造函数
+
+Derived(params) : Base(args) {}
+
+
+
+
+
+## c++知识点
+
+### 名字查找与继承 p549
+
+如果不是虚函数，或者是通过对象调用（不是指针或者引用），则产生普通的函数调用，而不会考虑其动态类型。反之，如果是虚函数**且**通过指针或引用来调用，则会在运行时决定其动态类型。
+
+
+
+名字查找先于类型检查。
+
+```cpp
+struct Base {
+	int memfcn();
+};
+
+struct Derived : Base {
+	int memfcn(int); //隐藏基类的memfcn
+};
+
+Derived d; Base b;
+b.memfcn(); //调用Base::memfcn
+d.memfcn(10); //调用Derived::memfcn
+d.memfcn();  //错误：参数列表为空的memfcn被隐藏了.一旦名字找到就停止查找
+d.Base::memfcn();　//正确：调用Base::memfcn
+```
+
+
+
+### 隐藏指针
+
+定义clone函数，为了提高效率使用move语义。p562  
+
+```cpp
+class Bulk_quote : public Quote {
+	Bulk_quote* clone() const & {
+		return new Bulk_quote(*this);
+	}
+	Bulk_quote* clone() && {
+		return new Bulk_quote(std::move(*this));
+	}
+}
+
+class Basket {
+	public:
+	void add_item(const Quote& sale) {
+		items.insert(std::shared_ptr<Quote>(sale.clone()));
+	}
+	void add_item(Quote&& sale) {
+		items.insert(std::shared_ptr<Quote>(std::move(sale).clone()));
+	}
+}
+```
+
+通过这样的方式，外部在add_item的时候不需要构造shared_ptr，同时也避免内部在new对象的时候无法获取类型而导致截断。
