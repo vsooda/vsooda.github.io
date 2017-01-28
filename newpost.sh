@@ -1,7 +1,7 @@
 #!/bin/sh
 BASEURL="_posts/"
 NOW=$(date +"%Y-%m-%d")
-if [ $# > 1 ]; then
+if [ $# -gt 1 ]; then
     NOW=$2
 fi
 HYPHEN="-"
