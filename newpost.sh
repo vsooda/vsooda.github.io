@@ -13,6 +13,7 @@ echo "---" >> $FILE
 echo "layout: post"  >> $FILE
 echo "title: \""$1"\""  >> $FILE
 echo "date: "$NOW  >> $FILE
+echo "mathjax: true" >> $FILE
 echo "categories: "  >> $FILE
 echo "tags: " >> $FILE
 echo "---" >> $FILE
