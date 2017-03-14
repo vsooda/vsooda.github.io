@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Softmax, Softmax-Loss, Logistic"
+title: "彻底理解softmax"
 date: 2017-03-14
 mathjax: true
 categories: ml
@@ -16,21 +16,11 @@ tags: ml
 
 
 
-一看源码，有点懵逼，就是只有forward, backward的实现。对于为何如此实现没有只言片语。甚至搜索关键字loss没有任何返回。自己查阅相关文章了。
+一看源码，有点懵逼，就是只有forward, backward的实现。对于为何如此实现没有只言片语。甚至搜索关键字loss没有任何返回。自己查阅相关文章了。发现说来话长...
 
 
 
 本文从最简单的logistic讲起，讲到softmax, softmax loss, 最后讲mxnet SoftmaxOutput的具体实现。
-
-
-
-
-
-caffe 关于softmax layer的描述。
-
-
-
-> Softmax with Loss - computes the multinomial logistic loss of the softmax of its inputs. It’s conceptually identical to a softmax layer followed by a multinomial logistic loss layer, but provides a more numerically stable gradient.
 
 
 
@@ -78,7 +68,7 @@ $$J(w)=-\frac{1}{m}\sum_{i=1}^{N}[y_ilogP(Y=1\mid x_i)+(1-y_i)log(1-logP(Y=1\mid
 
 $$J(w)=-\frac{1}{m}\sum_{i=1}^{N}\lbrack y_i log \frac{P(Y=1\mid x_i)}{1-P(Y=1\mid x_i)}+log(1-P(Y=1\mid x_i))\rbrack$$
 
-将$P(Y=1|x)=\frac{exp(w\cdot x)}{1+exp(w\cdot x)}$代入上式，得到: 
+将$P(Y=1\mid x)=\frac{exp(w\cdot x)}{1+exp(w\cdot x)}$代入上式，得到: 
 
 $$J(w)=-\frac{1}{m}\sum_{i=1}^{N}[y_i(w\cdot x_i)-log(1+exp(w\cdot x_i))]$$
 
@@ -130,9 +120,7 @@ dW += reg*W # don't forget the regularization gradient
 
 Where we see that we have backpropped through the matrix multiply operation, and also added the contribution from the regularization. Note that the regularization gradient has the very simple form `reg*W` since we used the constant `0.5` for its loss contribution (i.e. \\(\frac{d}{dw} ( \frac{1}{2} \lambda w^2) = \lambda w\\). This is a common convenience trick that simplifies the gradient expression.
 
-
-
-### 推导
+#### 推导
 
 下面介绍推导过程。可以参考这篇[文章](http://math.stackexchange.com/questions/945871/derivative-of-softmax-loss-function)。
 
@@ -162,13 +150,21 @@ $$\frac{\partial L}{\partial o_i}=-\sum_jy_j\frac{\partial \log p_j}{\partial o_
 
 ### softmax layer
 
+caffe 关于softmax layer的描述。
+
+> Softmax with Loss - computes the multinomial logistic loss of the softmax of its inputs. It’s conceptually identical to a softmax layer followed by a multinomial logistic loss layer, but provides a more numerically stable gradient.
+
+参考文章: [pluskid](http://freemind.pluskid.org/machine-learning/softmax-vs-softmax-loss-numerical-stability/), [cs231n](http://cs231n.github.io/linear-classify/#softmax)
+
+#### 单层　vs 多层
+
+#### 数值稳定性问题
 
 
-### mxnet implement
 
-###  
+### mxnet实现
 
-
+关于softmaxoutput前向输入概率，后向计算loss, 并用mshadow求梯度。MakeLoss
 
 
 
