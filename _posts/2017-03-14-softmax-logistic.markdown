@@ -158,6 +158,27 @@ $$\frac{\partial L}{\partial o_i}=-\sum_jy_j\frac{\partial \log p_j}{\partial o_
 
 
 
+这里我们对上面cs231n进行的简单的解释。
+
+```python
+dscores = probs
+dscores[range(num_examples),y] -= 1
+dscores /= num_examples
+dW = np.dot(X.T, dscores)
+```
+
+上面代码中为什么X.T要乘上dscores. 是什么原理？其实重点在于dscores是损失函数对O的偏导数，而不是一个差值。使用链式法则，推导如下:
+
+$$dscores=\frac{\partial J}{\partial O}$$
+
+$$\frac{\partial O}{\partial W}=X^T$$
+
+所以, 
+
+$$\frac{\partial J}{\partial W}=\frac{\partial J}{\partial O}\cdot \frac{\partial O}{\partial W}=X^T\cdot dscores$$
+
+至于到底应该是$X^T\cdot scores$还是$dscores\cdot X^T$可以由矩阵的维度决定。具体理论参见这篇[文章](http://cs231n.stanford.edu/vecDerivs.pdf)。
+
 ### softmax layer
 
 caffe 关于softmax layer的描述。
@@ -193,3 +214,5 @@ http://cs231n.github.io/linear-classify/#softmax
 http://math.stackexchange.com/questions/945871/derivative-of-softmax-loss-function
 
 http://cs231n.github.io/neural-networks-case-study/#grad
+
+[http://cs231n.stanford.edu/vecDerivs.pdf](http://cs231n.stanford.edu/vecDerivs.pdf)
