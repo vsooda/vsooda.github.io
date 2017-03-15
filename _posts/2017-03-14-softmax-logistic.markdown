@@ -134,6 +134,16 @@ $$L = -\sum_j y_j \log p_j$$
 
 softmax层求导:
 
+$$\frac{\partial p_j}{\partial o_i} = \frac{\partial  \frac{e^{o_j}}{\sum_k e^{o_k}}}{\partial o_i}\\=\frac{\frac{\partial e^{o_j}}{\partial e^{o_i}}\sum_k e^{o_k}-e^{o_j}e^{o_i}}{(\sum_k e^{o_k})^2}$$
+
+
+
+当$i=j$时, $\frac{\partial e^{o_j}}{\partial e^{o_i}}=e^{o_i}$;
+
+当$i\neq j$时，$\frac{\partial o_j}{\partial o_i}=0$.
+
+所以, 
+
 $$\frac{\partial p_j}{\partial o_i} = p_i(1 - p_i),\quad i = j$$
 
 $$\frac{\partial p_j}{\partial o_i} = -p_i p_j,\quad i \neq j.$$
@@ -142,7 +152,7 @@ $$\frac{\partial p_j}{\partial o_i} = -p_i p_j,\quad i \neq j.$$
 
 
 
-$$\frac{\partial L}{\partial o_i}=-\sum_jy_j\frac{\partial \log p_j}{\partial o_i}=-\sum_jy_j\frac{1}{p_j}\frac{\partial p_j}{\partial o_i}\\=-y_i(1-p_i)-\sum_{j\neq i}y_j\frac{1}{p_j}({\color{red}{-p_jp_i}})\\=-y_i(1-p_i)+\sum_{j\neq i}y_j({\color{red}{p_i}})\\=-y_i+\color{blue}{y_ip_i+\sum_{j\neq i}y_j({p_i})}\\=\color{blue}{p_i\left(\sum_jy_j\right)}-y_i=p_i-y_i$$
+$$\frac{\partial L}{\partial o_i}=-\sum_jy_j\frac{\partial \log p_j}{\partial o_i}=-\sum_jy_j\frac{1}{p_j}\frac{\partial p_j}{\partial o_i}\\=-y_i\frac{1}{p_i}p_i(1-p_i)-\sum_{j\neq i}y_j\frac{1}{p_j}({\color{red}{-p_jp_i}})\\=-y_i(1-p_i)+\sum_{j\neq i}y_j({\color{red}{p_i}})\\=-y_i+\color{blue}{y_ip_i+\sum_{j\neq i}y_j({p_i})}\\=\color{blue}{p_i\left(\sum_jy_j\right)}-y_i=p_i-y_i$$
 
 所以，最终对于softmax层，其反向梯度仅仅是**概率值减去label值**。
 
