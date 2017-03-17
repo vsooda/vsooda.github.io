@@ -158,6 +158,10 @@ $$\frac{\partial L}{\partial o_i}=-\sum_jy_j\frac{\partial \log p_j}{\partial o_
 
 
 
+### 理解
+
+#### 最大似然
+
 这里我们对上面cs231n进行的简单的解释。
 
 ```python
@@ -165,6 +169,8 @@ dscores = probs
 dscores[range(num_examples),y] -= 1
 dscores /= num_examples
 dW = np.dot(X.T, dscores)
+W += -step_size * dW　#为什么是减？见下文解释
+b += -step_size * db
 ```
 
 上面代码中为什么X.T要乘上dscores. 是什么原理？其实重点在于dscores是损失函数对O的偏导数，而不是一个差值。使用链式法则，推导如下:
@@ -179,6 +185,26 @@ $$\frac{\partial J}{\partial W}=\frac{\partial J}{\partial O}\cdot \frac{\partia
 
 至于到底应该是$X^T\cdot scores$还是$dscores\cdot X^T$可以由矩阵的维度决定。具体理论参见这篇[文章](http://cs231n.stanford.edu/vecDerivs.pdf)。
 
+#### 加还是减
+
+先考虑一个问题: 为什么不直接去$f'(x)$等于０。这是因为损失函数不是单调函数，可能存在多个局部最优点。
+
+
+
+在更新权重的时候为什么是减而不是加？
+
+
+
+我们知道在函数$y=f(x)$中，如果$f'(x)>0$表示，ｙ在ｘ处随着ｘ增大而增大。反之则减小。（画图可能更清晰一些）
+
+而我们要求的是损失函数的最小值。也就是说，在$f'(x)>0$时，我们可以通过减小ｘ使得整个loss减小。而在$f'(x)<0$时，我们通过增大x的值来使得整个loss减小。
+
+
+
+综上，我们通过将ｘ往负梯度的方向进行调整，从而获得更小的loss值。
+
+
+
 ### softmax layer
 
 caffe 关于softmax layer的描述。
@@ -187,7 +213,7 @@ caffe 关于softmax layer的描述。
 
 参考文章: [pluskid](http://freemind.pluskid.org/machine-learning/softmax-vs-softmax-loss-numerical-stability/), [cs231n](http://cs231n.github.io/linear-classify/#softmax)
 
-#### 单层　vs 多层
+#### 单层vs多层
 
 #### 数值稳定性问题
 
