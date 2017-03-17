@@ -270,7 +270,105 @@ for i, var in enumerate(gene_executor.grad_dict):
         optimizer.update(i, gene_executor.arg_dict[var], gene_executor.grad_dict[var], optim_states[i])
 ```
 
-backward是计算梯度，update是真正根据梯度更新参数。更新策略在optimizer里面
+backward是计算梯度，update是真正根据梯度更新参数。更新策略在optimizer里面.
+
+下面以mxnet的softmax output和regression output为例, 介绍mxnet的output layer。**在这些output layer中其实loss并没有被计算，而是直接把其梯度计算出来就好了。**
+
+#### softmax output
+
+**softmax_output-inl.h**:
+
+```cpp
+template<typename xpu, typename DType>
+class SoftmaxOutputOp : public Operator {
+  virtual void Forward() {
+  //...
+  	Softmax(out, data);
+  }
+  virtual void Backward() {
+  //...
+  	SoftmaxGrad(grad, out, label);
+  }
+}
+```
+
+**mshadow/tensor_cpu-inl.h**:
+
+```cpp
+template<typename DType>
+inline void Softmax(Tensor<cpu, 1, DType> dst,
+                    const Tensor<cpu, 1, DType> &energy) {
+  DType mmax = energy[0];
+  for (index_t x = 1; x < dst.size(0); ++x) {
+    if (mmax < energy[x]) mmax = energy[x];
+  }
+  DType sum = DType(0.0f);
+  for (index_t x = 0; x < dst.size(0); ++x) {
+    dst[x] = std::exp(energy[x] - mmax);
+    sum += dst[x];
+  }
+  for (index_t x = 0; x < dst.size(0); ++x) {
+    dst[x] /= sum;
+  }
+}
+
+template<typename DType>
+inline void SoftmaxGrad(Tensor<cpu, 2, DType> dst,
+                        const Tensor<cpu, 2, DType> &src,
+                        const Tensor<cpu, 1, DType> &label) {
+#pragma omp parallel for
+  for (openmp_index_t y = 0; y < dst.size(0); ++y) {
+    const index_t k = static_cast<int>(label[y]);
+    for (index_t x = 0; x < dst.size(1); ++x) {
+      if (x == k) {
+        dst[y][k] = src[y][k] - 1.0f;
+      } else {
+        dst[y][x] = src[y][x];
+      }
+    }
+  }
+}
+```
+
+#### regression output
+
+**regression_output-inl.h**:
+
+```cpp
+template<typename xpu, typename ForwardOp, typename BackwardOp>
+  class RegressionOutputOp : public Operator {
+    virtual void Forward() {
+      //...
+      Assign(out, req[reg_enum::kOut], F<ForwardOp>(data));
+    }
+    virtual void Backward() {
+      //...
+      //不需要计算loss，只要有对应的后向计算就可以了
+      Assign(grad, req[reg_enum::kData], param_.grad_scale/num_output*
+             F<BackwardOp>(out, reshape(label, grad.shape_)));
+    }
+  }
+```
+
+**regression_output.cc**:
+
+  ```cpp
+template<>
+Operator *CreateRegressionOutputOp<cpu>(reg_enum::RegressionOutputType type,
+                                        RegressionOutputParam param) {
+  switch (type) {
+    case reg_enum::kLinear:
+      return new RegressionOutputOp<cpu, mshadow::op::identity, mshadow::op::minus>(param); //不同的regression只是前向，后向op不一样
+    case reg_enum::kLogistic:
+      return new RegressionOutputOp<cpu, mshadow_op::sigmoid, mshadow::op::minus>(param);
+    case reg_enum::kMAE:
+      return new RegressionOutputOp<cpu, mshadow::op::identity, mshadow_op::minus_sign>(param);
+    default:
+      LOG(FATAL) << "unknown activation type " << type;
+  }
+  return nullptr;
+}
+  ```
 
 ### metric输出
 
@@ -285,8 +383,6 @@ loss[len(style_layer)] += alpha*np.sum(np.square((desc_executor.outputs[len(styl
 if epoch % 20 == 0:
 	print 'loss', sum(loss), np.array(loss)
 ```
-
-
 
 ### L1, L2 norm
 
