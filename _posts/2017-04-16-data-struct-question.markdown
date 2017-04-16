@@ -3,7 +3,7 @@ layout: post
 title: "数据结构与算法技术评级"
 date: 2017-04-16
 mathjax: true
-categories:　code
+categories: code
 tags: algorithm
 ---
 * content
@@ -14,9 +14,6 @@ tags: algorithm
 基本能答上欢迎加入我们。
 
 
-
-
-##数据结构与算法
 
 #### 1 二叉树遍历
 * 二叉树遍历有哪几种方式。
