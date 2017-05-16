@@ -29,10 +29,15 @@ html {
 body {
     font-family: 'Helvetica Neue',Helvetica,Arial,'Microsoft YaHei',sans-serif;
     color: #333;
+    background-image: url(/css/background.jpg);
+    //background-repeat: no-repeat;
+    background-size: cover;
     position: relative;
     min-height: 100%;
     padding-bottom: 190px;
 }
+
+
 a {
     text-decoration: none;
 }
