@@ -1,0 +1,588 @@
+---
+layout: post
+title: "git tutorial"
+date: 2017-05-21
+mathjax: true
+categories: code tools
+tags: git
+---
+* content
+{:toc}
+## git 基本概念
+
+
+
+基本的 Git 工作流程如下：
+
+1. 在工作目录中修改文件。
+2. 暂存文件，将文件的快照放入暂存区域。
+3. 提交更新，找到暂存区域的文件，将快照永久性存储到 Git 仓库目录。
+
+
+![](../assets/git/lifecycle.png)
+
+
+
+#### 常用命令
+
+git status
+
+git add 
+
+git rm 
+
+git commit 
+
+git push -u origin branch_name
+
+git fetch
+
+git checout -b branch_name <origin/branch_name>
+
+git branch
+
+git show commid_id
+
+git diff
+
+git diff --staged
+
+
+
+## 实战
+
+### 创建仓库
+
+mkdir git_tutorial
+
+git init
+
+编辑 README
+
+```
+this is a simple demo showing how to use git in team work.
+```
+
+git add README
+
+git commit -m 'init commit'
+
+这样就完成了第一次提交。
+
+### 开始开发
+
+接下来写一些简单代码
+
+编辑 main.cpp
+
+```
+#include <iostream>
+using namespace std;
+
+int main() {
+    std::cout << "hello git " << std::endl;
+    return 0;
+}
+```
+
+g++ main.cpp -o git_demo
+
+./git_demo
+
+完成hello git了，好棒 :) 
+
+提交一下吧。
+
+git add main.cpp
+
+git commit -m 'hello git'
+
+
+
+再增加一些功能。
+
+├── main.cpp
+├── Makefile
+├── README
+├── util.cpp
+└── util.h
+
+
+
+util.h
+
+```
+int add(int a, int b);
+```
+
+
+
+util.cpp
+
+```
+#include "util.h"
+int add(int a, int b) {
+   return a + b; 
+}
+```
+
+main.cpp
+
+```
+#include <iostream>
+#include "util.h"
+using namespace std;
+
+int main() {
+    int a = 3, b = 5;
+    int c = add(a, b);
+    std::cout << a << " + " << b << " = " << add(a, b) << std::endl;
+    std::cout << "hello git " << std::endl;
+    return 0;
+}
+```
+
+Makefile 
+
+```
+git_demo : main.cpp util.cpp
+	g++ main.cpp util.cpp -o git_demo
+```
+
+PS: 对Makefile不熟悉的不必着急。不一定要用Makefile, 使用Makefile之后，直接make等同于执行g++ main.cpp util.cpp -o git_demo，也可以将源码直接加到vs等IDE中，直接run就好了。下同)
+
+
+
+make之后执行一下：./git_demo 输出如下：
+
+```
+3 + 5 = 8
+hello git
+```
+
+
+
+提交吧。先git status看一下当前目录情况。
+
+![](../assets/git/git_status.png)
+
+
+
+正常提交的话，需要一次次git add每个文件。比较繁琐。有没有办法一次add 多个文件呢。
+
+可以add 整个目录，但是这里git_demo是个可执行文件，显然不是我们想要的。可以先add，再把不要的文件reset掉，但是每个提交都会有这个文件，也是很烦的事情。
+
+一劳永逸的方法是，直接ignore这个文件。
+
+编辑 .gitignore
+
+```
+git_demo
+```
+
+现在再用git status查看，就不会再出现这个文件了。
+
+git add . 
+
+把这些文件进行暂存。
+
+可以用git diff --staged查看一下，确保提交的内容没有问题。
+
+git commit -m 'add function'
+
+
+
+### 分支
+
+现在加入我们想要开发一个复杂的功能`减法`。我们开一个分支。为什么要开分支？让我们看几种情况再回来考虑。
+
+git checkout -b minus
+
+编写代码..
+
+git add .
+
+git commit -m 'minus function'
+
+这时候用git branch显示分支有:
+
+```
+master
+minus
+```
+
+现在测试通过，需要将minus合并到master
+
+git checkout master
+
+git merge minus
+
+git log 查看
+
+```
+commit 87eaf1e9f2e82aaa5b29e1aaa4e6f736d7b56d7d
+Author: sooda <liushouda@qq.com>
+Date:   Sun May 21 18:03:47 2017 +0800
+
+    minus function
+
+commit 7956201e1de99b7b371c895b22345e02118d383d
+Author: sooda <liushouda@qq.com>
+Date:   Sun May 21 17:19:51 2017 +0800
+
+    add function
+
+commit 07460d8b806d8b1e6090785f93e802a490ecdc79
+Author: sooda <liushouda@qq.com>
+Date:   Sun May 21 16:12:39 2017 +0800
+
+    hello git
+
+commit ce0bae17393d4e0a10b9d2987aef2977c955c186
+Author: sooda <liushouda@qq.com>
+Date:   Sun May 21 16:12:04 2017 +0800
+
+    init commit
+```
+
+现在master提交历史上，就好像只有一个分支一样。
+
+
+
+### 远程
+
+#### 创建项目
+
+![](../assets/git/gitlab_new.png)
+
+**添加远程仓库**:
+
+```
+git remote add origin git@gitlab.avatarworks.com:shouda/git_tutorial.git
+```
+
+提交代码
+
+git push -u origin master
+
+
+
+### 协作
+
+
+现在加入有另一位成员b加入进来，一起开发。
+
+```
+git clone http://shouda@gitlab.avatarworks.com/shouda/git_tutorial.git
+```
+
+git checkout -b multiply
+
+编写乘法代码
+
+git add .
+
+git commit -m 'multiply'
+
+git push -u origin multiply  (没有加-u下次需要加set-upstream,根据提示操作即可)
+
+在gitlab（github）上提交合并请求。
+
+![](../assets/git/merge_request.png)
+
+
+
+---
+
+项目维护员点击: accept merge request即可合并到master分支
+
+---
+
+用户a在开发除法。
+
+git checkout -b ‘div'
+
+编写代码，写到一半，有人说master代码有问题，需要修复一下（通常是有bug，现在假设我们想将add改成addFunc)。这时候怎么办。以前的做法是备份文件夹？？现在肯定不需要。我们有分支！我们只要切回master分支，修改并提交后，再切回这个分支就好了。
+
+说干就干。
+
+**做法一**
+
+git checkout master
+
+git pull
+
+报错
+
+```
+error: Your local changes to the following files would be overwritten by merge:
+	util.cpp
+	util.h
+Please, commit your changes or stash them before you can merge.
+Aborting
+```
+
+意思是，有些文件master的更新修改了util.h, util.cpp, 现在本地同样修改了这个两个文件，需要先把这个修改提交了，否则，无法拉取最新代码。（因为拉取新代码，可能是你本地未提交代码丢失)
+
+
+
+**正确做法**：
+
+
+
+比较好的做法是将在原div分支上先提交代码，再切换分支。有时候，修改代码比较乱，或者涉及到一些本地环境变量，不想提交。那么，stash （贮存）就派上用场了。贮存的意思就是先把本地的修改存起来，还原一个干净的环境。
+
+git stash
+
+```
+Saved working directory and index state WIP on div: 87eaf1e minus function
+HEAD is now at 87eaf1e minus function
+```
+
+git checkout master
+
+git pull  (切分支最好从最新的master切出来)
+
+git checkout -b 'hotfix'
+
+修改代码。。
+
+git add .
+
+git commit -m 'change add to addFunc'
+
+git push origin hotfix
+
+创建merge request，提交合并请求
+
+现在可以切回div分支继续开发了。
+
+git checkout div
+
+恢复开发环境 git stash pop
+
+这样一切都跟原来一样。git stash不仅仅用于这种合并的时候，任何时候想要还原干净环境都可以这样做。
+
+
+
+继续编写代码，测试通过之后commit
+
+git add .
+
+git commit -m 'div function'
+
+
+
+这时候似乎已经完成开发了。直接到gitlab提交合并请求？
+
+虽然这也可以。但是，理我们从master开分支已经较长时间了，master很有可能已经改变了。我们现在最新的代码是否能够直接合并到master并不确定。所以，我们可以尝试将master合并到本分支，看我们的代码是否有冲突。
+
+更新master代码: git fetch origin master:master
+
+git merge master
+
+ops! 冲突了。。
+
+```
+Auto-merging util.h
+CONFLICT (content): Merge conflict in util.h
+Auto-merging util.cpp
+CONFLICT (content): Merge conflict in util.cpp
+Auto-merging main.cpp
+CONFLICT (content): Merge conflict in main.cpp
+Automatic merge failed; fix conflicts and then commit the result.
+```
+
+
+
+接下来我们学习如何合并冲突。
+
+![](../assets/git/conflict.png)
+
+用文本编辑器打开，util.h
+
+```cpp
+int addFunc(int a, int b);
+int minusFunc(int a, int b);
+<<<<<<< HEAD
+int divFunc(int a, int b); //当前分支的代码
+=======
+int multiFunc(int a, int b); //master分支的代码
+>>>>>>> master
+```
+
+上面中文注释部分是新加的。这个冲突的意思是，你当前分支希望这一行是divFunc, master分支希望是multiFunc。git不知道到底听哪个好了。所以列出来由我们决定。
+
+从我们业务逻辑出发，这两个都要啊。那就改下这个代码..
+
+```cpp
+int addFunc(int a, int b);
+int minusFunc(int a, int b);
+int divFunc(int a, int b);
+int multiFunc(int a, int b);
+```
+
+这样就算util.h的冲突解决好了。但是如何让git知道你已经解决好冲突了呢。答案是暂存。 git add util.h即可。
+
+同样的方式解决main.cpp的冲突。
+
+
+
+我们再来看一下util.cpp
+
+```cpp
+#include "util.h"
+
+int addFunc(int a, int b) {
+   return a + b; 
+}
+
+int minusFunc(int a, int b) {
+    return a - b;
+}
+
+<<<<<<< HEAD
+int divFunc(int a, int b) {
+    return a / b;
+=======
+int multiFunc(int a, int b) {
+    return a * b;
+>>>>>>> master
+}
+```
+
+在这个例子中，手动修改一下很容易。如果更复杂的合并，则可能需要用到mergetool了。我们尝试在这里使用一下mergetool。在ubuntu下我们使用meld
+
+```
+sudo apt-get install meld    //安装
+git config --global merge.tool meld  //设置为默认mergetool
+```
+
+git mergetool
+
+弹出一个界面 
+
+![](../assets/git/meld.png)
+
+左边表示你当前分支(div)的更改。右边表示被合并分支master的更改。中间表示你希望的合并结果。
+
+你可以点击左边绿色的箭头，告诉mergetool说，这个函数是需要的。点击以后的结果是:
+
+![](../assets/git/meld1.png)
+
+现在的情况表明，要么选中间的，要么选右边的。没办法兼容的样子。。
+
+没关系，我们还有一招，中间那个文件是可以直接修改的。我们手动把右边的第三个函数copy到中间来，
+
+![](../assets/git/meld2.png)
+
+这样看起来应该没错了（中间的合并结果比右边多了一个divFunc，比左边多一个multiFunc）。[ps: 注意上面代码没合并有问题,后面会有解决方案].按ctrl s保存后，关掉这个图形界面即可。如果有多个文件需要合并，会跳出新的合并页面。
+
+git commit
+
+跳出一个合并信息页面。一般不需要更改，直接保存退出就好了。
+
+这样就完成了将master合并到div了
+
+现在可以将div提交合并了。
+
+git push origin div
+
+提交代码之后，回到主分支继续工作，
+
+git checkout master 
+
+（维护人员合并代码)
+
+git pull
+
+make 
+
+编译不通过！
+
+```
+main.cpp:(.text+0x22): undefined reference to `addFunc(int, int)'
+collect2: error: ld returned 1 exit status
+Makefile:2: recipe for target 'git_demo' failed
+make: *** [git_demo] Error 1
+```
+
+大意了，赶紧修复一下。
+
+git checkout div
+
+将util.cpp的add改成addFunc。有了上次的经验，合并代码之后一定要编译一下看看是否正确。正确后提交代码。
+
+git add .
+
+git commit -m 'fix merge'
+
+git push origin div
+
+重新提交合并请求即可。
+
+
+
+
+
+## 高级话题
+
+
+
+
+
+### 修改提交
+
+参考[这里](https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E9%87%8D%E5%86%99%E5%8E%86%E5%8F%B2)
+
+![](../assets/git/git_amend_orig.png)
+
+git rm main.cpp
+
+git commit --amend
+
+保存即可。
+
+如果想在一个提交增加某些文件，同样可以进行该操作。
+
+**注意，上面的rm操作是真的会删除文件的。但是即使文件被删除了也没有关系，只要提交过了，本地会有记录的，通过git reflog可以查看之前的id，甚至把它checkout出来**
+
+![](../assets/git/git_amend.png)
+
+
+### 搜索
+
+来自[这里](https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E6%90%9C%E7%B4%A2)
+
+> ### Git 日志搜索
+>
+> 或许你不想知道某一项在 **哪里** ，而是想知道是什么 **时候** 存在或者引入的。 `git log` 命令有许多强大的工具可以通过提交信息甚至是 diff 的内容来找到某个特定的提交。
+>
+> 例如，如果我们想找到 `ZLIB_BUF_MAX` 常量是什么时候引入的，我们可以使用 `-S` 选项来显示新增和删除该字符串的提交。
+>
+> ```
+> $ git log -SZLIB_BUF_MAX --oneline
+> e01503b zlib: allow feeding more than 4GB in one go
+> ef49a7a zlib: zlib can only process 4GB at a time
+> ```
+>
+> 如果我们查看这些提交的 diff，我们可以看到在 `ef49a7a` 这个提交引入了常量，并且在 `e01503b` 这个提交中被修改了。
+>
+> 如果你希望得到更精确的结果，你可以使用 `-G` 选项来使用正则表达式搜索。
+>
+> #### 行日志搜索
+>
+> 行日志搜索是另一个相当高级并且有用的日志搜索功能。 这是一个最近新增的不太知名的功能，但却是十分有用。 在 `git log` 后加上 `-L` 选项即可调用，它可以展示代码中一行或者一个函数的历史。
+>
+> 例如，假设我们想查看 `zlib.c` 文件中`git_deflate_bound` 函数的每一次变更，我们可以执行 `git log -L :git_deflate_bound:zlib.c`。 Git 会尝试找出这个函数的范围，然后查找历史记录，并且显示从函数创建之后一系列变更对应的补丁。
+
+
+
+### github协作
+git rebase的使用
+
+git rebase -i HEAD~n //合并多个提交
+
+git rebase origin/master 
+
+https://github.com/edx/edx-platform/wiki/How-to-Rebase-a-Pull-Request
