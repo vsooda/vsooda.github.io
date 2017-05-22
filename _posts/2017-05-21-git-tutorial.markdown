@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "git tutorial"
+title: "git入门"
 date: 2017-05-21
 mathjax: true
 categories: code tools
@@ -8,9 +8,10 @@ tags: git
 ---
 * content
 {:toc}
-## git 基本概念
+## git 基本知识
 
 
+### git工作流
 
 基本的 Git 工作流程如下：
 
@@ -21,9 +22,75 @@ tags: git
 
 ![](../assets/git/lifecycle.png)
 
+最常用命令:
+
+```
+git add .  //暂存
+git commit -m 'xxx'　//提交
+git pull　//拉取更新
+```
 
 
-#### 常用命令
+
+目前位置，这几个操作与svn类似。
+
+每次提交会有一个commit id. 通过git log可以查看提交历史。输出如下。
+
+```
+commit 2c29b790d069a46f07cba6a38eb380f4ccbd7635
+Author: sooda <liushouda@qq.com>
+Date:   Mon May 22 14:47:29 2017 +0800
+
+    fix merge
+
+commit 0f2830daa6ac8dc3b681bbd53a16a58534a55b0d
+Merge: 1d7a343 4a906a4
+Author: sooda <liushouda@qq.com>
+Date:   Mon May 22 14:36:08 2017 +0800
+
+    Merge branch 'master' into div
+```
+
+
+
+有了这个commid id某次提交的校验码。用前面4,5个字符基本上就可以唯一确定一个提交了。
+
+
+
+有了这个id，任何时候都可以回退，查看这次提交的内容。
+
+
+
+```
+git checkout commid_id 检出某次提交，可以用于简单测试该提交状态下代码有没有问题，也可以从该提交重新切分支
+git reset --hard commid_id 重置到某次提交
+```
+
+
+
+### 远端
+
+git在本地控制实际上就是一个.git文件夹。把这个.git文件夹删掉之后，就跟git没啥关系了。
+
+git是一个分布式版本控制。从任何一个副本都可以恢复整个提交历史。一个本地仓库可以跟踪多个远程仓库，
+
+* 通过git remote add 添加。
+* git remote -v 显示远程信息。
+* git fetch remote_name来拉取该远端。 
+* git merge remote_name/branch_name来合并该分支。
+* git push remote_name branch_name来推送到某个远端。
+
+默认来说，本地分支是master。默认跟踪的远端是origin。 也就是说本地分支branch_name下操作pull/push等操作都是相对于origin的。
+
+
+
+#### gitlab，github
+
+这些只是提供一个远程管理功能。本质上还是git。git服务器可以自己搭建，不一定要gitlab或者github
+
+
+
+### 常用命令
 
 git status
 
@@ -46,6 +113,16 @@ git show commid_id
 git diff
 
 git diff --staged
+
+git remote -v
+
+git log <filename>
+
+git remote add
+
+git remote set-url
+
+git branch -D branch_name 
 
 
 
@@ -269,6 +346,7 @@ git push -u origin master
 
 ### 协作
 
+#### 开发人员b
 
 现在加入有另一位成员b加入进来，一起开发。
 
@@ -294,9 +372,13 @@ git push -u origin multiply  (没有加-u下次需要加set-upstream,根据提�
 
 ---
 
+#### gitlab merge
+
 项目维护员点击: accept merge request即可合并到master分支
 
 ---
+
+#### 开发人员a
 
 用户a在开发除法。
 
@@ -324,6 +406,7 @@ Aborting
 
 意思是，有些文件master的更新修改了util.h, util.cpp, 现在本地同样修改了这个两个文件，需要先把这个修改提交了，否则，无法拉取最新代码。（因为拉取新代码，可能是你本地未提交代码丢失)
 
+##### git stash
 
 
 **正确做法**：
@@ -371,7 +454,7 @@ git add .
 
 git commit -m 'div function'
 
-
+#### 合并代码
 
 这时候似乎已经完成开发了。直接到gitlab提交合并请求？
 
@@ -451,6 +534,8 @@ int multiFunc(int a, int b) {
 }
 ```
 
+#### mergetool
+
 在这个例子中，手动修改一下很容易。如果更复杂的合并，则可能需要用到mergetool了。我们尝试在这里使用一下mergetool。在ubuntu下我们使用meld
 
 ```
@@ -488,11 +573,14 @@ git commit
 
 git push origin div
 
-提交代码之后，回到主分支继续工作，
+提交代码之后，回到主分支继续工作
+
+#### 测试
 
 git checkout master 
 
 （维护人员合并代码)
+
 
 git pull
 
@@ -521,14 +609,48 @@ git push origin div
 
 重新提交合并请求即可。
 
+### 总结
 
+#### 为什么要开分支
+
+现在我们来考虑一下为什么要开分支。先考虑如果不开分支会怎么样：
+
+* 在开发一个功能的时候，我们代码甚至编译不通过。如果需要修复一个线上版本的bug, 我们没有办法快速响应。这时候可能需要复制文件夹。
+* 在开发一个功能的时候，如果最终这个功能被认定为不可用，那么这个代码放哪里呢？开个文件夹备份一下？
+* 在开发一个功能的时候，我们突然发现一个bug。想知道以前的版本有没有。如果不开分支，又要文件夹备份？
+
+开分支可以认为就是文件夹备份。但是比文件夹备份牛逼的地方在于，他还能合并！我们用文件夹来做只能是替换文件。而无法合并不同修改。
+
+
+
+#### 使用原则
+
+* 一个分支只干一件事情。
+
+  ​如果多个功能都在一个分支开发。可能相互代码之间会有影响，如果出问题不好查找。如果其中一个功能用不了，整个分支无法合并到主分支。这时候就很麻烦了。
+
+* 鼓励多提交
+
+  在git中，因为有commid id的存在，只要你提交过代码，就不用担心代码会丢失。可以在开发一个小功能之后就提交代码，小步快跑。最后提交的时候可以合并多个小提交。
+
+  一次git提交相当于一个`承诺:这次提交我完成了xxx功能，这次提交应该可以正常执行`。有了这个保证之后，将来代码有问题，很容易就可以从提交历史回溯，看看哪次提交造成的。
+
+* 写好提交信息
+
+  版本控制的目的就是为了方便查看历史。哪天发现你的代码出问题了，一看提交历史发现是某某某改的。提交信息为空，不写理由。这时候你去问他为什么这么改，他估计也忘记了。所以写好提交信息很重要。
+
+
+* 临时更改不要提交
+
+  对于本地的一些环境变量，文件名路径名这种不要提交。
+
+* 大的二进制文件不要提交
+
+  git无法区分二进制文件中的区别。只能全部替换。二进制文件会使得git急剧变大
 
 
 
 ## 高级话题
-
-
-
 
 
 ### 修改提交
