@@ -761,6 +761,102 @@ git push origin div
 
 重新提交合并请求即可。
 
+
+
+### 参与github项目
+
+#### 下载
+
+假设一个场景，我们发现https://github.com/msracver/Deformable-ConvNets这个项目跟我们相关性很大。我们想把它下下来看看。
+
+![](../assets/git/download.png)
+
+一种方法是直接下载源码zip，这个非常不建议的。因为人家项目还会继续更新，而下载源码zip则已经丢失git信息
+
+
+
+正确的做法是先fork这个项目。
+
+![](../assets/git/fork.png)
+
+点击fork这个按钮。会生成在我们自己名下的一个仓库。比如: https://github.com/vsooda/Deformable-ConvNets
+
+
+
+找个目录clone这个地址就好了。 git clone https://github.com/vsooda/Deformable-ConvNets 
+
+
+
+#### 修改
+
+下载下来，跑一跑发现这个项目真的挺牛逼的。但是有一些bug或者我们需要自己定制。
+
+现在以修bug为例。
+
+开个分支 git checkout -b fix_test
+
+在README.md加上一行: just for test  (只是测试，在实际中肯定要提交有效代码)
+
+git add README.md
+
+git commit -m 'fix test'
+
+git push -u origin fix_test
+
+这样在我们github个人仓库下就可以看到我们自己的修改了。
+
+
+
+#### 同步upstream
+
+在我们做这个更改的时候，原仓库可能又有一些更改了。我们需要及时更新我们仓库信息。
+
+这就涉及到多个远端问题了。我们增加一个远端，命名为upstream (只是一个名字，其他名字也可以)
+
+git remote add upstream https://github.com/msracver/Deformable-ConvNets.git
+
+显示一下当前远端有哪些：
+
+```
+sooda@thinkpad:~/deep/Deformable-ConvNets$ git remote -v
+origin	https://github.com/vsooda/Deformable-ConvNets.git (fetch)
+origin	https://github.com/vsooda/Deformable-ConvNets.git (push)
+upstream	https://github.com/msracver/Deformable-ConvNets.git (fetch)
+upstream	https://github.com/msracver/Deformable-ConvNets.git (push)
+```
+
+抓取远端: git fetch upstream
+
+切到主分支: git checkout master
+
+合并原仓库更新到master: git merge upstream/master
+
+切到fix_test分支: git checkout fix_test
+
+合并本地master: git merge master
+
+推送到github: git push
+
+
+
+#### pull request
+
+现在这个修改只是我们自己能看到。如果我们这个修改确实对整个项目有帮助，我们希望贡献出去，要怎么做呢。
+
+答案是: pull request
+
+在自己的仓库下，选中fix_test分支后，点击new pull request
+
+![](../assets/git/new_pull_request.png)
+
+进入一个新界面:
+
+![](../assets/git/pull_request.png)
+
+写一写这个pull request做了什么。点击`create pull request`提交。接下来就是等待作者的审核了。记得及时回复别人的问题。如果对方有什么修改意见，你直接在fix_test分支继续修改，直接推送上去就好了。不需要重新创建pull request。
+
+
+
 ### 总结
 
 #### 为什么要开分支
@@ -799,6 +895,15 @@ git push origin div
 * 大的二进制文件不要提交
 
   git无法区分二进制文件中的区别。只能全部替换。二进制文件会使得git急剧变大
+
+
+
+
+### 作业
+
+1. 重现以上实战步骤
+2. 在https://github.com/vsooda/git_tutorial.git 上任意开发一个小函数，提交pull request，最后成功被合并。
+
 
 
 
