@@ -8,8 +8,12 @@ tags: git
 ---
 * content
 {:toc}
-## git 基本知识
 
+本文介绍git的基本用法。大家心里先有一个问题，github上一个项目几百个人到底应该怎么管理？
+
+
+
+## git 基本知识
 
 ### git工作流
 
@@ -152,7 +156,7 @@ git commit -m 'init commit'
 
 编辑 main.cpp
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -188,15 +192,13 @@ git commit -m 'hello git'
 
 util.h
 
-```
+```cpp
 int add(int a, int b);
 ```
 
-
-
 util.cpp
 
-```
+```cpp
 #include "util.h"
 int add(int a, int b) {
    return a + b; 
@@ -205,7 +207,7 @@ int add(int a, int b) {
 
 main.cpp
 
-```
+```cpp
 #include <iostream>
 #include "util.h"
 using namespace std;
@@ -226,7 +228,7 @@ git_demo : main.cpp util.cpp
 	g++ main.cpp util.cpp -o git_demo
 ```
 
-PS: 对Makefile不熟悉的不必着急。不一定要用Makefile, 使用Makefile之后，直接make等同于执行g++ main.cpp util.cpp -o git_demo，也可以将源码直接加到vs等IDE中，直接run就好了。下同)
+PS: 对Makefile不熟悉的不必着急。不一定要用Makefile, 使用Makefile之后，直接make等同于执行g++ main.cpp util.cpp -o git_demo，也可以将源码直接加到vs等IDE中，直接run就好了。下同。后面我们修改的主要是util.h, util.cpp, main.cpp这三个文件。不再特别指明。
 
 
 
@@ -276,6 +278,41 @@ git commit -m 'add function'
 git checkout -b minus
 
 编写代码..
+
+```cpp
+int add(int a, int b);
+int minusFunc(int a, int b);
+```
+
+```cpp
+#include "util.h"
+
+int add(int a, int b) {
+   return a + b; 
+}
+
+int minusFunc(int a, int b) {
+    return a - b;
+}
+
+```
+
+```cpp
+#include <iostream>
+#include "util.h"
+using namespace std;
+
+int main() {
+    int a = 3, b = 5;
+    int c = add(a, b);
+    std::cout << a << " + " << b << " = " << add(a, b) << std::endl;
+    std::cout << a << " - " << b << " = " << minusFunc(a, b) << std::endl;
+    std::cout << "hello git " << std::endl;
+    return 0;
+}
+```
+
+
 
 git add .
 
@@ -348,7 +385,7 @@ git push -u origin master
 
 #### 开发人员b
 
-现在加入有另一位成员b加入进来，一起开发。
+现在加入有另一位成员b加入进来，一起开发`multiply`。
 
 ```
 git clone http://shouda@gitlab.avatarworks.com/shouda/git_tutorial.git
@@ -356,7 +393,45 @@ git clone http://shouda@gitlab.avatarworks.com/shouda/git_tutorial.git
 
 git checkout -b multiply
 
-编写乘法代码
+```cpp
+int add(int a, int b);
+int minusFunc(int a, int b);
+int multiFunc(int a, int b);
+```
+
+```cpp
+#include "util.h"
+
+int add(int a, int b) {
+   return a + b; 
+}
+
+int minusFunc(int a, int b) {
+    return a - b;
+}
+
+int multiFunc(int a, int b) {
+    return a * b;
+}
+```
+
+```cpp
+#include <iostream>
+#include "util.h"
+using namespace std;
+
+int main() {
+    int a = 3, b = 5;
+    int c = add(a, b);
+    std::cout << a << " + " << b << " = " << add(a, b) << std::endl;
+    std::cout << a << " - " << b << " = " << minusFunc(a, b) << std::endl;
+    std::cout << a << " * " << b << " = " << multiFunc(a, b) << std::endl;
+    std::cout << "hello git " << std::endl;
+    return 0;
+}
+```
+
+
 
 git add .
 
@@ -380,11 +455,51 @@ git push -u origin multiply  (没有加-u下次需要加set-upstream,根据提�
 
 #### 开发人员a
 
-用户a在开发除法。
+用户a在开发`除法`。
 
 git checkout -b ‘div'
 
-编写代码，写到一半，有人说master代码有问题，需要修复一下（通常是有bug，现在假设我们想将add改成addFunc)。这时候怎么办。以前的做法是备份文件夹？？现在肯定不需要。我们有分支！我们只要切回master分支，修改并提交后，再切回这个分支就好了。
+编写代码，
+
+```cpp
+int add(int a, int b);
+int minusFunc(int a, int b);
+int divFunc(int a, int b);
+```
+
+```cpp
+#include "util.h"
+
+int add(int a, int b) {
+   return a + b; 
+}
+
+int minusFunc(int a, int b) {
+    return a - b;
+}
+
+int divFunc(int a, int b) {
+    return a / b;
+}
+```
+
+```cpp
+#include <iostream>
+#include "util.h"
+using namespace std;
+
+int main() {
+    int a = 3, b = 5;
+    int c = add(a, b);
+    std::cout << a << " + " << b << " = " << add(a, b) << std::endl;
+    std::cout << a << " - " << b << " = " << minusFunc(a, b) << std::endl;
+    std::cout << a << " / " << b << " = " << divFunc(a, b) << std::endl;
+    std::cout << "hello git " << std::endl;
+    return 0;
+}
+```
+
+写到一半(上面给出完整代码，实际上已经可以开始提交了。但在实际中肯定会碰到写一半的情况)，有人说master代码有问题，需要修复一下（通常是有bug，现在假设我们想将add改成addFunc)。这时候怎么办。以前的做法是备份文件夹？？现在肯定不需要。我们有分支！我们只要切回master分支，修改并提交后，再切回这个分支就好了。
 
 说干就干。
 
@@ -411,8 +526,6 @@ Aborting
 
 **正确做法**：
 
-
-
 比较好的做法是将在原div分支上先提交代码，再切换分支。有时候，修改代码比较乱，或者涉及到一些本地环境变量，不想提交。那么，stash （贮存）就派上用场了。贮存的意思就是先把本地的修改存起来，还原一个干净的环境。
 
 git stash
@@ -429,6 +542,45 @@ git pull  (切分支最好从最新的master切出来)
 git checkout -b 'hotfix'
 
 修改代码。。
+
+```cpp
+int addFunc(int a, int b);
+int minusFunc(int a, int b);
+int multiFunc(int a, int b);
+```
+
+```cpp
+#include "util.h"
+
+int addFunc(int a, int b) {
+   return a + b; 
+}
+
+int minusFunc(int a, int b) {
+    return a - b;
+}
+
+int multiFunc(int a, int b) {
+    return a * b;
+}
+```
+
+```cpp
+#include <iostream>
+#include "util.h"
+using namespace std;
+
+int main() {
+    int a = 3, b = 5;
+    std::cout << a << " + " << b << " = " << addFunc(a, b) << std::endl;
+    std::cout << a << " - " << b << " = " << minusFunc(a, b) << std::endl;
+    std::cout << a << " * " << b << " = " << multiFunc(a, b) << std::endl;
+    std::cout << "hello git " << std::endl;
+    return 0;
+}
+```
+
+
 
 git add .
 
@@ -599,7 +751,7 @@ make: *** [git_demo] Error 1
 
 git checkout div
 
-将util.cpp的add改成addFunc。有了上次的经验，合并代码之后一定要编译一下看看是否正确。正确后提交代码。
+将util.cpp的add改成addFunc。有了上次的经验，**合并代码之后一定要编译一下看看是否正确**。正确后提交代码。
 
 git add .
 
