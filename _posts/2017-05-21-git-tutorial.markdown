@@ -830,6 +830,14 @@ upstream	https://github.com/msracver/Deformable-ConvNets.git (push)
 
 
 
+#### 更规范一些
+
+参考这个[文章](https://github.com/edx/edx-platform/wiki/How-to-Rebase-a-Pull-Request)
+
+git rebase的使用
+git rebase -i HEAD~n //合并多个提交
+git rebase origin/master 
+
 ### 总结
 
 #### 为什么要开分支
@@ -882,6 +890,7 @@ upstream	https://github.com/msracver/Deformable-ConvNets.git (push)
 
 ## 高级话题
 
+这部分涉及的东西很多，未完待续。
 
 ### 修改提交
 
@@ -927,14 +936,3 @@ git commit --amend
 > 行日志搜索是另一个相当高级并且有用的日志搜索功能。 这是一个最近新增的不太知名的功能，但却是十分有用。 在 `git log` 后加上 `-L` 选项即可调用，它可以展示代码中一行或者一个函数的历史。
 >
 > 例如，假设我们想查看 `zlib.c` 文件中`git_deflate_bound` 函数的每一次变更，我们可以执行 `git log -L :git_deflate_bound:zlib.c`。 Git 会尝试找出这个函数的范围，然后查找历史记录，并且显示从函数创建之后一系列变更对应的补丁。
-
-
-
-### github协作
-git rebase的使用
-
-git rebase -i HEAD~n //合并多个提交
-
-git rebase origin/master 
-
-https://github.com/edx/edx-platform/wiki/How-to-Rebase-a-Pull-Request
