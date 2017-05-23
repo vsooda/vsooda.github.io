@@ -201,7 +201,7 @@ util.cpp
 ```cpp
 #include "util.h"
 int add(int a, int b) {
-   return a + b; 
+  return a + b; 
 }
 ```
 
@@ -294,7 +294,6 @@ int add(int a, int b) {
 int minusFunc(int a, int b) {
     return a - b;
 }
-
 ```
 
 ```cpp
@@ -713,7 +712,15 @@ git mergetool
 
 ![](../assets/git/meld2.png)
 
-这样看起来应该没错了（中间的合并结果比右边多了一个divFunc，比左边多一个multiFunc）。[ps: 注意上面代码没合并有问题,后面会有解决方案].按ctrl s保存后，关掉这个图形界面即可。如果有多个文件需要合并，会跳出新的合并页面。
+这样看起来应该没错了（中间的合并结果比右边多了一个divFunc，比左边多一个multiFunc）。[ps: 注意上面代码没合并有问题,后面会有解决方案].
+
+点击右边addFunc那个箭头。因为我们希望add替换成addFunc的。
+
+![](../assets/git/meld3.png)
+
+按ctrl s保存后，关掉这个图形界面即可。如果有多个文件需要合并，会跳出新的合并页面。
+
+make一下，看看是否编译通过，效果是否正确。正确之后就可以提交了。
 
 git commit
 
@@ -726,40 +733,6 @@ git commit
 git push origin div
 
 提交代码之后，回到主分支继续工作
-
-#### 测试
-
-git checkout master 
-
-（维护人员合并代码)
-
-
-git pull
-
-make 
-
-编译不通过！
-
-```
-main.cpp:(.text+0x22): undefined reference to `addFunc(int, int)'
-collect2: error: ld returned 1 exit status
-Makefile:2: recipe for target 'git_demo' failed
-make: *** [git_demo] Error 1
-```
-
-大意了，赶紧修复一下。
-
-git checkout div
-
-将util.cpp的add改成addFunc。有了上次的经验，**合并代码之后一定要编译一下看看是否正确**。正确后提交代码。
-
-git add .
-
-git commit -m 'fix merge'
-
-git push origin div
-
-重新提交合并请求即可。
 
 
 
