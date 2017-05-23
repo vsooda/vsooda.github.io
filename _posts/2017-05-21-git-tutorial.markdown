@@ -24,7 +24,7 @@ tags: git
 3. 提交更新，找到暂存区域的文件，将快照永久性存储到 Git 仓库目录。
 
 
-![](../assets/git/lifecycle.png)
+![](/assets/git/lifecycle.png)
 
 最常用命令:
 
@@ -80,7 +80,7 @@ git是一个分布式版本控制。从任何一个副本都可以恢复整个�
 
 * 通过git remote add 添加。
 * git remote -v 显示远程信息。
-* git fetch remote_name来拉取该远端。 
+* git fetch remote_name来拉取该远端。
 * git merge remote_name/branch_name来合并该分支。
 * git push remote_name branch_name来推送到某个远端。
 
@@ -98,11 +98,11 @@ git是一个分布式版本控制。从任何一个副本都可以恢复整个�
 
 git status
 
-git add 
+git add
 
-git rm 
+git rm
 
-git commit 
+git commit
 
 git push -u origin branch_name
 
@@ -126,7 +126,7 @@ git remote add
 
 git remote set-url
 
-git branch -D branch_name 
+git branch -D branch_name
 
 
 
@@ -170,7 +170,7 @@ g++ main.cpp -o git_demo
 
 ./git_demo
 
-完成hello git了，好棒 :) 
+完成hello git了，好棒 :)
 
 提交一下吧。
 
@@ -201,7 +201,7 @@ util.cpp
 ```cpp
 #include "util.h"
 int add(int a, int b) {
-  return a + b; 
+  return a + b;
 }
 ```
 
@@ -221,7 +221,7 @@ int main() {
 }
 ```
 
-Makefile 
+Makefile
 
 ```
 git_demo : main.cpp util.cpp
@@ -243,7 +243,7 @@ hello git
 
 提交吧。先git status看一下当前目录情况。
 
-![](../assets/git/git_status.png)
+![](/assets/git/git_status.png)
 
 
 
@@ -261,7 +261,7 @@ git_demo
 
 现在再用git status查看，就不会再出现这个文件了。
 
-git add . 
+git add .
 
 把这些文件进行暂存。
 
@@ -288,7 +288,7 @@ int minusFunc(int a, int b);
 #include "util.h"
 
 int add(int a, int b) {
-   return a + b; 
+   return a + b;
 }
 
 int minusFunc(int a, int b) {
@@ -366,7 +366,7 @@ Date:   Sun May 21 16:12:04 2017 +0800
 
 #### 创建项目
 
-![](../assets/git/gitlab_new.png)
+![](/assets/git/gitlab_new.png)
 
 **添加远程仓库**:
 
@@ -402,7 +402,7 @@ int multiFunc(int a, int b);
 #include "util.h"
 
 int add(int a, int b) {
-   return a + b; 
+   return a + b;
 }
 
 int minusFunc(int a, int b) {
@@ -440,7 +440,7 @@ git push -u origin multiply  (没有加-u下次需要加set-upstream,根据提�
 
 在gitlab（github）上提交合并请求。
 
-![](../assets/git/merge_request.png)
+![](/assets/git/merge_request.png)
 
 
 
@@ -470,7 +470,7 @@ int divFunc(int a, int b);
 #include "util.h"
 
 int add(int a, int b) {
-   return a + b; 
+   return a + b;
 }
 
 int minusFunc(int a, int b) {
@@ -552,7 +552,7 @@ int multiFunc(int a, int b);
 #include "util.h"
 
 int addFunc(int a, int b) {
-   return a + b; 
+   return a + b;
 }
 
 int minusFunc(int a, int b) {
@@ -631,7 +631,7 @@ Automatic merge failed; fix conflicts and then commit the result.
 
 接下来我们学习如何合并冲突。
 
-![](../assets/git/conflict.png)
+![](/assets/git/conflict.png)
 
 用文本编辑器打开，util.h
 
@@ -668,7 +668,7 @@ int multiFunc(int a, int b);
 #include "util.h"
 
 int addFunc(int a, int b) {
-   return a + b; 
+   return a + b;
 }
 
 int minusFunc(int a, int b) {
@@ -696,27 +696,27 @@ git config --global merge.tool meld  //设置为默认mergetool
 
 git mergetool
 
-弹出一个界面 
+弹出一个界面
 
-![](../assets/git/meld.png)
+![](/assets/git/meld.png)
 
 左边表示你当前分支(div)的更改。右边表示被合并分支master的更改。中间表示你希望的合并结果。
 
 你可以点击左边绿色的箭头，告诉mergetool说，这个函数是需要的。点击以后的结果是:
 
-![](../assets/git/meld1.png)
+![](/assets/git/meld1.png)
 
 现在的情况表明，要么选中间的，要么选右边的。没办法兼容的样子。。
 
 没关系，我们还有一招，中间那个文件是可以直接修改的。我们手动把右边的第三个函数copy到中间来，
 
-![](../assets/git/meld2.png)
+![](/assets/git/meld2.png)
 
 这样看起来应该没错了（中间的合并结果比右边多了一个divFunc，比左边多一个multiFunc）。[ps: 注意上面代码没合并有问题,后面会有解决方案].
 
 点击右边addFunc那个箭头。因为我们希望add替换成addFunc的。
 
-![](../assets/git/meld3.png)
+![](/assets/git/meld3.png)
 
 按ctrl s保存后，关掉这个图形界面即可。如果有多个文件需要合并，会跳出新的合并页面。
 
@@ -742,7 +742,7 @@ git push origin div
 
 假设一个场景，我们发现https://github.com/msracver/Deformable-ConvNets这个项目跟我们相关性很大。我们想把它下下来看看。
 
-![](../assets/git/download.png)
+![](/assets/git/download.png)
 
 一种方法是直接下载源码zip，这个非常不建议的。因为人家项目还会继续更新，而下载源码zip则已经丢失git信息
 
@@ -750,13 +750,13 @@ git push origin div
 
 正确的做法是先fork这个项目。
 
-![](../assets/git/fork.png)
+![](/assets/git/fork.png)
 
 点击fork这个按钮。会生成在我们自己名下的一个仓库。比如: https://github.com/vsooda/Deformable-ConvNets
 
 
 
-找个目录clone这个地址就好了。 git clone https://github.com/vsooda/Deformable-ConvNets 
+找个目录clone这个地址就好了。 git clone https://github.com/vsooda/Deformable-ConvNets
 
 
 
@@ -820,11 +820,11 @@ upstream	https://github.com/msracver/Deformable-ConvNets.git (push)
 
 在自己的仓库下，选中fix_test分支后，点击new pull request
 
-![](../assets/git/new_pull_request.png)
+![](/assets/git/new_pull_request.png)
 
 进入一个新界面:
 
-![](../assets/git/pull_request.png)
+![](/assets/git/pull_request.png)
 
 写一写这个pull request做了什么。点击`create pull request`提交。接下来就是等待作者的审核了。记得及时回复别人的问题。如果对方有什么修改意见，你直接在fix_test分支继续修改，直接推送上去就好了。不需要重新创建pull request。
 
@@ -836,7 +836,7 @@ upstream	https://github.com/msracver/Deformable-ConvNets.git (push)
 
 git rebase的使用
 git rebase -i HEAD~n //合并多个提交
-git rebase origin/master 
+git rebase origin/master
 
 ### 总结
 
@@ -896,7 +896,7 @@ git rebase origin/master
 
 参考[这里](https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E9%87%8D%E5%86%99%E5%8E%86%E5%8F%B2)
 
-![](../assets/git/git_amend_orig.png)
+![](/assets/git/git_amend_orig.png)
 
 git rm main.cpp
 
@@ -908,7 +908,7 @@ git commit --amend
 
 **注意，上面的rm操作是真的会删除文件的。但是即使文件被删除了也没有关系，只要提交过了，本地会有记录的，通过git reflog可以查看之前的id，甚至把它checkout出来**
 
-![](../assets/git/git_amend.png)
+![](/assets/git/git_amend.png)
 
 
 ### 搜索
