@@ -33,7 +33,7 @@ $$p_i = \frac{n_i}{N\Delta_i}$$
 
 如下图所示: 
 
-![](../assets/kernels/hist.png)
+![](http://vsooda.github.io/assets/kernels/hist.png)
 
 概率密度估计的直方图方法确实告诉了我们两个重要的事情。第一,为了估计在某个特定位置的概率密度,我们应该考虑位于那个点的某个邻域内的数据点. 第二,为了获得好的结果,平滑参数的值既不能太大也不能太小。
 
@@ -74,7 +74,7 @@ $$p(x)=\frac{1}{N}\sum_{n=1}^{N}\frac{1}{(2\pi h^2)^{\frac{D}{2}}}exp\{-\frac{\V
 
 
 
-![](../assets/kernels/kernel_hist.png)
+![](http://vsooda.github.io/assets/kernels/kernel_hist.png)
 
 上图表示，小的$h$对噪声敏感，大的$h$过于平滑。
 
@@ -114,7 +114,7 @@ $$w=-\frac{1}{\lambda}\sum_{n=1}^{N}{\{w^T\phi(x_n)-t_n\}}\phi(x_n)=\sum_{n=1}^{
 
 $$a_n=-\frac{1}{\lambda}{\{w^T\phi(x_n)-t_n\}}\phi(x_n) \qquad(6.4)$$
 
-![](../assets/kernels/dual.png)
+![](http://vsooda.github.io/assets/kernels/dual.png)
 
 gram。与neural style的gram关系？
 
@@ -132,7 +132,7 @@ gram。与neural style的gram关系？
 
 下面对于直接构造核函数的例子，
 
-![img](../assets/kernels/construct_kernel.png)
+![img](http://vsooda.github.io/assets/kernels/construct_kernel.png)
 
 特征映射函数为: $\phi(x)=(x_1^2, \sqrt{2}x_1x_2, x_2^2)^T$
 
@@ -231,11 +231,11 @@ $$p(x,t)=\frac{1}{N}\sum_{n=1}^{N}f(x-x_n, t-t_n)$$
 
 其中，$f(x,t)$是分量密度函数，每个数据点都有一个以该数据点为中心的这种分量。
 
-![](../assets/kernels/kernel_regression_text.png)
+![](http://vsooda.github.io/assets/kernels/kernel_regression_text.png)
 
  (另一个展开归一化径向基函数的情况是把核密度估计应用到回归问题中,正如我们将在6.3.1节讨论的那样)
 
-![img](../assets/kernels/kernel_regression.png)
+![img](http://vsooda.github.io/assets/kernels/kernel_regression.png)
 
 > 使用各向同性的高斯核的 Nadaraya-Watson 核回归模型的说明。数据集为正弦数据集。原始的正弦
 > 函数由绿色曲线表示,数据点由蓝色的点表示,每个数据点是一个各向同性的高斯核的中心。得到的回
@@ -273,11 +273,11 @@ kkt条件
 
 #### 4.3 核
 
-![](../assets/kernels/rotate.gif)
+![](http://vsooda.github.io/assets/kernels/rotate.gif)
 
 #### 4.4 soft margin
 
-![](../assets/kernels/Optimal-Hyper-Plane-2.png)
+![](http://vsooda.github.io/assets/kernels/Optimal-Hyper-Plane-2.png)
 
 形式
 
@@ -291,17 +291,17 @@ kkt条件
 
 ### 5 机器学习技法笔记
 
-![img](../assets/kernels/1464796657873139.jpg)
+![img](http://vsooda.github.io/assets/kernels/1464796657873139.jpg)
 
 在核技巧这节讲到核方法其实就是偷吃步。在这个例子中，原本要求x的转换后的内积。需要先转换到特征空间中，这个特征空间可能很多维。而通过核方法，可以把这个过程直接使用一个原始空间的一个核函数计算出来，不用管转换后的空间是什么。这样就大大提高了计算效率。这个例子由于基函数只有两阶，所以难度加速不够明显，更高阶的话，基函数的计算更复杂，使用核方法的收益也就越高
 
-![img](../assets/kernels/1464797662377554.jpg)
+![img](http://vsooda.github.io/assets/kernels/1464797662377554.jpg)
 
 在kernel svm中，将w表示为z，从而出现内积形式。使用核方法进行偷吃步。
 
 完整kernel svm如下
 
-![img](../assets/kernels//1464797787848188.jpg)
+![img](http://vsooda.github.io/assets/kernels//1464797787848188.jpg)
 
 更高阶的多项式核
 
@@ -311,11 +311,11 @@ prml p295是关于这个式子更简单的例子。
 
 高斯核通过泰勒展开可以转化为向量内积的形式。
 
-![img](../assets/kernels//1464884285200222.jpg)
+![img](http://vsooda.github.io/assets/kernels//1464884285200222.jpg)
 
 高斯核的内在意义是在获取支撑向量边界上点的高斯分布的线性组合，使得在无穷多维上获得最大分隔边界
 
-![img](../assets/kernels/1464884307371885.jpg)
+![img](http://vsooda.github.io/assets/kernels/1464884307371885.jpg)
 
 ### 参考
 
