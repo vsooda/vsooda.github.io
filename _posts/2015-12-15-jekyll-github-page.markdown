@@ -38,6 +38,12 @@ gem 'github-pages'
 ```
 然后直接`bundle install` 搞定。
 
+Update: 如果在mac上碰到nokogiri安装不上的问题，可以使用以下命令进行安装：
+
+```
+gem install nokogiri -- --with-xml2-include=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/include/libxml2/ --use-system-libraries
+```
+
 ### github page 生成
 初始化page，使用github管理，查看文章开头的网址。
 
