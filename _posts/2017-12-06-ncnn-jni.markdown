@@ -103,7 +103,55 @@ externalNativeBuild {
 
 
 
+**udpate 2017.12.19**: 
 
+**c++_shared**虽然能解决std::to_string, std::stod等问题，但是由于很多第三方库使用的是**gnustl**，再选择用c++_shared的方式，会导致出错。只能沿用gnustl的方式。
+
+解决方式就是不用to_string, stod这几个函数 :)
+
+在需要使用to_string这几个函数的时候，不用std::to_string而是包含以下这个头文件，然后直接to_string,不加命名空间。
+
+```Cpp
+#include <sstream>
+#include <string>
+
+#if defined(__ANDROID__)
+template <typename T>
+std::string to_string(T value)
+{
+  std::ostringstream os;
+  os << value;
+  return os.str();
+}
+
+inline int stoi(const std::string& str) {
+  std::stringstream ss;
+  int n = 0;
+  ss << str;
+  ss >> n;
+  return n;
+}
+
+inline double stod(const std::string& str, std::size_t* pos = 0) {
+  std::stringstream ss;
+  ss << str;
+  double val = 0;
+  ss >> val;
+  if (pos) {
+    if (ss.tellg() == -1) {
+      *pos = str.size();
+    } else {
+      *pos = ss.tellg();
+    }
+  }
+  return val;
+}
+#else
+using std::to_string;
+using std::stoi;
+using std::stod;
+#endif // defined(__ANDROID__)
+```
 
 
 
