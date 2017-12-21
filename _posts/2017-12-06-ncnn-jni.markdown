@@ -1,0 +1,99 @@
+---
+layout: post
+title: "ncnn jni"
+date: 2017-12-06
+mathjax: true
+categories: code deep
+tags: android ncnn jni
+---
+* content
+{:toc}
+本文记录ncnn安卓jni编译过程。
+
+使用ncnn example里面的[jni](https://github.com/Tencent/ncnn/tree/master/examples/squeezencnn/jni)直接编的so文件,在[ncnn-mobile](https://github.com/dangbo/ncnn-mobile.git)里面无法直接使用。结果不对。
+
+怀疑是版本jni接口变化。就想着自己编译jni。
+
+
+
+
+
+先参考[wiki](https://github.com/Tencent/ncnn/wiki/cmake-%E6%89%93%E5%8C%85-android-sdk}编译安卓.a 库。
+
+```
+cmake -DCMAKE_TOOLCHAIN_FILE=../android.toolchain.cmake     -DANDROID_ABI="armeabi-v7a with NEON"     -DANDROID_NATIVE_API_LEVEL=android-21 -DANDROID_TOOLCHAIN_NAME=arm-linux-androideabi-4.9   -DCMAKE_BUILD_TYPE=Release  -DANDROID_STL_FORCE_FEATURES=OFF ..
+```
+
+有了.a之后，就需要编译jni，并在具体的应用测试正确性。
+
+### cmake jni
+
+先从example的eclipse导入项目。发现根本识别不了c++项目。问题又转变成怎么添加jni问题了。
+
+经过一番尝试之后，发现添加jni只要：
+**添加cmake文件，并且在build gradle里面增加以下配置。**
+
+
+然后cmake可以指定cpp代码位置。
+
+将ncnn的各个头文件拷贝过来，发现没有platform.h，查看代码后，发现这个头文件似乎没用。把每个地方的platform删掉即可
+
+### openmp问题
+
+```
+externalNativeBuild {
+            cmake {
+                cppFlags "-fopenmp -std=c++11"
+                arguments "-DANDROID_TOOLCHAIN=clang"
+            }
+        }
+```
+
+### jnigraphics
+
+在build.gradle里面添加ldLibs "jnigraphics" 死活不成功。
+
+后来在cmake里面添加。
+
+```
+target_link_libraries( squeezencnn
+                       ${log-lib}
+                       ncnn
+                       jnigraphics)
+```
+
+又会报错。
+再在cmake加上
+
+```
+find_library(jnigraphics
+            jnigraphics)
+```
+
+### stl
+
+增加-std=c++11无效，无论在cmake还是在build.gradle
+添加上移植一来都能解决问题的以下两句依然无济于事。
+
+```
+externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++11 -frtti -fexceptions"
+                arguments "-DANDROID_TOOLCHAIN=clang", "-DANDROID_STL=c++_shared"
+            }
+        }
+```
+
+然后开始怀疑是不会clang和gcc编译不兼容问题。
+把上面的clang反复删除多没有用。
+
+感觉是无解状态。
+
+后面怀疑是否gnustl之类的错误。把"-DANDROID_STL=c++_shared"删掉，随手一试，居然就通过了。无所适从。
+
+
+
+
+
+
+
