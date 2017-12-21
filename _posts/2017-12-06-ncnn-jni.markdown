@@ -33,6 +33,16 @@ cmake -DCMAKE_TOOLCHAIN_FILE=../android.toolchain.cmake     -DANDROID_ABI="armea
 经过一番尝试之后，发现添加jni只要：
 **添加cmake文件，并且在build gradle里面增加以下配置。**
 
+```
+externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
+```
+
+
+
 
 然后cmake可以指定cpp代码位置。
 
