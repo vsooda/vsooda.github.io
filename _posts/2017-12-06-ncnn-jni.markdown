@@ -18,10 +18,10 @@ tags: android ncnn jni
 
 
 
-先参考[wiki](https://github.com/Tencent/ncnn/wiki/cmake-%E6%89%93%E5%8C%85-android-sdk}编译安卓.a 库。
+先参考[wiki](https://github.com/Tencent/ncnn/wiki/cmake-%E6%89%93%E5%8C%85-android-sdk)编译安卓.a 库。
 
 ```
-cmake -DCMAKE_TOOLCHAIN_FILE=../android.toolchain.cmake     -DANDROID_ABI="armeabi-v7a with NEON"     -DANDROID_NATIVE_API_LEVEL=android-21 -DANDROID_TOOLCHAIN_NAME=arm-linux-androideabi-4.9   -DCMAKE_BUILD_TYPE=Release  -DANDROID_STL_FORCE_FEATURES=OFF ..
+cmake -DCMAKE_TOOLCHAIN_FILE=../android.toolchain.cmake -DANDROID_ABI="armeabi-v7a with NEON"     -DANDROID_NATIVE_API_LEVEL=android-21 -DANDROID_TOOLCHAIN_NAME=arm-linux-androideabi-4.9 -DCMAKE_BUILD_TYPE=Release -DANDROID_STL_FORCE_FEATURES=OFF ..
 ```
 
 有了.a之后，就需要编译jni，并在具体的应用测试正确性。
