@@ -4,11 +4,11 @@ title: "ctc"
 date: 2018-02-04
 mathjax: true
 categories: deep
-tags: etc
+tags: ctc
 ---
 * content
 {:toc}
-本文介绍ctc算法[^ctc]。更好的图文展示请参考这篇[博客](https://distill.pub/2017/ctc/)。之前看过这篇博客，发现很容易忘记。还是需要自己啃一下论文。以下是论文记录。
+本文介绍ctc算法[^ctc]。更好的图文展示请参考这篇[博客](https://distill.pub/2017/ctc/)。之前有了解过大致细节，发现还是很容易忘记。还是需要自己啃一下论文。以下是论文笔记。有一些疑问，待看了源码再做补充。
 
 
 
@@ -32,7 +32,7 @@ ctc用在语音识别，取得不错的效果。最近学术界以及我自己�
 
 ### 工作原理
 
-![](../assets/ctc/ctc_predict.png)
+![](http://vsooda.github.io/assets/ctc/ctc_predict.png)
 
 我们先用上面这张图来说明ctc的基本工作原理。第一行是输入的波形。第二行是分帧预测结果。第三行是对结果进行合并。合并规则如下：
 
@@ -45,7 +45,7 @@ blank符号用于表示一种犹豫不定的状态。后文用$\epsilon$ 表示�
 
 我们先来看一张图。在这张图中，可以看到ctc预测结果和分帧有明显的不同。
 
-![](../assets/ctc/ctc_vs_frame.png)
+![](http://vsooda.github.io/assets/ctc/ctc_vs_frame.png)
 
 上图第一行是波形，第二行是分帧预测结果，第三行是ctc的结果。（岂不是说，使用ctc很难准确获取每个音素的起始结束时间？待确定**todo**）
 
@@ -97,7 +97,7 @@ $$a_t(s)=\sum_{\pi \in N^T, \mathcal{B}({\pi_{1:t})=\bf{l}_{1:s}}}\prod_{t'=1}^t
 
 如下图所示，横向表示时间帧。纵向表示标签序列（白色是blank，黑色是正常标签）。cat的概率是所有可能路径之和。
 
-![](../assets/ctc/cat.png)
+![](http://vsooda.github.io/assets/ctc/cat.png)
 
 对于一个序列，可以从blank开始，也可以用正确的标签开始，所以有以下初始条件：
 
@@ -147,7 +147,13 @@ $$lab(\bf{l}, k)=\{s : \bf{l}'_s = k\} $$
 
 ### 与hmm的区别
 
-hmm的训练参考之前的[文章](http://vsooda.github.io/2015/10/27/hmm-tts/).
+hmm的训练参考之前的[文章](http://vsooda.github.io/2015/10/27/hmm-tts/). 待补充
+
+
+
+### mxnet ctc 实现
+
+todo
 
 ​		
 
