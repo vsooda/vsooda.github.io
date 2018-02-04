@@ -93,7 +93,7 @@ $$a_t(s)=\sum_{\pi \in N^T, \mathcal{B}({\pi_{1:t})=\bf{l}_{1:s}}}\prod_{t'=1}^t
 
 后面我们会看到，$\alpha_t(s)$可以表示成$\alpha_{t-1}(s)$和$\alpha_{t-1}(s-1)$. 从而大大节约计算量。
 
-在训练的时候会将标签从$\bf{l}$改成$\bf{l'}$。主要是在每个标签之间插入blank。使得总长度是$2\mid\bf{l} \mid +1$.
+在训练的时候会将标签从$\bf{l}​$改成$\bf{l}'​$。主要是在每个标签之间插入blank。使得总长度是$2\mid\bf{l} \mid +1​$.
 
 如下图所示，横向表示时间帧。纵向表示标签序列（白色是blank，黑色是正常标签）。cat的概率是所有可能路径之和。
 
@@ -102,7 +102,7 @@ $$a_t(s)=\sum_{\pi \in N^T, \mathcal{B}({\pi_{1:t})=\bf{l}_{1:s}}}\prod_{t'=1}^t
 对于一个序列，可以从blank开始，也可以用正确的标签开始，所以有以下初始条件：
 
 *  $\alpha_1(1)=y_\epsilon^1$
-*  $\alpha_1(2)=y_{{\bf{l}_1}}^1$
+*  $\alpha_1(2)=y_{\bf{l}_1}^1$
 *  $\alpha_1(s)=0, \forall s>2$
 
 
@@ -110,8 +110,8 @@ $$a_t(s)=\sum_{\pi \in N^T, \mathcal{B}({\pi_{1:t})=\bf{l}_{1:s}}}\prod_{t'=1}^t
 $$
 \alpha_t(s) =
 \begin{cases}
-\bar{\alpha}_t(s) y_{{\bf{l}'_s}}^t & \text{if $\bf{l}'_s=\epsilon$ or $\bf{l}'_{s-2}=\bf{l}'_s$} \\
-(\bar{\alpha}_t(s)+\alpha_{t-1}(s-2))y_{{\bf{l}'_s}}^t & \text{otherwise}
+\bar{\alpha}_t(s) y_{\bf{l}'_s}^t & \text{if $\bf{l}'_s=\epsilon$ or $\bf{l}'_{s-2}=\bf{l}'_s$} \\
+(\bar{\alpha}_t(s)+\alpha_{t-1}(s-2))y_{\bf{l}'_s}^t & \text{otherwise}
 \end{cases}
 $$
 
@@ -135,7 +135,7 @@ $$
 
 #### 最大似然训练
 
-$$p(\bf{l}\mid x)=\sum_{s=1}^{\mid \bf{l}' \mid}\frac{\alpha_t(s)\beta_t(s)}{y_{{\bf{l}'_s}}^t}$$
+$$p(\bf{l}\mid x)=\sum_{s=1}^{\mid \bf{l}' \mid}\frac{\alpha_t(s)\beta_t(s)}{y_{\bf{l}'_s}^t}$$
 
 对于$y_k^t$,只需要考虑标签$k$就可以了。
 
@@ -143,7 +143,7 @@ $$p(\bf{l}\mid x)=\sum_{s=1}^{\mid \bf{l}' \mid}\frac{\alpha_t(s)\beta_t(s)}{y_{
 
 $$lab(\bf{l}, k)=\{s : \bf{l}'_s = k\} $$
 
-$$$$
+
 
 ### 与hmm的区别
 
@@ -151,13 +151,12 @@ hmm的训练参考之前的[文章](http://vsooda.github.io/2015/10/27/hmm-tts/)
 
 ​		
 
-
 ​	
-​		
-​			
-​				
-[^ctc]Connectionist Temporal Classification: Labelling Unsegmented
-Sequence Data with Recurrent Neural Networks
+参考文献:
+
+[^ctc]: Connectionist Temporal Classification: Labelling Unsegmented Sequence Data with Recurrent Neural Networks
+
+
 
 
 ​			
