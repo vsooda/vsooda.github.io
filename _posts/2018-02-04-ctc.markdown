@@ -87,6 +87,26 @@ $$p(\bf{l}\mid x)=\sum_{\pi\in \mathcal{B}^{-1}(\bf{l})}p(\pi \mid x) \qquad(1)$
 
 
 
+$\alpha_t(s)$表示在第$t$帧，前面的预测序列是$\bf{l}_{1:s}$的概率。
+
+$$a_t(s)=\sum_{\pi \in N^T, \mathcal{B}({\pi_{1:t})=\bf{l}_{1:s}}}\prod_{t'=1}^ty_{\pi_{t'}}^{t'}$$
+
+后面我们会看到，$\alpha_t(s)$可以表示成$\alpha_{t-1}(s)$和$\alpha_{t-1}(s-1)$. 从而大大节约计算量。
+
+在训练的时候会将标签从$\bf{l}$改成$\bf{l'}$。主要是在每个标签之间插入blank。使得总长度是$2\mid\bf{l} \mid +1$.
+
+如下图所示，横向表示时间帧。纵向表示标签序列（白色是blank，黑色是正常标签）。cat的概率是所有可能路径之和。
+
+![](../assets/ctc/cat.png)
+
+对于一个序列，可以从blank开始，也可以用正确的标签开始，所以有以下初始条件：
+
+*  $\alpha_1(1)=y_b^1$
+
+
+
+
+
 ### 与hmm的区别
 
 hmm的训练参考之前的[文章](http://vsooda.github.io/2015/10/27/hmm-tts/).
