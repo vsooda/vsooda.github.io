@@ -8,7 +8,7 @@ tags: ctc
 ---
 * content
 {:toc}
-本文介绍ctc算法[^ctc]。更好的图文展示请参考这篇[博客](https://distill.pub/2017/ctc/)。之前有了解过大致细节，发现还是很容易忘记。还是需要自己啃一下论文。以下是论文笔记。有一些疑问，待看了源码再做补充。
+本文介绍ctc算法[^ctc]。之前有了解过大致细节，发现还是很容易忘记。还是需要自己啃一下论文。以下是论文笔记。有一些疑问，待看了源码再做补充。
 
 
 
@@ -33,6 +33,8 @@ ctc用在语音识别，取得不错的效果。最近学术界以及我自己�
 ### 工作原理
 
 ![](http://vsooda.github.io/assets/ctc/ctc_predict.png)
+
+以上图片来自这篇一篇很好的博客[^blog]。
 
 我们先用上面这张图来说明ctc的基本工作原理。第一行是输入的波形。第二行是分帧预测结果。第三行是对结果进行合并。合并规则如下：
 
@@ -161,6 +163,7 @@ todo
 参考文献:
 
 [^ctc]: Connectionist Temporal Classification: Labelling Unsegmented Sequence Data with Recurrent Neural Networks
+[^blog]: https://distill.pub/2017/ctc/
 
 
 
