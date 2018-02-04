@@ -83,9 +83,9 @@ $$p(\bf{l}\mid x)=\sum_{\pi\in \mathcal{B}^{-1}(\bf{l})}p(\pi \mid x) \qquad(1)$
 
 ### 训练
 
+#### 前向后向
+
 训练使用前向后向算法。（可以先复习一下hmm的前向后向训练，对于理解ctc有帮助。）
-
-
 
 $\alpha_t(s)$表示在第$t$帧，前面的预测序列是$\bf{l}_{1:s}$的概率。
 
@@ -101,21 +101,57 @@ $$a_t(s)=\sum_{\pi \in N^T, \mathcal{B}({\pi_{1:t})=\bf{l}_{1:s}}}\prod_{t'=1}^t
 
 对于一个序列，可以从blank开始，也可以用正确的标签开始，所以有以下初始条件：
 
-*  $\alpha_1(1)=y_b^1$
+*  $\alpha_1(1)=y_\epsilon^1$
+*  $\alpha_1(2)=y_{{\bf{l}_1}}^1$
+*  $\alpha_1(s)=0, \forall s>2$
 
 
 
+$$
+\alpha_t(s) =
+\begin{cases}
+\bar{\alpha}_t(s) y_{{\bf{l}'_s}}^t & \text{if $\bf{l}'_s=\epsilon$ or $\bf{l}'_{s-2}=\bf{l}'_s$} \\
+(\bar{\alpha}_t(s)+\alpha_{t-1}(s-2))y_{{\bf{l}'_s}}^t & \text{otherwise}
+\end{cases}
+$$
 
+其中$\bar{\alpha}_t(s)=\alpha_{t-1}(s)+\alpha_{t-1}(s-1)$
+
+解释一下为什么这里需要分这两种情况考虑。
+
+比如对于abb这样的序列，对应的$\bf{l'}$是: -a-b-b-
+
+* 第一种情况
+  * 在预测到$\epsilon$的时候，必须保证前面一个是$\epsilon$或者前面已经是正确的标签了
+  * 预测第二个b的时候，必须保证前面一个是$\epsilon$或者b
+* 第二种情况
+  * 在预测第一个b时，前面一个是$a,b,\epsilon$都是可以的。
+
+
+
+同理或者后向 $\beta_t^s$	
+
+
+
+#### 最大似然训练
+
+$$p(\bf{l}\mid x)=\sum_{s=1}^{\mid \bf{l}' \mid}\frac{\alpha_t(s)\beta_t(s)}{y_{{\bf{l}'_s}}^t}$$
+
+对于$y_k^t$,只需要考虑标签$k$就可以了。
+
+因为会有重复，所以我们需要几下标签$k$出现的位置(**todo**:论文这里没有说清楚这个k指的是当前这个k，还是所有跟k相同标签的位置。回头看下mxnet ctc代码再做补充):
+
+$$lab(\bf{l}, k)=\{s : \bf{l}'_s = k\} $$
+
+$$$$
 
 ### 与hmm的区别
 
 hmm的训练参考之前的[文章](http://vsooda.github.io/2015/10/27/hmm-tts/).
 
+​		
 
 
-​		
-​		
-​	
 ​	
 ​		
 ​			
