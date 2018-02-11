@@ -33,15 +33,15 @@ tags: cv
 
 将各种分支简化成相同的模式:
 
-![](../assets/xception/inception_simple.png)
+![](http://vsooda.github.io/assets/xception/inception_simple.png)
 
 1x1卷积实际上可以进行合并操作, 只要分group即可:
 
-![](../assets/xception/inception_concat.png)
+![](http://vsooda.github.io/assets/xception/inception_concat.png)
 
 在极端(extreme)情况下，每个group只有一个通道:
 
-![](../assets/xception/inception_extreme.png)
+![](http://vsooda.github.io/assets/xception/inception_extreme.png)
 
 
 
@@ -64,7 +64,7 @@ tags: cv
 
 ### 整体结构
 
-![](../assets/xception/framework.png)
+![](http://vsooda.github.io/assets/xception/framework.png)
 
 下面附上inception v3结构作为对比。
 
@@ -72,19 +72,19 @@ tags: cv
 
 **整体结构**:
 
-![](../assets/xception/inception_v3.png)
+![](http://vsooda.github.io/assets/xception/inception_v3.png)
 
 **figure5**:
 
-![](../assets/xception/inception_figure5.png)
+![](http://vsooda.github.io/assets/xception/inception_figure5.png)
 
 **figure6**:
 
-![](../assets/xception/inception_figure6.png)
+![](http://vsooda.github.io/assets/xception/inception_figure6.png)
 
 **figure7**:
 
-![](../assets/xception/inception_figure7.png)
+![](http://vsooda.github.io/assets/xception/inception_figure7.png)
 
 
 

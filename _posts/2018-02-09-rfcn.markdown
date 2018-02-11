@@ -4,7 +4,7 @@ title: "R-FCN: Object Detection via Region-based Fully Convolutional Networks"
 date: 2018-02-09
 mathjax: true
 categories: deep
-tags: object, cv
+tags: object cv
 ---
 * content
 {:toc}
@@ -20,13 +20,13 @@ tags: object, cv
 
 ### 框架
 
-![](/assets/rfcn/framework.png)
+![](http://vsooda.github.io/assets/rfcn/framework.png)
 
  本文的idea如上图所示。对于一张图片在经过一系列卷积之后（backbone网络），faster rcnn是对上图的每个roi区域进行计算。为了防止计算，这里一次性的获得$k^2(C+1)$个特征图。可以认为一共有$k^2$个​$C+1$通道的特征图。这个​$k^2k$用来对物体位置进行编码，可以分别认为是物体的左上，中上，右上...右下这些位置。然后对这些特征图的roi位置进行pooling（每个特征图只有特定位置有用？岂不是浪费了计算资源？）。每个网格的pooling数值等于网格内部所有像素的平均。然后将这些​$k^2$ pooling的数值进行投票，获取最终数值用来表示该位置的该类别的概率。
 
 
 
-![](/assets/rfcn/rfcn.png)
+![](http://vsooda.github.io/assets/rfcn/rfcn.png)
 
 
 
@@ -42,7 +42,7 @@ tags: object, cv
 
 正样本：
 
-![](/assets/rfcn/people_pos.png)
+![](http://vsooda.github.io/assets/rfcn/people_pos.png)
 
 上图这个框比较好的框柱了这个小孩。$k*k$个位置的响应都比较高。最后对其进行vote（取平均），被认为是正样本。
 
@@ -50,6 +50,6 @@ tags: object, cv
 
 负样本：
 
-![](/assets/rfcn/people_neg.png)
+![](http://vsooda.github.io/assets/rfcn/people_neg.png)
 
 上图框有一些偏移。有些位置有较高的响应的，有的位置响应较低。vote结果是负样本。
