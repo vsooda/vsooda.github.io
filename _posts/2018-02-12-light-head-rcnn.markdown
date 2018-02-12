@@ -72,6 +72,10 @@ Faster rcnn之所以慢是因为对于每个roi之后的计算比较复杂，而
 
 ![](http://vsooda.github.io/assets/light_head_rcnn/speed.png)
 
+### 源码
+
+[这里](https://github.com/terrychenism/Deformable-ConvNets/blob/master/rfcn/symbols/resnet_v1_101_rfcn_light.py)有个mxnet实现。看了一下应该理解无误。**todo：修改一下这个网络使用不同的backbone network。测试在xception上是否真的有这么高的速度和准确性**。
+
 
 
 参考文献：
