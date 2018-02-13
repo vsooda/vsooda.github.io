@@ -1,0 +1,87 @@
+---
+layout: post
+title: "mask rcnn"
+date: 2018-02-13
+mathjax: true
+categories: deep
+tags: cv object
+---
+* content
+{:toc}
+本文介绍iccv2017 最佳论文: mask rcnn[^mask_rcnn]。来自kaiming。另一篇最佳学生论文focal loss[^focal_loss]也有kaiming冠名，后面也会进行介绍。
+
+mask rcnn是在faster rcnn的基础上，新增一个分支来预测mask。实现了同时检测和分割，速度仅仅比faster rcnn慢一点点。mask rcnn也能用在人体关键点检测上。mask rcnn在物体分割，物体检测，人体关键点检测上均击败了其他所有算法，包括COCO2016的冠军。下面让我们看一下mask rcnn做了哪些工作。
+
+
+
+### 背景
+
+物体检测我们就不说，大家都比较熟悉。比较常用的算法有faster rcnn，fpn等。本文就是想在做检测的时候同时进行分割。那么分割有什么特殊的吗？一般有哪些算法呢。
+
+这里讲的分割一般说的是语义分割(`semantic segmantation`). 目标就是把每个像素归类到具体的类别，而不去区分属于哪个物体。现在一把都是用fcn来做分割，之前的FCIS同样是基于fcn。本文增加的mask分支同样是基于fcn。
+
+作者发现，将mask和类别预测解耦能大大提高准确度(`应该不是这篇文章提出的。我记得之前看过的论文也是这么做的吧？voc20类就预测21张图。待确定哪篇论文`)。同时，作者发现使用RoiPooling，由于量化的关系，会导致没misalignmenet. 所以提出了RoiAlign来解决这个问题。后面详细介绍。
+
+
+
+### mask rcnn
+
+我们先看一下mask rcnn的结构图。
+
+![](http://vsooda.github.io/assets/mask_rcnn/mask_rcnn.png)
+
+很简单的一个分支对不对？凭什么能做的比别人好？诶，那个`RoiAlign`是什么？
+
+下面我们来一一解答：
+
+* 网络整体结构有什么不同
+* RoiAlign
+
+####网络整体结构
+
+在mask分支上，假设共有$k$类。mask rcnn每个roi会得到$k*m*m$维输出。对每个类别预测一个$m*m$的binary mask图。mask rcnn使用sigmoid激活函数，并用二值交叉熵损失函数。而FCIS是对每个像素用softmax预测到每个类别，并用交叉熵损失函数进行训练。
+
+mask rcnn将类别和mask解耦。避免类间的竞争，可以大大提高准确度。知乎这个[cfzd回答](https://www.zhihu.com/question/57403701)上说，FCIS说的是roi inside map和roi outside map的竞争。**todo**:待确定。
+
+#### head
+
+mask分支上的fcn网络如下。
+
+![](http://vsooda.github.io/assets/mask_rcnn/head.png)
+
+
+
+
+
+#### RoiAlign
+
+前面我们有提到，RoiAlign是用来解决RoiPooling不对齐问题的。那么RoiPooling的不对齐的是怎么造成的呢？
+
+我们知道RPN预测出来的roi左边是连续值。并不会直接对应到某个坐标。之前的做法一般是四舍五入（量化）映射到坐标点上。然后对这roi区域进行分割在bin。由于长宽并不定会被bin size整除，这里又要进行一次量化。经过这两次量化，RoiPooling的值与原图的对应关系已经变了。以前一般是使用RoiPooling来做分类，所以一点点的不对齐影响不大。但是对于分割来说，这也会导致不好的结果（不过，light head rcnn证明, 将RoiPooling改成RoiAlign还是有提高的）。
+
+RoiAlign就是用来解决这种不对齐问题的。如下图所示。
+
+![](http://vsooda.github.io/assets/mask_rcnn/roi_align.png)
+
+黑色的框表示在feature map上的roi。这个roi不是整数值。先不管，直接对齐划分成各个bin。每个bin里面的某个位置上的数值，采用双线性插值来获取。比如左上角那个`黑色`像素值是由临近点插值来的。
+
+怎么说呢, 很简单对吧。为啥没人做过这个工作...
+
+
+
+### 结果
+
+在bounding-box预测上, mask rcnn比当时最佳网络(faster rcnn + resnet101 + fpn)的AP高3.6个点。其中1.1来自RoiAlign，0.9来自多任务训练。1.6来自更好的基础网络resnext101.
+
+![](http://vsooda.github.io/assets/mask_rcnn/bbox_result.png)
+
+ 
+
+在分割上的性能，可以看出比FCIS好很多。
+
+![](http://vsooda.github.io/assets/mask_rcnn/mask_result.png)
+
+
+
+[^mask_rcnn]: He, Kaiming, et al. "Mask r-cnn." *Computer Vision (ICCV), 2017 IEEE International Conference on*. IEEE, 2017.
+[^focal_loss]: Lin, Tsung-Yi, et al. "Focal loss for dense object detection." *arXiv preprint arXiv:1708.02002* (2017).
