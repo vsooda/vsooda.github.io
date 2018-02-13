@@ -18,7 +18,7 @@ mask rcnn是在faster rcnn的基础上，新增一个分支来预测mask。实�
 
 物体检测我们就不说，大家都比较熟悉。比较常用的算法有faster rcnn，fpn等。本文就是想在做检测的时候同时进行分割。那么分割有什么特殊的吗？一般有哪些算法呢。
 
-这里讲的分割一般说的是语义分割(`semantic segmantation`). 目标就是把每个像素归类到具体的类别，而不去区分属于哪个物体。现在一把都是用fcn来做分割，之前的FCIS同样是基于fcn。本文增加的mask分支同样是基于fcn。
+这里讲的分割一般说的是语义分割(`semantic segmantation`). 目标就是把每个像素归类到具体的类别，而不去区分属于哪个物体。现在一把都是用fcn来做分割，之前的分割效果最好的FCIS[^fcis]同样是基于fcn。本文增加的mask分支同样是基于fcn。
 
 作者发现，将mask和类别预测解耦能大大提高准确度(`应该不是这篇文章提出的。我记得之前看过的论文也是这么做的吧？voc20类就预测21张图。待确定哪篇论文`)。同时，作者发现使用RoiPooling，由于量化的关系，会导致没misalignmenet. 所以提出了RoiAlign来解决这个问题。后面详细介绍。
 
@@ -41,7 +41,7 @@ mask rcnn是在faster rcnn的基础上，新增一个分支来预测mask。实�
 
 在mask分支上，假设共有$k$类。mask rcnn每个roi会得到$k*m*m$维输出。对每个类别预测一个$m*m$的binary mask图。mask rcnn使用sigmoid激活函数，并用二值交叉熵损失函数。而FCIS是对每个像素用softmax预测到每个类别，并用交叉熵损失函数进行训练。
 
-mask rcnn将类别和mask解耦。避免类间的竞争，可以大大提高准确度。知乎这个[cfzd回答](https://www.zhihu.com/question/57403701)上说，FCIS说的是roi inside map和roi outside map的竞争。**todo**:待确定。
+mask rcnn将类别和mask解耦。避免类间的竞争，可以大大提高准确度。知乎这个[cfzd回答](https://www.zhihu.com/question/57403701)上@Oh233(似乎是FCIS的作者）说，FCIS说的是roi inside map和roi outside map的竞争。**todo**:待确定。
 
 #### head
 
@@ -85,3 +85,4 @@ RoiAlign就是用来解决这种不对齐问题的。如下图所示。
 
 [^mask_rcnn]: He, Kaiming, et al. "Mask r-cnn." *Computer Vision (ICCV), 2017 IEEE International Conference on*. IEEE, 2017.
 [^focal_loss]: Lin, Tsung-Yi, et al. "Focal loss for dense object detection." *arXiv preprint arXiv:1708.02002* (2017).
+[^fcis]: Y. Li, H. Qi, J. Dai, X. Ji, and Y. Wei. Fully convolutional instance-aware semantic segmentation.In CVPR, 2017.
