@@ -24,7 +24,7 @@ tags: object cv
 
 
 
-Faster rcnn之所以慢是因为对于每个roi之后的计算比较复杂，而roi数目又比较多。rfcn虽然在对roi的计算几乎是cost free的（只要一个vote操作），但是需要计算一个很大的score map $k*k*(C+1)$。计算这个score map使得rfcn速度并不理想。light head rcnn这篇文章计算一个小的feature map，大小通常是$k*k*10$，大大的提高了效率。
+Faster rcnn之所以慢是因为对于每个roi之后的计算比较复杂，而roi数目又比较多。rfcn虽然在对roi的计算几乎是cost free的（只要一个vote操作），但是需要计算一个很大的score map $k\times k\times (C+1)$。计算这个score map使得rfcn速度并不理想。light head rcnn这篇文章计算一个小的feature map，大小通常是 $k\times k\times 10$，大大的提高了效率。
 
 从准确的角度来看，faster rcnn在第一个池化层之前采用全局均值池化来减少计算量。这其实会对定位有不利影响。而rfcn在计算score map之后只是做一个池化操作，准确度一般来说比不上那些有对具体roi进行计算的网络。针对以上缺点，本文设计的网络只采用单层全连接作为rcnn subnet。同时，使用thin feature map来提高计算效率。
 

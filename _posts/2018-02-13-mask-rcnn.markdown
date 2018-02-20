@@ -37,7 +37,7 @@ mask rcnn是在faster rcnn的基础上，新增一个分支来预测mask。实�
 * 网络整体结构有什么不同
 * RoiAlign
 
-####网络整体结构
+#### 网络整体结构
 
 在mask分支上，假设共有$k$类。mask rcnn每个roi会得到$k*m*m$维输出。对每个类别预测一个$m*m$的binary mask图。mask rcnn使用sigmoid激活函数，并用二值交叉熵损失函数。而FCIS是对每个像素用softmax预测到每个类别，并用交叉熵损失函数进行训练。
 
