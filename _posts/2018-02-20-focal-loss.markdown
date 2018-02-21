@@ -84,7 +84,7 @@ $$FL(p_t)=-(1-p_t)^\gamma log(p_t)$$
 
 
 
-![](../assets/focal_loss/focal.png)
+![](http://vsooda.github.io/assets/focal_loss/focal.png)
 
 
 
@@ -92,21 +92,21 @@ $$FL(p_t)=-(1-p_t)^\gamma log(p_t)$$
 
 本文基于resnet+fpn提出新的one stage模型。模型不是重点，重点是通过实验来验证focal loss的作用。
 
-![](../assets/focal_loss/retina.png)
+![](http://vsooda.github.io/assets/focal_loss/retina.png)
 
 
 
 论文提到一个技巧。刚开始训练会发散。作者用到一些**模型初始化技巧**. 具体来说就是:
 
-
-
-#### 模型初始化
+* resnet部分采用resnet50在imagenet上的预训练结果。
+* 除了最后一层之外的新层都是按高斯分布$\sigma=0.01$来初始化权重，bias初始化为0.
+* 最后一层，将b初始化为$b=-log((1-\pi)/\pi)$。这样等于给出一个先验，在开始训练的时候，任何一个anchor被认为是物体的概率约等于$\pi$
 
 
 
 ### 结果
 
-![](../assets/focal_loss/ce_focal.png)
+![](http://vsooda.github.io/assets/focal_loss/ce_focal.png)
 
 从图中可以看出，加了focal loss的网咯比交叉熵+OHEM准确率高很多。表明了focal loss的有效性。
 
