@@ -81,10 +81,7 @@ $$FL(p_t)=-(1-p_t)^\gamma log(p_t)$$
 
 下图是不同$\gamma$取值的影响。
 
-
-
-
-![](http://vsooda.github.io/assets/focal_loss/focal.png)
+<img src="http://vsooda.github.io/assets/focal_loss/focal.png" style="width:500px">
 
 
 
@@ -106,7 +103,7 @@ $$FL(p_t)=-(1-p_t)^\gamma log(p_t)$$
 
 ## 结果
 
-![](http://vsooda.github.io/assets/focal_loss/ce_focal.png)
+<img src="http://vsooda.github.io/assets/focal_loss/ce_focal.png" style="width:500px">
 
 从图中可以看出，加了focal loss的网咯比交叉熵+OHEM准确率高很多。表明了focal loss的有效性。
 
