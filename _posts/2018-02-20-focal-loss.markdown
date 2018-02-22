@@ -16,7 +16,7 @@ tags: cv object
 
 
 
-### 背景
+## 背景
 
 我们知道传统的物体检测一般使用滑动窗口+hog特征+svm分类的方式来进行。最好的物体检测一般是基于dpm的变种。而将深度学习引入到物体检测后，取得很好的效果。一般分为两种类别。
 
@@ -25,7 +25,7 @@ tags: cv object
 
 一般来说，one stage速度快但准确度较低。本文提出，导致这个问题的原因是: 正负样本的极度不均匀导致的。那么让我们思考一下，为啥two stage没有这个问题呢？
 
-#### one stage和two stage的区别
+### one stage和two stage的区别
 
 先让我们回忆一下，two stage是怎么做的:
 
@@ -38,7 +38,7 @@ tags: cv object
 
 针对这个问题，本文提出focal loss来解决。
 
-### focal loss
+## focal loss
 
 我们先回顾一下交叉熵的损失函数是什么样子的。（对交叉熵推导不熟悉的，参考这篇[博客](http://vsooda.github.io/2017/03/14/softmax-logistic/))
 $$
@@ -88,7 +88,7 @@ $$FL(p_t)=-(1-p_t)^\gamma log(p_t)$$
 
 
 
-### retina net
+## retina net
 
 本文基于resnet+fpn提出新的one stage模型。模型不是重点，重点是通过实验来验证focal loss的作用。
 
@@ -104,7 +104,7 @@ $$FL(p_t)=-(1-p_t)^\gamma log(p_t)$$
 
 
 
-### 结果
+## 结果
 
 ![](http://vsooda.github.io/assets/focal_loss/ce_focal.png)
 
@@ -112,6 +112,6 @@ $$FL(p_t)=-(1-p_t)^\gamma log(p_t)$$
 
 同时，我自己在yolo上尝试focal loss，也有提高。
 
-参考文献:
+## 参考文献
 
 [^focal_loss]: Lin, Tsung-Yi, et al. "Focal loss for dense object detection." *arXiv preprint arXiv:1708.02002* (2017).
