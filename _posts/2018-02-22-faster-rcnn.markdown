@@ -8,7 +8,9 @@ tags: cv object
 ---
 * content
 {:toc}
-本文介绍faster rcnn系列。很久以前看别人博客，整个看下来就是罗列一些已知结论，看完之后还是云里雾里。本文尽量避免这种情况。先正向介绍大体发展流程。再介绍一吨的细节。
+本文介绍faster rcnn系列。很久以前看别人博客，整个看下来就是罗列一些已知结论，看完之后还是云里雾里。本文尽量避免这种情况。先正向介绍大体发展流程。再介绍**一吨**的细节。
+
+
 
 
 
@@ -24,13 +26,17 @@ rcnn[^rcnn]是这个系列的开端。rcnn是regions with cnn features的缩写�
 
 训练流程:
 
-* 在imagenet训练cnn
-* 训练svm。之所以用svm而不是直接用softmax，是因为作者实验发现svm效果更好
+* 在imagenet训练cnn。再裁剪物体roi使用softmax分类训练。
+* 训练svm。裁剪proposals位置的图片，resize到固定大小，再输入cnn获取特征，然后拿这个特征来训练svm。之所以用svm而不是直接用softmax，是因为作者实验发现svm效果更好
 * 训练bbox regression error。对框的位置进行微调
 
 下面对bbox regression进行详细说明。
 
+#### bbox regression
 
+对于proposal P，找到一个最近的标注物体ground-true G。如果两者的IoU大于一个阈值(0.6), 则进行训练。否则，抛弃这个proposal，因为训练即使拿来训练也没有什么意义。
+
+bbox regression的目标就是将弥补proposal和ground-true的偏移。
 
 微调目标:
 
@@ -42,35 +48,65 @@ $$t_w=log(G_w/P_w)$$
 
 $$t_y=log(G_h/P_h)$$
 
-
-
 ### sppnet，fast rcnn
+
+rcnn计算非常慢。主要是因为对每个proposal都重新计算卷积特征。如下图左图所示。那么一个很自然的想法就是，是否可以重复利用这些特征呢？答案是可以。如下图右图所示。先统一计算feature map。然后将proposal映射到feature map上。然后拿这些roi位置的feature map来进行后续计算。
 
 ![](../assets/faster_rcnn/fast.png)
 
-
+下面我们分别看一下sppnet，fast rcnn的区别。
 
 #### sppnet
 
 ![](../assets/faster_rcnn/spp.png)
 
-
-
-
+上图表明了sppnet的基本思路。对于一个物体的roi位置的特征图。进行几个尺度的pooling。然后拼接成固定的长度。再通过前连接层获取特征。结构如下:
 
 ![](../assets/faster_rcnn/spp_framework.png)
 
+sppnet的将任意的roi feature map划分到固定网格，再进行pooling的操作被称为: **RoiPooling**.
 
+sppnet的相对于rcnn有个缺点，RoiPooling后面的网络层无法被微调，因为只有检测任务有这些层，分类任务没有（分类并没有roi这种东西）。
 
 #### fast rcnn
 
+* 更高的map
+* sppnet和rcnn使用一样的多阶段训练。fast rcnn将svm改成softmax，并使用multitask loss同时进行分类和bbox regrresion。所以只需要一阶段训练就可以了，
+* 不需要额外的硬盘存储空间。
+* 可以更新所有层 （上面有提到sppnet为什么不能更新所有层）
 
+fast rcnn还采用smooth L1损失函数。相对于L2更加鲁棒。无须精细的调节学习率以避免梯度爆炸。
+
+**smooth l1损失**:
+
+$$
+smooth_{L1}(x) =
+\begin{cases}
+0.5x^2  & \text{if $\lvert x\rvert < 1 $ } \\
+\lvert x\rvert - 0.5 & \text{otherwise.}
+\end{cases}
+$$
 
 ### faster rcnn
 
-![](../assets/faster_rcnn/anchors.png)
+我们先总结一下fast rcnn还有什么问题。fast rcnn用select search等算法来先获得候选框，再拿这些候选框来分类以及回归出偏移。在实用中，select search一般是cpu代码，限制了整体的效率。也限制了性能的提升。
+
+faster rcnn提出rpn网络来进行候选框提取。rpn也是神经网络。与fast rcnn网络共享底层，减少大量计算。使得最终达到5fps左右。
+
+<img src="../assets/faster_rcnn/rpn_share.png" style="width:500px">
+
+从上图我们可以看出，图片经过一系列的卷积层之后，获得feature maps。一方面，拿这些feature map扔到rpn网络中，预测出可能的候选区域proposals。再将这些候选区域的feature maps roi扔到fast rcnn中进一步分类和偏移回归。
+
+接下来我们看一下rpn的具体构造.
 
 #### rpn
+
+<img src="../assets/faster_rcnn/anchors.png" style="width:500px">
+
+上图是rpn的基本结构。
+
+* 对feature map进行sliding window操作。等价于直接用3x3的卷积核
+* anchors。使用anchors来对位置进行编码。从而在一个滑动窗口内部可以获得多个尺度的候选框。rpn学习的相对于anchors box的delta。
 
 
 
@@ -103,15 +139,7 @@ anchors what and why？
 ![](../assets/faster_rcnn/fast_rcnn.png)
 
 
-**smooth l1损失**:
 
-$$
-smooth_{L1}(x) =
-\begin{cases}
-0.5x^2  & \text{if $\mid x\mid < 1 $ } \\
-\mid x\mid - 0.5 & \text{otherwise.}
-\end{cases}
-$$
 
 **roi映射**: 
 
