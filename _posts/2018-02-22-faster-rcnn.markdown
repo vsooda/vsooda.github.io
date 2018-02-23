@@ -112,7 +112,7 @@ faster rcnn[^faster_rcnn]提出rpn网络来进行候选框提取。rpn也是神�
 
 
 
-## 细节
+## 细节 in progress
 
 好了上面介绍了整个发展过程。接下来，让我们抛开这些条条框框。让我们直接看rcnn的集大成者faster rcnn里面到底蕴含着哪些细节。首先我们先付下一下faster rcnn是什么？
 
@@ -121,6 +121,172 @@ faster rcnn[^faster_rcnn]提出rpn网络来进行候选框提取。rpn也是神�
 faster rcnn由rpn+fast rcnn构成。rpn和fast rcnn共享基础网络，可以大大提升检测效率。rpn预测出候选框位置，再截取候选框位置的feature map放入fast rcnn进行分类和偏移计算。训练的时候可以采取两者轮流计算的方式，也可以采用（近似）联合训练。
 
 rpn引入了anchors box。fast rcnn需要处理roi 映射。
+
+#### anchors 计算
+
+输入600X800的图片，经过base卷积层之后，16x下采样，获得37x50的feature map。
+
+anchors数目是: 37 x 50 x 9 = 16650
+
+```python
+def _whctrs(anchor):
+    """
+    Return width, height, x center, and y center for an anchor (window).
+    """
+
+    w = anchor[2] - anchor[0] + 1
+    h = anchor[3] - anchor[1] + 1
+    x_ctr = anchor[0] + 0.5 * (w - 1)
+    y_ctr = anchor[1] + 0.5 * (h - 1)
+    return w, h, x_ctr, y_ctr
+
+
+def _mkanchors(ws, hs, x_ctr, y_ctr):
+    """
+    Given a vector of widths (ws) and heights (hs) around a center
+    (x_ctr, y_ctr), output a set of anchors (windows).
+    """
+
+    ws = ws[:, np.newaxis]
+    hs = hs[:, np.newaxis]
+    anchors = np.hstack((x_ctr - 0.5 * (ws - 1),
+                         y_ctr - 0.5 * (hs - 1),
+                         x_ctr + 0.5 * (ws - 1),
+                         y_ctr + 0.5 * (hs - 1)))
+    return anchors
+```
+
+![](../assets/faster_rcnn/generate_anchors.png)
+
+base_anchors: [0 0 15 15]
+
+![](../assets/faster_rcnn/ratio_enum.png)
+
+ratio_anchors:
+
+```
+array([ -3.5,   2. ,  18.5,  13. ]),
+array([  0.,   0.,  15.,  15.]), 
+array([  2.5,  -3. ,  12.5,  18. ])
+```
+
+再通过scale_enum:
+
+![](../assets/faster_rcnn/scale_enum.png)
+
+![](../assets/faster_rcnn/orig_anchors.png)
+
+以上anchors，加上每个网格的偏移: 
+
+```
+0 0 0 0
+16 0 16 0
+32 0 32 0
+...
+768 576 768 576
+784 576 784 576
+```
+
+anchors大小变成变成1850x9x4。
+
+#### rpn + anchors
+
+rpn输出scores: 1x9x37x50
+
+bbox delta大小: 1x36x37x50
+
+为什么大小是这样的？要看一下rpn网络构造了。
+
+```python
+def get_vgg_test(num_classes=config.NUM_CLASSES, num_anchors=config.NUM_ANCHORS):
+    """
+    Faster R-CNN test with VGG 16 conv layers
+    :param num_classes: used to determine output size
+    :param num_anchors: used to determine output size
+    :return: Symbol
+    """
+    data = mx.symbol.Variable(name="data")
+    im_info = mx.symbol.Variable(name="im_info")
+
+    # shared convolutional layers
+    relu5_3 = get_vgg_conv(data)
+
+    # RPN
+    rpn_conv = mx.symbol.Convolution(
+        data=relu5_3, kernel=(3, 3), pad=(1, 1), num_filter=512, name="rpn_conv_3x3")
+    rpn_relu = mx.symbol.Activation(data=rpn_conv, act_type="relu", name="rpn_relu")
+    rpn_cls_score = mx.symbol.Convolution(
+        data=rpn_relu, kernel=(1, 1), pad=(0, 0), num_filter=2 * num_anchors, name="rpn_cls_score")
+    rpn_bbox_pred = mx.symbol.Convolution(
+        data=rpn_relu, kernel=(1, 1), pad=(0, 0), num_filter=4 * num_anchors, name="rpn_bbox_pred")
+
+    input_data_shape = (1, 3, 600, 800)
+    _, out_shape, _ = rpn_conv.infer_shape(data=input_data_shape)
+    print('rpn_conv shape: ', out_shape) # 1x512x37x50
+    _, out_shape, _ = rpn_cls_score.infer_shape(data=input_data_shape)
+    print('rpn_cls_score shape: ', out_shape)  # 1x18x37x50
+    _, out_shape, _ = rpn_bbox_pred.infer_shape(data=input_data_shape)
+    print('rpn_bbox_pred shape: ', out_shape)  # 1x36x37x50
+
+    # ROI Proposal
+    rpn_cls_score_reshape = mx.symbol.Reshape(
+        data=rpn_cls_score, shape=(0, 2, -1, 0), name="rpn_cls_score_reshape")
+    rpn_cls_prob = mx.symbol.SoftmaxActivation(
+        data=rpn_cls_score_reshape, mode="channel", name="rpn_cls_prob")
+    rpn_cls_prob_reshape = mx.symbol.Reshape(
+        data=rpn_cls_prob, shape=(0, 2 * num_anchors, -1, 0), name='rpn_cls_prob_reshape')
+    
+    rois = mx.symbol.Custom(
+        cls_prob=rpn_cls_prob_reshape, bbox_pred=rpn_bbox_pred, im_info=im_info, name='rois',
+        op_type='proposal', feat_stride=config.RPN_FEAT_STRIDE,
+        scales=tuple(config.ANCHOR_SCALES), ratios=tuple(config.ANCHOR_RATIOS),
+        rpn_pre_nms_top_n=config.TEST.RPN_PRE_NMS_TOP_N, rpn_post_nms_top_n=config.TEST.RPN_POST_NMS_TOP_N,
+        threshold=config.TEST.RPN_NMS_THRESH, rpn_min_size=config.TEST.RPN_MIN_SIZE)
+
+    _, out_shape, _ = rois.infer_shape(data=input_data_shape)
+    print('rois shape: ', out_shape)  # 300x5
+    # Fast R-CNN
+    pool5 = mx.symbol.ROIPooling(
+        name='roi_pool5', data=relu5_3, rois=rois, pooled_size=(7, 7), spatial_scale=1.0 / config.RCNN_FEAT_STRIDE)
+    _, out_shape, _ = pool5.infer_shape(data=input_data_shape)
+    print('pool5 shape: ', out_shape)  # 300x512x7x7
+    # group 6
+    flatten = mx.symbol.Flatten(data=pool5, name="flatten")
+    fc6 = mx.symbol.FullyConnected(data=flatten, num_hidden=4096, name="fc6")
+    relu6 = mx.symbol.Activation(data=fc6, act_type="relu", name="relu6")
+    drop6 = mx.symbol.Dropout(data=relu6, p=0.5, name="drop6")
+    # group 7
+    fc7 = mx.symbol.FullyConnected(data=drop6, num_hidden=4096, name="fc7")
+    relu7 = mx.symbol.Activation(data=fc7, act_type="relu", name="relu7")
+    drop7 = mx.symbol.Dropout(data=relu7, p=0.5, name="drop7")
+    # classification
+    cls_score = mx.symbol.FullyConnected(name='cls_score', data=drop7, num_hidden=num_classes)
+    cls_prob = mx.symbol.softmax(name='cls_prob', data=cls_score)
+    # bounding box regression
+    bbox_pred = mx.symbol.FullyConnected(name='bbox_pred', data=drop7, num_hidden=num_classes * 4)
+
+    # reshape output
+    cls_prob = mx.symbol.Reshape(data=cls_prob, shape=(config.TEST.BATCH_IMAGES, -1, num_classes), name='cls_prob_reshape')
+    bbox_pred = mx.symbol.Reshape(data=bbox_pred, shape=(config.TEST.BATCH_IMAGES, -1, 4 * num_classes), name='bbox_pred_reshape')
+
+    # group output
+    group = mx.symbol.Group([rois, cls_prob, bbox_pred])
+    return group
+```
+
+已经在上面的加上每层的输出大小。应该一目了然了吧。
+
+需要注意的是rpn的输出一定会是固定大小(topN: 300), 否则就不是静态图了？
+
+但是通过层层过滤，会不会导致proposal不够topN呢。有可能。如果不够，则进行随机重复。这部分逻辑在proposal里面处理。
+
+```python
+ if len(keep) < post_nms_topN:
+            pad = npr.choice(keep, size=post_nms_topN - len(keep))
+            keep = np.hstack((keep, pad))
+```
+
+
 
 下面让我们一一解答一下问题: 
 
