@@ -8,7 +8,9 @@ tags: cv object
 ---
 * content
 {:toc}
-本文介绍faster rcnn系列。很久以前看别人博客，整个看下来就是罗列一些已知结论，看完之后还是云里雾里。本文尽量避免这种情况。先正向介绍大体发展流程。再介绍**一吨**的细节。
+本文介绍faster rcnn[^rcnn][^sppnet][^fast_rcnn][^faster_rcnn]系列。很久以前看别人博客，整个看下来就是罗列一些已知结论，看完之后还是云里雾里。本文尽量避免这种情况。先介绍大体发展流程。再根据mxnet rcnn源码分析具体细节。看完会有不小收获。
+
+ps: 还欠两篇ssd，yolo :(
 
 
 
@@ -128,7 +130,9 @@ faster rcnn由rpn+fast rcnn构成。rpn和fast rcnn共享基础网络，可以�
 
 这张经典图片是600x800。后文均以**600x800**的测试图片为例。600x800的输入经过base卷积层之后，16x下采样，获得37x50的feature map。从这里可以看出faster rcnn在预测时，并没有进行resize。下一节我们再说明为什么可以用不固定大小的输入。
 
-#### 总体
+#### 整体网络结构
+
+接下来先看一下网络结构。(这部分对不熟悉mxnet的同学可能不够友好。待优化)
 
 ```python
 def get_vgg_test(num_classes=21, num_anchors=9):
@@ -207,17 +211,7 @@ def get_vgg_test(num_classes=21, num_anchors=9):
     return group
 ```
 
-已经在上面的源码加上每层的输出大小。应该一目了然了吧。
-
-需要注意的是rpn的输出一定会是固定大小(topN: 300), 否则就不是静态图了。
-
-但是通过层层过滤，会不会导致proposal不够topN呢？答案是：有可能。如果不够，则进行随机重复。这部分逻辑在proposal里面处理。
-
-```python
- if len(keep) < post_nms_topN:
-            pad = npr.choice(keep, size=post_nms_topN - len(keep))
-            keep = np.hstack((keep, pad))
-```
+已经在上面的源码加上每层的输出大小。应该一目了然了吧。需要注意的是，因为是静态图，所以proposal层必须保证输出固定数量的roi。
 
 从上面网络结构可以看出，fast rcnn网络就剩下几个全连接层了，都是**常规操作**。
 
@@ -365,7 +359,13 @@ $$t_w^*=log(w^*/w_a), t_h^*=log(h^*/h_a)$$
 
 其中$x$, $x_a$, $x^*$分别代表预测box，anchor box， ground-true box。
 
-通过以上函数处理anchors box和delta。获得的proposals坐标依旧是600x800范围。然后进行clip，并且对score进行过滤，nms，取top等。如前文所说，如果最终剩下的不足topN，则补足。
+通过以上函数处理anchors box和delta。获得的proposals坐标依旧是600x800范围。然后进行clip，并且对score进行过滤，nms，取top等。如前文所说，需要保证输出proposal数目是固定的。如果剩余数目大于topN，那么就取score最大的topN个。如果最终剩下的不足topN，则进行随机重复。这部分逻辑在proposal层里面处理。
+
+```python
+ if len(keep) < post_nms_topN:
+            pad = npr.choice(keep, size=post_nms_topN - len(keep))
+            keep = np.hstack((keep, pad))
+```
 
 一句话总结：**计算proposal，就是对应网格的anchor box加上对应网格预测值（bbox delta）上**。
 
@@ -391,7 +391,7 @@ roi pooling里，一个激活值可能对多个pooling结果有影响。在反�
 
 anchors what and why？
 
-## 附录（待整理）
+## 附录 (待整理)
 
 * anchors assign问题。坐标空间是什么。
 * anchor box的作用是什么
