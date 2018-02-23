@@ -126,7 +126,7 @@ faster rcnn由rpn+fast rcnn构成。rpn和fast rcnn共享基础网络，可以�
 
 ![](http://vsooda.github.io/assets/faster_rcnn/dog_result.jpg)
 
-这张经典图片是600x800。后文均以**600x800**的测试图片为例。600x800的输入经过base卷积层之后，16x下采样，获得37x50的feature map。从这里可以看出faster rcnn在预测时，并没有进行resize。
+这张经典图片是600x800。后文均以**600x800**的测试图片为例。600x800的输入经过base卷积层之后，16x下采样，获得37x50的feature map。从这里可以看出faster rcnn在预测时，并没有进行resize。下一节我们再说明为什么可以用不固定大小的输入。
 
 #### 总体
 
@@ -225,7 +225,9 @@ def get_vgg_test(num_classes=21, num_anchors=9):
 
 <img src="http://vsooda.github.io/assets/faster_rcnn/fast_rcnn.png" style="width:500px">
 
-现在剩下的所有细节都在`proposal`层了。怎么对rpn的输出进行处理，然后拿回来roi来到fast rcnn网络里面进行RoiPooling等后续操作呢？具体来说就是:
+现在我们可以知道为什么输入图像不需要resize。因为rpn都是卷积层，不需要固定维度的输入。而fast rcnn网络有roipooling可以变成固定大小。
+
+现在剩下的所有细节都在`proposal`层了。怎么对rpn的输出进行处理，然后拿回来roi来到fast rcnn网络里面进行等后续操作呢？具体来说就是:
 
 * anchors怎么设置的
 * bbox delta是怎么算的呢？
@@ -297,9 +299,18 @@ array([  2.5,  -3. ,  12.5,  18. ])
 784 576 784 576
 ```
 
-anchors大小变成变成1850x9x4。
+获得最终anchors:
 
-一句话总结:  **anchors box就是定义在feature map网格上的原图坐标的一些预定义框。计算proposal，就是对应网格的anchor box加上对应网格预测值（bbox delta）上**。
+```
+-84 -40 99 55
+-68 -40 115 55
+-52 -40 131 55
+...
+```
+
+anchors大小变成1850x9x4。
+
+一句话总结:  **anchors box就是定义在feature map网格上的原图坐标的一些预定义框。**
 
 
 #### bbox delta
@@ -339,7 +350,6 @@ def nonlinear_pred(boxes, box_deltas):
     pred_boxes[:, 2::4] = pred_ctr_x + 0.5 * (pred_w - 1.0)
     # y2
     pred_boxes[:, 3::4] = pred_ctr_y + 0.5 * (pred_h - 1.0)
-
     return pred_boxes
 ```
 
@@ -355,11 +365,17 @@ $$t_w^*=log(w^*/w_a), t_h^*=log(h^*/h_a)$$
 
 其中$x$, $x_a$, $x^*$分别代表预测box，anchor box， ground-true box。
 
-通过以上函数处理box和delta。获得的坐标依旧是600x800范围。然后进行clip，并且对score进行过滤，nms，取top等。如前文所说，如果最终剩下的不足topN，则补足。
+通过以上函数处理anchors box和delta。获得的proposals坐标依旧是600x800范围。然后进行clip，并且对score进行过滤，nms，取top等。如前文所说，如果最终剩下的不足topN，则补足。
 
-好了，那么现在我们知道rpn出来的数据是原始图像的位置，怎么映射到feature map呢？从上述网络结构可知，答案在roiPooling中。
+一句话总结：**计算proposal，就是对应网格的anchor box加上对应网格预测值（bbox delta）上**。
+
+对于不同分辨率的图片来说，anchors box的具体值是会变的。但生成bbox delta的权重是对应到网格上的，这些值不随分辨率而改变。**实际上，这些权重在feature map上的滑动窗口间是共享的**. 也就是: `平移不变性`
+
+好了，那么现在我们知道rpn出来的数据是原始图像的位置，怎么映射到feature map呢？从上述网络结构可知，答案在`RoiPooling`中。
 
 #### RoiPooling
+
+fast rcnn的映射沿用sppnet的计算方式。但sppnet也没有很详细的描述这个问题。这篇[博客](https://zhuanlan.zhihu.com/p/24780433), 对其进行较详细的解析。但...
 
 来看一下RoiPooling的参数说明: 
 
@@ -367,11 +383,15 @@ $$t_w^*=log(w^*/w_a), t_h^*=log(h^*/h_a)$$
 
 也就是roi映射直接除以stride的乘积（16）。并没有那么多事。
 
+### 训练细节(in progress)
 
+roi pooling里，一个激活值可能对多个pooling结果有影响。在反向传播的时候需要对多个累加多个反向梯度。
+
+## 原理 (todo)
+
+anchors what and why？
 
 ## 附录（待整理）
-
-下面让我们一一解答一下问题: 
 
 * anchors assign问题。坐标空间是什么。
 * anchor box的作用是什么
@@ -380,24 +400,6 @@ $$t_w^*=log(w^*/w_a), t_h^*=log(h^*/h_a)$$
 * 对于无理取闹的proposal需要训练吗？直接丢弃？: rcnn append c描述这个问题。
 * roi如何映射？
 * **todo:** rpn，anchors，fast rcnn的坐标空间分别是什么？0-1？什么时候需要进行映射？在计算proposal的时候映射到整数空间？fast rcnn的偏移也是整数?（当然，不一定需要整数，知道原图的大小，proposal大小也就可以用小数？）？
-
-
-
-### rpn细节
-
-anchors what and why？
-
-### fast rcnn细节
-
-
-**roi映射**: 
-
-fast rcnn的映射沿用sppnet的计算方式。但sppnet也没有很详细的描述这个问题。这篇[博客](https://zhuanlan.zhihu.com/p/24780433), 对其进行较详细的解析。**todo: 看源码后再来补充细节**.
-
-### 训练细节
-
-roi pooling里，一个激活值可能对多个pooling结果有影响。在反向传播的时候需要对多个累加多个反向梯度。
-
 
 
 ## 参考文献
