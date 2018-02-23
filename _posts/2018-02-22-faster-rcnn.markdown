@@ -114,91 +114,24 @@ faster rcnn[^faster_rcnn]提出rpn网络来进行候选框提取。rpn也是神�
 
 ## 细节 in progress
 
-好了上面介绍了整个发展过程。接下来，让我们抛开这些条条框框。让我们直接看rcnn的集大成者faster rcnn里面到底蕴含着哪些细节。首先我们先付下一下faster rcnn是什么？
-
-### 定义
+好了上面介绍了整个发展过程。接下来，让我们抛开这些条条框框。让我们直接看rcnn的集大成者faster rcnn里面到底蕴含着哪些细节。首先我们先定义一下faster rcnn是什么？
 
 faster rcnn由rpn+fast rcnn构成。rpn和fast rcnn共享基础网络，可以大大提升检测效率。rpn预测出候选框位置，再截取候选框位置的feature map放入fast rcnn进行分类和偏移计算。训练的时候可以采取两者轮流计算的方式，也可以采用（近似）联合训练。
 
-rpn引入了anchors box。fast rcnn需要处理roi 映射。
+我们先看一下预测的时候有哪些细节。再来看训练细节。
 
-#### anchors 计算
+### inference细节
 
-输入600X800的图片，经过base卷积层之后，16x下采样，获得37x50的feature map。
+下文以mxnet rcnn的[源码](https://github.com/apache/incubator-mxnet/tree/master/example/rcnn)进行讲解。运行一下demo, 获得如下结果:
 
-anchors数目是: 37 x 50 x 9 = 16650
+![](http://vsooda.github.io/assets/faster_rcnn/dog_result.jpg)
 
-```python
-def _whctrs(anchor):
-    """
-    Return width, height, x center, and y center for an anchor (window).
-    """
+这张经典图片是600x800。后文均以**600x800**的测试图片为例。600x800的输入经过base卷积层之后，16x下采样，获得37x50的feature map。从这里可以看出faster rcnn在预测时，并没有进行resize。
 
-    w = anchor[2] - anchor[0] + 1
-    h = anchor[3] - anchor[1] + 1
-    x_ctr = anchor[0] + 0.5 * (w - 1)
-    y_ctr = anchor[1] + 0.5 * (h - 1)
-    return w, h, x_ctr, y_ctr
-
-
-def _mkanchors(ws, hs, x_ctr, y_ctr):
-    """
-    Given a vector of widths (ws) and heights (hs) around a center
-    (x_ctr, y_ctr), output a set of anchors (windows).
-    """
-
-    ws = ws[:, np.newaxis]
-    hs = hs[:, np.newaxis]
-    anchors = np.hstack((x_ctr - 0.5 * (ws - 1),
-                         y_ctr - 0.5 * (hs - 1),
-                         x_ctr + 0.5 * (ws - 1),
-                         y_ctr + 0.5 * (hs - 1)))
-    return anchors
-```
-
-![](../assets/faster_rcnn/generate_anchors.png)
-
-base_anchors: [0 0 15 15]
-
-![](../assets/faster_rcnn/ratio_enum.png)
-
-ratio_anchors:
-
-```
-array([ -3.5,   2. ,  18.5,  13. ]),
-array([  0.,   0.,  15.,  15.]), 
-array([  2.5,  -3. ,  12.5,  18. ])
-```
-
-再通过scale_enum:
-
-![](../assets/faster_rcnn/scale_enum.png)
-
-![](../assets/faster_rcnn/orig_anchors.png)
-
-以上anchors，加上每个网格的偏移: 
-
-```
-0 0 0 0
-16 0 16 0
-32 0 32 0
-...
-768 576 768 576
-784 576 784 576
-```
-
-anchors大小变成变成1850x9x4。
-
-#### rpn + anchors
-
-rpn输出scores: 1x9x37x50
-
-bbox delta大小: 1x36x37x50
-
-为什么大小是这样的？要看一下rpn网络构造了。
+#### 总体
 
 ```python
-def get_vgg_test(num_classes=config.NUM_CLASSES, num_anchors=config.NUM_ANCHORS):
+def get_vgg_test(num_classes=21, num_anchors=9):
     """
     Faster R-CNN test with VGG 16 conv layers
     :param num_classes: used to determine output size
@@ -238,16 +171,16 @@ def get_vgg_test(num_classes=config.NUM_CLASSES, num_anchors=config.NUM_ANCHORS)
     
     rois = mx.symbol.Custom(
         cls_prob=rpn_cls_prob_reshape, bbox_pred=rpn_bbox_pred, im_info=im_info, name='rois',
-        op_type='proposal', feat_stride=config.RPN_FEAT_STRIDE,
+        op_type='proposal', feat_stride=16,
         scales=tuple(config.ANCHOR_SCALES), ratios=tuple(config.ANCHOR_RATIOS),
-        rpn_pre_nms_top_n=config.TEST.RPN_PRE_NMS_TOP_N, rpn_post_nms_top_n=config.TEST.RPN_POST_NMS_TOP_N,
-        threshold=config.TEST.RPN_NMS_THRESH, rpn_min_size=config.TEST.RPN_MIN_SIZE)
+        rpn_pre_nms_top_n=6000, rpn_post_nms_top_n=300,
+        threshold=0.7, rpn_min_size=16)
 
     _, out_shape, _ = rois.infer_shape(data=input_data_shape)
     print('rois shape: ', out_shape)  # 300x5
     # Fast R-CNN
     pool5 = mx.symbol.ROIPooling(
-        name='roi_pool5', data=relu5_3, rois=rois, pooled_size=(7, 7), spatial_scale=1.0 / config.RCNN_FEAT_STRIDE)
+        name='roi_pool5', data=relu5_3, rois=rois, pooled_size=(7, 7), spatial_scale=1.0 / 16)
     _, out_shape, _ = pool5.infer_shape(data=input_data_shape)
     print('pool5 shape: ', out_shape)  # 300x512x7x7
     # group 6
@@ -274,11 +207,11 @@ def get_vgg_test(num_classes=config.NUM_CLASSES, num_anchors=config.NUM_ANCHORS)
     return group
 ```
 
-已经在上面的加上每层的输出大小。应该一目了然了吧。
+已经在上面的源码加上每层的输出大小。应该一目了然了吧。
 
-需要注意的是rpn的输出一定会是固定大小(topN: 300), 否则就不是静态图了？
+需要注意的是rpn的输出一定会是固定大小(topN: 300), 否则就不是静态图了。
 
-但是通过层层过滤，会不会导致proposal不够topN呢。有可能。如果不够，则进行随机重复。这部分逻辑在proposal里面处理。
+但是通过层层过滤，会不会导致proposal不够topN呢？答案是：有可能。如果不够，则进行随机重复。这部分逻辑在proposal里面处理。
 
 ```python
  if len(keep) < post_nms_topN:
@@ -286,7 +219,157 @@ def get_vgg_test(num_classes=config.NUM_CLASSES, num_anchors=config.NUM_ANCHORS)
             keep = np.hstack((keep, pad))
 ```
 
+从上面网络结构可以看出，fast rcnn网络就剩下几个全连接层了，都是**常规操作**。
 
+现在放上这张图，就很清晰了吧。
+
+<img src="http://vsooda.github.io/assets/faster_rcnn/fast_rcnn.png" style="width:500px">
+
+现在剩下的所有细节都在`proposal`层了。怎么对rpn的输出进行处理，然后拿回来roi来到fast rcnn网络里面进行RoiPooling等后续操作呢？具体来说就是:
+
+* anchors怎么设置的
+* bbox delta是怎么算的呢？
+* 坐标在feature map大小还是原图大小还是0-1归一化范围呢？
+
+####  anchors设置
+
+anchors数目是: 37 x 50 x 9 = 16650
+
+先列一下后面会用到的bbox util函数: 
+```python
+# xyxy to whxy
+def _whctrs(anchor):
+    """
+    Return width, height, x center, and y center for an anchor (window).
+    """
+    w = anchor[2] - anchor[0] + 1
+    h = anchor[3] - anchor[1] + 1
+    x_ctr = anchor[0] + 0.5 * (w - 1)
+    y_ctr = anchor[1] + 0.5 * (h - 1)
+    return w, h, x_ctr, y_ctr
+
+# whxy to xyxy
+def _mkanchors(ws, hs, x_ctr, y_ctr):
+    """
+    Given a vector of widths (ws) and heights (hs) around a center
+    (x_ctr, y_ctr), output a set of anchors (windows).
+    """
+    ws = ws[:, np.newaxis]
+    hs = hs[:, np.newaxis]
+    anchors = np.hstack((x_ctr - 0.5 * (ws - 1),
+                         y_ctr - 0.5 * (hs - 1),
+                         x_ctr + 0.5 * (ws - 1),
+                         y_ctr + 0.5 * (hs - 1)))
+    return anchors
+```
+
+现在开始看anchors box是怎么设置的。入口函数是:
+
+![](http://vsooda.github.io/assets/faster_rcnn/generate_anchors.png)
+
+_ratio_enum运行情况如下:
+
+![](http://vsooda.github.io/assets/faster_rcnn/ratio_enum.png)
+
+ratio_anchors 结果:
+
+```
+array([ -3.5,   2. ,  18.5,  13. ]),
+array([  0.,   0.,  15.,  15.]), 
+array([  2.5,  -3. ,  12.5,  18. ])
+```
+
+再通过scale_enum:
+
+![](http://vsooda.github.io/assets/faster_rcnn/scale_enum.png)
+
+![](http://vsooda.github.io/assets/faster_rcnn/orig_anchors.png)
+
+
+以上anchors，加上每个网格的偏移: 
+
+```
+0 0 0 0
+16 0 16 0
+32 0 32 0
+...
+768 576 768 576
+784 576 784 576
+```
+
+anchors大小变成变成1850x9x4。
+
+一句话总结:  **anchors box就是定义在feature map网格上的原图坐标的一些预定义框。计算proposal，就是对应网格的anchor box加上对应网格预测值（bbox delta）上**。
+
+
+#### bbox delta
+
+```python
+def nonlinear_pred(boxes, box_deltas):
+    """
+    Transform the set of class-agnostic boxes into class-specific boxes #rpn这里并没有分不同类别
+    by applying the predicted offsets (box_deltas)
+    :param boxes: !important [N 4]
+    :param box_deltas: [N, 4 * num_classes]
+    :return: [N 4 * num_classes]
+    """
+    if boxes.shape[0] == 0:
+        return np.zeros((0, box_deltas.shape[1]))
+
+    boxes = boxes.astype(np.float, copy=False)
+    widths = boxes[:, 2] - boxes[:, 0] + 1.0
+    heights = boxes[:, 3] - boxes[:, 1] + 1.0
+    ctr_x = boxes[:, 0] + 0.5 * (widths - 1.0)
+    ctr_y = boxes[:, 1] + 0.5 * (heights - 1.0)
+    dx = box_deltas[:, 0::4]
+    dy = box_deltas[:, 1::4]
+    dw = box_deltas[:, 2::4]
+    dh = box_deltas[:, 3::4]
+    pred_ctr_x = dx * widths[:, np.newaxis] + ctr_x[:, np.newaxis]
+    pred_ctr_y = dy * heights[:, np.newaxis] + ctr_y[:, np.newaxis]
+    pred_w = np.exp(dw) * widths[:, np.newaxis]
+    pred_h = np.exp(dh) * heights[:, np.newaxis]
+
+    pred_boxes = np.zeros(box_deltas.shape)
+    # x1
+    pred_boxes[:, 0::4] = pred_ctr_x - 0.5 * (pred_w - 1.0)
+    # y1
+    pred_boxes[:, 1::4] = pred_ctr_y - 0.5 * (pred_h - 1.0)
+    # x2
+    pred_boxes[:, 2::4] = pred_ctr_x + 0.5 * (pred_w - 1.0)
+    # y2
+    pred_boxes[:, 3::4] = pred_ctr_y + 0.5 * (pred_h - 1.0)
+
+    return pred_boxes
+```
+
+将以上源码对应到公式:
+
+$$t_x=(x-x_a)/w_a, t_y=(y-t_a)/h_a$$
+
+$$t_w=log(w/w_a), t_h=log(h/h_a)$$
+
+$$t_x^*=(x^*-x_a)/w_a, t_y^*=(y^*-t_a)/h_a$$
+
+$$t_w^*=log(w^*/w_a), t_h^*=log(h^*/h_a)$$
+
+其中$x$, $x_a$, $x^*$分别代表预测box，anchor box， ground-true box。
+
+通过以上函数处理box和delta。获得的坐标依旧是600x800范围。然后进行clip，并且对score进行过滤，nms，取top等。如前文所说，如果最终剩下的不足topN，则补足。
+
+好了，那么现在我们知道rpn出来的数据是原始图像的位置，怎么映射到feature map呢？从上述网络结构可知，答案在roiPooling中。
+
+#### RoiPooling
+
+来看一下RoiPooling的参数说明: 
+
+> - **spatial_scale** (*float, required*) – Ratio of input feature map height (or w) to raw image height (or w). Equals the reciprocal of total stride in convolutional layer
+
+也就是roi映射直接除以stride的乘积（16）。并没有那么多事。
+
+
+
+## 附录（待整理）
 
 下面让我们一一解答一下问题: 
 
@@ -304,25 +387,7 @@ def get_vgg_test(num_classes=config.NUM_CLASSES, num_anchors=config.NUM_ANCHORS)
 
 anchors what and why？
 
-**anchor box**：
-
-$$t_x=(x-x_a)/w_a, t_y=(y-t_a)/h_a$$
-
-$$t_w=log(w/w_a), t_h=log(h/h_a)$$
-
-$$t_x^*=(x^*-x_a)/w_a, t_y^*=(y^*-t_a)/h_a$$
-
-$$t_w^*=log(w^*/w_a), t_h^*=log(h^*/h_a)$$
-
-其中$x$, $x_a$, $x^*$分别代表预测box，anchor box， ground-true box。
-
 ### fast rcnn细节
-
-**偏移**：
-
-<img src="http://vsooda.github.io/assets/faster_rcnn/fast_rcnn.png" style="width:500px">
-
-
 
 
 **roi映射**: 
