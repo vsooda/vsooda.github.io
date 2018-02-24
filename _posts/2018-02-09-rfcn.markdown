@@ -3,8 +3,8 @@ layout: post
 title: "R-FCN: Object Detection via Region-based Fully Convolutional Networks"
 date: 2018-02-09
 mathjax: true
-categories: deep
-tags: object cv
+categories: deep cv
+tags: object
 ---
 * content
 {:toc}

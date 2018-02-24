@@ -3,7 +3,7 @@ layout: post
 title: "xception"
 date: 2018-02-11
 mathjax: true
-categories: deep
+categories: deep cv
 tags: cv
 ---
 * content

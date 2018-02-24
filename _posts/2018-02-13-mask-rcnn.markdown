@@ -3,8 +3,8 @@ layout: post
 title: "mask rcnn"
 date: 2018-02-13
 mathjax: true
-categories: deep
-tags: cv object
+categories: deep cv
+tags: object
 ---
 * content
 {:toc}

@@ -3,8 +3,8 @@ layout: post
 title: "focal loss"
 date: 2018-02-20
 mathjax: true
-categories: deep
-tags: cv object
+categories: deep cv
+tags: object
 ---
 * content
 {:toc}

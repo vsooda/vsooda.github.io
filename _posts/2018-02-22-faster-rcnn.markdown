@@ -3,8 +3,8 @@ layout: post
 title: "faster rcnn系列"
 date: 2018-02-22
 mathjax: true
-categories: deep
-tags: cv object
+categories: deep cv
+tags: object
 ---
 * content
 {:toc}
@@ -72,7 +72,7 @@ sppnet的相对于rcnn有个缺点，RoiPooling后面的网络层无法被微调
 
 #### fast rcnn
 
-* 更高的map
+* 更高的mAP
 * sppnet和rcnn使用一样的多阶段训练。fast rcnn将svm改成softmax，并使用multitask loss同时进行分类和bbox regrresion。所以只需要一阶段训练就可以了，
 * 不需要额外的硬盘存储空间。
 * 可以更新所有层 （上面有提到sppnet为什么不能更新所有层）

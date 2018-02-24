@@ -3,8 +3,8 @@ layout: post
 title: "fpn"
 date: 2018-02-12
 mathjax: true
-categories: deep
-tags: cv object
+categories: deep cv
+tags: object
 ---
 * content
 {:toc}
