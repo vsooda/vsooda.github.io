@@ -20,7 +20,7 @@ mask rcnn是在faster rcnn的基础上，新增一个分支来预测mask。实�
 
 这里讲的分割一般说的是语义分割(`semantic segmantation`). 目标就是把每个像素归类到具体的类别，而不去区分属于哪个物体。现在一把都是用fcn来做分割，之前的分割效果最好的FCIS[^fcis]同样是基于fcn。本文增加的mask分支同样是基于fcn。
 
-作者发现，将mask和类别预测解耦能大大提高准确度(`应该不是这篇文章提出的。我记得之前看过的论文也是这么做的吧？voc20类就预测21张图。待确定哪篇论文`)。同时，作者发现使用RoiPooling，由于量化的关系，会导致没misalignmenet. 所以提出了RoiAlign来解决这个问题。后面详细介绍。
+作者发现，将mask和类别预测解耦能大大提高准确度(`应该不是这篇文章提出的。Fully convolutional networks for semantic segmentation 就这么做了。voc20类就预测21张图。`)。同时，作者发现使用RoiPooling，由于量化的关系，会导致没misalignmenet. 所以提出了RoiAlign来解决这个问题。后面详细介绍。
 
 
 
@@ -86,3 +86,4 @@ RoiAlign就是用来解决这种不对齐问题的。如下图所示。
 [^mask_rcnn]: He, Kaiming, et al. "Mask r-cnn." *Computer Vision (ICCV), 2017 IEEE International Conference on*. IEEE, 2017.
 [^focal_loss]: Lin, Tsung-Yi, et al. "Focal loss for dense object detection." *arXiv preprint arXiv:1708.02002* (2017).
 [^fcis]: Y. Li, H. Qi, J. Dai, X. Ji, and Y. Wei. Fully convolutional instance-aware semantic segmentation.In CVPR, 2017.
+[^fcn]: Long, Jonathan, Evan Shelhamer, and Trevor Darrell. "Fully convolutional networks for semantic segmentation." *Proceedings of the IEEE conference on computer vision and pattern recognition*. 2015.
