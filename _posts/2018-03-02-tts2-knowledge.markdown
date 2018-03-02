@@ -13,11 +13,11 @@ tags: tts
 
 
 文章列表如下:
+
 <img src="/assets/tts2_knowledge/tts2_papers.png" style="width:300px">
 
 
 关键知识主要包含:
-
 * seq2seq， encoder，decoder [^seq2seq]
 * attention[^attention]
 * gated linear unitn [^gated_linear]
