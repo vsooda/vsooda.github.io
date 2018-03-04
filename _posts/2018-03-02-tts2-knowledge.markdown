@@ -10,21 +10,14 @@ tags: tts
 {:toc}
 最近打算用mxnet复现tacotron[^tacotron]，deepvoice3[^deepvoice3]，wavenet[^wavenet]等论文。后面会写一系列文章记录相关论文细节，以及复现过程中遇到的问题。本文先介绍所需要的预备知识，扫清大家阅读后面文章可能碰到的障碍。
 
-in progress...
 
-
-
-文章列表如下:
-
-<img src="http://vsooda.github.io/assets/tts2_knowledge/tts2_papers.png" style="width:300px">
-
-
+	
 关键知识主要包含:
-* seq2seq， encoder，decoder [^seq2seq]
-* attention[^attention]
-* gated linear unit [^gated_linear]
-* conv seq2seq [^convs2s]
-* highway network [^highway]
+* seq2seq， encoder，decoder
+* attention
+* gated linear unit
+* conv seq2seq
+* highway network
 * causal
 * softsign
 
@@ -146,7 +139,7 @@ deepvoice3第一句就是:
 
 我们先看一下conv seq2seq的整体结构。
 
-![](../assets/tts2_knowledge/conv_s2s.png)
+![](http://vsooda.github.io/assets/tts2_knowledge/conv_s2s.png)
 
 上图中，encoder通过cnn和gated linear units对输入进行编码。变成key，value。decoder使用同样的方式，将输出变成query。通过attention机制获得attention value。再加上原始的query，一起预测输出。
 
