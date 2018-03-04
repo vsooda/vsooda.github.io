@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "end2end tts knowledge"
+title: "end2end tts前置知识"
 date: 2018-03-02
 mathjax: true
 categories: speech
@@ -60,7 +60,7 @@ attention[^attention] 这篇论文提出于2015，目前引用已经将近3000�
 
 seq2seq是将输入通过encoder映射到一个固定向量，然后从这固定向量出发获得解码输出。但这实际上有点违反人类的认知的。比如上面的例子： (good, morning) 翻译到(早，上，好)。“早上“与”morning“有关系，与”good“几乎没有关系。”好“与”good“有关系，与”moring“几乎没有关系。
 
-attention论文认为，简单的将整个输入映射到一个固定向量是不合理的。应该在解码的时候，寻找与其有关系的输入。然后有这些输入一起决定应该输出什么。这句是**attention**
+attention论文认为，简单的将整个输入映射到一个固定向量是不合理的。应该在解码的时候，寻找与其有关系的输入。然后有这些输入一起决定应该输出什么。这就是**attention**
 
 ### 细节
 
@@ -140,14 +140,53 @@ deepvoice3第一句就是:
 
 其实这里的fully-convolutional描述的是seq2seq的方式。
 
-我们正常听到seq2seq，立马就想到用rnn。facebook的这篇论文[^conv_seq2seq]用`fully-convolution`实现了seq2seq。效果不比rnn的差。优势是大大提升了训练速度。花絮是: 谷歌对标conv seq2seq，推出了Attention is all you need[^attention_need]这篇论文，不用rnn，cnn。堆积大量的self attention，用来计算上一层到下一层的映射。这是后话了。
+我们正常听到seq2seq，立马就想到用rnn。facebook的这篇论文[^conv_s2s]用`fully-convolution`实现了seq2seq。效果不比rnn的差。优势是大大提升了训练速度。
 
-接下来让我们看一下conv seq2seq是怎么实现的。
+>  谷歌对标conv seq2seq，推出了Attention is all you need[^attention_need]这篇论文，不用rnn，cnn。堆积大量的self attention，用来计算上一层到下一层的映射。这是后话了。
 
-**todo: 详解**
+我们先看一下conv seq2seq的整体结构。
+
+![](../assets/tts2_knowledge/conv_s2s.png)
+
+上图中，encoder通过cnn和gated linear units对输入进行编码。变成key，value。decoder使用同样的方式，将输出变成query。通过attention机制获得attention value。再加上原始的query，一起预测输出。
+
+在训练阶段，由于输出的所有词都是知道的，而且cnn没有状态，所以decoder整个都是可以并行的，不需要先一个个一次进行decode。这也就conv seq2seq比rnn训练速度快的奥秘。而在预测阶段就无法并行了，所以速度不会明显的提升。
+
+好了，整体结构就是这样。可能我们心中会有疑问：**cnn没有历史状态，凭什么跟rnn比**？
+
+**position embeddings**。这是这篇论文首创。后面很多用cnn做conv seq2seq的文章都会用到这个。只是具体的方式不大一样。本文通过引入position embeddings对文本位置进行编码。简单的说，就是`在每个词的向量加上该词在句中的绝对位置作为后续输入`。
+
+**卷积block**。堆积多层cnn,这样可以获得更大的感知野。并使用gated linear units
+
+**多步 attention**。下一层的attention是上一层attention value的加权平均。
+
+**归一化策略**。为了训练的稳定性，对网络的某些部分进行缩放。
+
+* 对residual block的输出和attention进行缩放。
+* 对input与residual block的输出之和乘上$\sqrt 5$。
+* 对condition input $c_i$乘上$m\sqrt {\frac{1}{m}}$
+* 对encoder层的梯度除以attention数目
+
+**网络初始化**。这篇论文还提出了新的权重初始化。**todo:待完善**.
 
 ## highway network
+大量的研究表明，增加网络层数可以提升效果。但是深度增大也意味着训练难度的增加。highway network[^highway]这篇论文提出一直方式来降低训练难度。这种方式可以使得信息直接穿越几层传导到后面的网络层，所以称为**highway network**。
 
+假设我们正常的网络层: 
+
+$$y=H(x,W_H)$$
+
+highway network增加了两个门。
+
+ $$y=H(x,W_h)\cdot T(x, W_T)+x \cdot C(x,W_C)$$
+
+$T(x, W_T)$, $C(x,W_C)$分别被称为transform门和carry门。分别表示对原始信息信息转换的程度和保留程度。在实际中，一般取$C=1-T$。
+
+所以上式变成: 
+
+$$y=H(x,W_h)\cdot T(x, W_T)+x \cdot (1-T(x, W_T))$$
+
+pytorch源码如下：
 ```python
 class Highway(nn.Module):
     def __init__(self, in_size, out_size):
