@@ -66,7 +66,45 @@ attention论文认为，简单的将整个输入映射到一个固定向量是�
 
 要加一些公式了，莫慌，都很简单。
 
-**todo**: 详解
+输入: ${\bf x}=(x_1,…,x_{T_x})$
+
+输出: ${\bf y}=(y_1,…,y_{T_y})$
+
+seq2seq的encoder一般是RNN。在每个时刻, rnn隐藏层输出$h_t$ 表示为（$f,q$表示某些非线性表达式）:
+
+$$h_t=f(x_t,h_{t-1})$$
+
+最终，用隐藏层输出将输入编码成固定长度的向量$c$
+
+$$c=q({h_1,…,h_{T_x}})$$
+
+在seq2seq中，一般只取最后一个隐藏层的输出作为编码向量$q({h_1,…,h_{T_x}})=h_{T_x}$
+
+在**attention**中，${h_1,…,h_{T_x}}$都会派上用场，而不是只用最后一个。简单来说，attention就是在预测某个decoder输出的时候，不再是固定的$h_{T_x}$， 而是$h_1,…,h_{T_x}$ 的加权和。那么，应该权重应该是多少呢？我们一步步来讲。
+
+在$i$时刻预测$y$输出:
+
+$$p(y_i \mid y_1,…y_{i-1}, {\bf x})=g(y_{i-1}, s_i, c_i)$$
+
+其中，$s_i$ 是上一时刻rnn隐含层的输出。$g$是decoder rnn。关键就是$c_i$怎么来的。
+
+$$c_i=\sum_{j=1}^{T_x}\alpha_{ij}h_j$$
+
+也就是加权组合。那么权重 $\alpha$ 怎么来的：
+
+ $$\alpha_{ij}=\frac{exp(e_{ij})}{\sum_{k=1}^{T_x}exp(e_{ik})}$$
+
+其中，$e_{ij}=a(s_{i-1}, h_j)$
+
+$a$是对齐模型。表示输入$j$ 与输出$i$的匹配程度。通常也是由神经网络来学习。
+
+直观来说，$\alpha_{ij}$或者$e_{ij}$表示上一时刻隐含层输出$s_{i-1}$与$h_j$对于这时刻隐含层输出$s_i$ 和解码输出$y_i$的重要程度。
+
+在实际的网络图中，一般用query表示$s_{i-1}$, key表示下$h_1,…,h_{T_x}$. value表示通过key或者key通过另外一些网络层的隐藏层输出。下面这张图可以形象的表示attention的过程.
+
+![](http://vsooda.github.io/assets/tts2_knowledge/key_value.png)
+
+中间部分是encoder。输入4个时刻的隐藏层$(h_1,h_2,h_3,h_4)$分别表示为(key1,key2,key3,key4), 分别对应的value是(value1, value2, value3, value4). query是$s_{i-1}$. 通过query和key计算相似度，这些归一化的相似度对value进行加权求和，最后获得attention value
 
 ### alignment
 
