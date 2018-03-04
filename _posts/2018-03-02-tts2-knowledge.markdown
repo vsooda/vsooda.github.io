@@ -106,6 +106,8 @@ $a$是对齐模型。表示输入$j$ 与输出$i$的匹配程度。通常也是�
 
 中间部分是encoder。输入4个时刻的隐藏层$(h_1,h_2,h_3,h_4)$分别表示为(key1,key2,key3,key4), 分别对应的value是(value1, value2, value3, value4). query是$s_{i-1}$. 通过query和key计算相似度，这些归一化的相似度对value进行加权求和，最后获得attention value
 
+attention的形式有很多种。可以是encoder和decoder之间算相似度。也可以分别在encoder和decoder内部计算相似度（self attention）。谷歌的attention is all you need就是堆叠了大量的self attention。
+
 ### alignment
 
 怎么知道训练是否有效，一般会将学习到的对齐用图像画出来。比如: 
@@ -118,11 +120,15 @@ ps: 张俊林发表在程序员上的一篇[文章](http://blog.csdn.net/qq_4002
 
 ## gated linear unit
 
-之前的基于神经网络的语言模型一般是用rnn。rnn可以保存长时依赖，所以效果会比较好。但是rnn存在效率问题，而cnn 可以并行。Language Modeling with Gated Convolutional Networks[^gated_linear]这篇文章通过堆叠多层cnn来获取比较的感受野, 同时作者通过gated linear unit来提高性能，最后效果能与rnn相匹敌。
+之前的基于神经网络的语言模型一般是用rnn。rnn可以获得长时依赖，所以效果会比较好。但是rnn存在效率问题，而cnn 可以并行。Language Modeling with Gated Convolutional Networks[^gated_linear]这篇文章通过堆叠多层cnn来获取比较的感受野, 同时作者通过gated linear unit来提高性能，最后效果能与rnn相匹敌。
+
+直接看一张图：
 
 <img src="http://vsooda.github.io/assets/tts2_knowledge/gated.png" style="width:300px">
 
-**todo: 详解**
+上图中，输入经过embeding（获得词向量），然后分别分别输入两个卷积层A，B，对卷积B的结果取sigmoid($\sigma$)，再与A对位相乘($\otimes$)，获得H。
+
+其中：$H=A \otimes \sigma(B) $，门$\sigma (B)$控制附近的哪些A是有效的（相关的）。
 
 ## conv seq2seq
 
@@ -159,7 +165,7 @@ class Highway(nn.Module):
         return H * T + inputs * (1.0 - T)
 ```
 
-## causa
+## causal
 
 causal convolution的意思就是，卷积的输出不依赖于未来的输入。这在自回归(autoregressive)模型是必要的。因为只能根据前面的结果预测当前的值。
 
