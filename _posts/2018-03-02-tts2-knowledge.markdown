@@ -11,13 +11,14 @@ tags: tts
 最近打算用mxnet复现tacotron[^tacotron]，deepvoice3[^deepvoice3]，wavenet[^wavenet]等论文。后面会写一系列文章记录相关论文细节，以及复现过程中遇到的问题。本文先介绍所需要的预备知识，扫清大家阅读后面文章可能碰到的障碍。
 
 
-	
+​	
 关键知识主要包含:
-* seq2seq， encoder，decoder
-* attention
-* gated linear unit
-* conv seq2seq
-* highway network
+* seq2seq， encoder，decoder [^seq2seq]
+* attention[^attention]
+* monotonic attention[^monotonic]
+* gated linear unit [^gated_linear]
+* conv seq2seq [^convs2s]
+* highway network [^highway]
 * causal
 * softsign
 
@@ -41,7 +42,7 @@ seq2seq分别encoder和decoder。上图中，左边是encoder，右边是decoder
 * 翻译任务: 输出是具体的词。有个词表，其中包含了结束符。decoder对每个输出做softmax，即可知道到底是哪个词了。但实际解码没有这么简单。考虑到softmax可能有几个词概率差不多的。那么是否应该用这几个词作为输入，继续解码，看看谁的后续概率更高就选谁的。答案是: YES。用这种方式的解码就是我们常说的束搜索。也就是beam search。
 * 语音合成任务: 输入是文本，输出是频谱特征。输入的处理方式与其他任务没有区别。输出的频谱特征是一堆连续值，不是分类任务，怎么知道是否结束呢？答案是: 
   * 设置一个最大解码次数，达到了自然停止。最后对合成语音进行端点检测，去掉尾部多余的空音。
-  * 设置一个阈值，例如0.2. 如果输出的所有值都这个数字, 就结束。**todo：待确定。碰到句子中间的空音怎么办**
+  * 设置一个阈值，例如0.2. 如果输出的所有值都这个数字, 就结束。~~todo：待确定。碰到句子中间的空音怎么办？~~空音的频谱不是0？
 
 ## attention
 
@@ -85,9 +86,9 @@ $$c_i=\sum_{j=1}^{T_x}\alpha_{ij}h_j$$
 
 也就是加权组合。那么权重 $\alpha$ 怎么来的：
 
- $$\alpha_{ij}=\frac{exp(e_{ij})}{\sum_{k=1}^{T_x}exp(e_{ik})}$$
+ $$	\alpha_{ij}=\frac{exp(e_{ij})}{\sum_{k=1}^{T_x}exp(e_{ik})}$$
 
-其中，$e_{ij}=a(s_{i-1}, h_j)$
+注意上式的形式，其实这就是**softmax attention**。其中，$e_{ij}=a(s_{i-1}, h_j)$
 
 $a$是对齐模型。表示输入$j$ 与输出$i$的匹配程度。通常也是由神经网络来学习。
 
@@ -110,6 +111,10 @@ attention的形式有很多种。可以是encoder和decoder之间算相似度。
 怎么理解呢? 对于翻译任务，输入和输出一般都是呈线性关系的。正常来说，输入序列先出现的词，在输出中，其对应的词也会先出现。上面这张图表示输入输出的响应强度。因为时序性与局部性，一般来说，对齐图上，对角线会比较亮，一般来说，这表明学习基本没有问题。反之，如果这张图很混乱，那么就表明学习是无效的。
 
 ps: 张俊林发表在程序员上的一篇[文章](http://blog.csdn.net/qq_40027052/article/details/78421155)讲解很通俗易懂。上面内容如果看不懂，建议花点时间看看这篇文章。
+
+## monotonic attention
+
+一般的attention需要对每个query计算跟整个key的相似度。复杂度是二次的。而且无法应用于实时语音识别这种online应用。monotonic attention[^monotonic]这篇论文提出了单调性，也就是在上面在alignment中，我们提到了时序性和局部性。也就是，不再对整个输入序列的计算softmax，而是对上一次最后一个attention位置外后几个timestep的窗口范围内计算softmax。通过实验表明，monotonic attention比softmax attention只有很微小的性能损失。这篇论文进行了大量的理论分析，有兴趣的可以看一下。
 
 ## gated linear unit
 
@@ -230,3 +235,4 @@ $$f(x)=\frac{x}{\lvert x\rvert +1}$$
 [^seq2seq]: Ilya Sutskever, Oriol Vinyals, and Quoc V Le. Sequence to sequence learning with neural networks. In Advances in neural information processing systems, pp. 3104–3112, 2014.
 [^deepvoice3]: W.Ping,K.Peng,A.Gibiansky,S.O ̈.Arik,A.Kannan, S. Narang, J. Raiman, and J. Miller, “Deep voice 3: 2000- speaker neural text-to-speech,” CoRR, vol. abs/1710.07654, 2017.
 [^tacotron]: Y. Wang, R. Skerry-Ryan, D. Stanton, Y. Wu, R. J. Weiss,N. Jaitly, Z. Yang, Y. Xiao, Z. Chen, S. Bengio, Q. Le,Y. Agiomyrgiannakis, R. Clark, and R. A. Saurous, “Tacotron:Towards end-to-end speech synthesis,” in Proceedings of Inter-speech, Aug. 2017.
+[^monotonic]: Colin Raffel, Thang Luong, Peter J Liu, Ron J Weiss, and Douglas Eck. Online and linear-time attention by enforcing monotonic alignments. In ICML, 2017.
