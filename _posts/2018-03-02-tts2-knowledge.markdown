@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "tts2 knowledge"
+title: "end2end tts knowledge"
 date: 2018-03-02
 mathjax: true
 categories: speech
@@ -39,7 +39,7 @@ seq2seq用来做序列学习非常有效。比如聊天系统，语音识别，o
 
 看一下下面这张图就知道seq2seq是怎么工作的了。
 
-![](../assets/tts2_knowledge/seq2seq.png)
+![](http://vsooda.github.io/assets/tts2_knowledge/seq2seq.png)
 
 seq2seq分别encoder和decoder。上图中，左边是encoder，右边是decoder。左边是一个RNN，将输入(A,B,C)输入到网络中，获取固定长度的隐藏向量W。也就是整个(A,B,C)序列被编码成固定长度的向量W。右边是decoder，也是RNN。由W出发，获取输出X，再把X作为输入，获得Y...一直持续下去，直到碰到结束符为止。最后，decoder输出的(X,Y,Z)就是序列预测的结果。
 
@@ -54,9 +54,29 @@ seq2seq分别encoder和decoder。上图中，左边是encoder，右边是decoder
 
 deepvoice系列，tacotron这些end2end语音合成论文充斥着大量的attention字眼，如果不懂这个，看起来可能会哭。
 
-这里简单介绍一下attention。
+attention[^attention] 这篇论文提出于2015，目前引用已经将近3000了。相当厉害。attention有很多变种，可以用于seq2seq，也可以不用。最初的论文是用于提升seq2seq的效果，我们就以这个为例。后面的一些扩展大家自己看。
 
-张俊林发表在程序员上的一篇[文章](http://blog.csdn.net/qq_40027052/article/details/78421155)讲解很通俗易懂。上面内容如果看不懂，建议花点时间看看这篇文章。
+### 动机
+
+seq2seq是将输入通过encoder映射到一个固定向量，然后从这固定向量出发获得解码输出。但这实际上有点违反人类的认知的。比如上面的例子： (good, morning) 翻译到(早，上，好)。“早上“与”morning“有关系，与”good“几乎没有关系。”好“与”good“有关系，与”moring“几乎没有关系。
+
+attention论文认为，简单的将整个输入映射到一个固定向量是不合理的。应该在解码的时候，寻找与其有关系的输入。然后有这些输入一起决定应该输出什么。这句是**attention**
+
+### 细节
+
+要加一些公式了，莫慌，都很简单。
+
+**todo**: 详解
+
+### alignment
+
+怎么知道训练是否有效，一般会将学习到的对齐用图像画出来。比如: 
+
+![](http://vsooda.github.io/assets/tts2_knowledge/alignment.png)
+
+怎么理解呢? 对于翻译任务，输入和输出一般都是呈线性关系的。正常来说，输入序列先出现的词，在输出中，其对应的词也会先出现。上面这张图表示输入输出的响应强度。因为时序性与局部性，一般来说，对齐图上，对角线会比较亮，一般来说，这表明学习基本没有问题。反之，如果这张图很混乱，那么就表明学习是无效的。
+
+ps: 张俊林发表在程序员上的一篇[文章](http://blog.csdn.net/qq_40027052/article/details/78421155)讲解很通俗易懂。上面内容如果看不懂，建议花点时间看看这篇文章。
 
 ## gated linear unit
 
