@@ -303,13 +303,13 @@ $$
 $$
 \begin{aligned}
 
-\text{static feature} &~~~~ c &~~~ MT\times 1\\\\
+\text{static feature} &~~~~ c &~~~ MT\times 1\\
 
-\text{observation} &~~~~ o &~~~ 3MT\times 1\\\\
+\text{observation} &~~~~ o &~~~ 3MT\times 1\\
 
-\text{window} &~~~~ W &~~~ 3MT\times MT\\\\
+\text{window} &~~~~ W &~~~ 3MT\times MT\\
 
-\text{means} &~~~~ \mathbf{\mu}_{q} &~~~ 3MT\times 1\\\\
+\text{means} &~~~~ \mathbf{\mu}_{q} &~~~ 3MT\times 1\\
 
 \text{covariance} &~~~~ \mathbf{\Sigma}_q &~~~ 3MT\times 3MT
 
@@ -355,7 +355,9 @@ $$
 
 &= \frac{1}{\sqrt{(2\pi)^{3MT}|\mathbf{\Sigma}_{q}|}} exp\left\lbrace-\frac{1}{2}\left(c^{\top}W^{\top}\mathbf{\Sigma}_{q}^{-1}-\mathbf{\mu}_{q}^{\top}\mathbf{\Sigma}_{q}^{-1}\right)\left(Wc-\mathbf{\mu}_{q}\right)\right\rbrace\\\\
 
-&= \frac{1}{\sqrt{(2\pi)^{3MT}|\mathbf{\Sigma}_{q}|}} exp\left\lbrace-\frac{1}{2}\left(c^{\top}W^{\top}\mathbf{\Sigma}_{q}^{-1}Wc+\mathbf{\mu}_{q}^{\top}\mathbf{\Sigma}_{q}^{-1}\mathbf{\mu}_{q}-c^{\top}W^{\top}\mathbf{\Sigma}_{q}^{-1}\mathbf{\mu}_{q}-\mathbf{\mu}_{q}^{\top}\mathbf{\Sigma}_{q}^{-1}Wc\right)\right\rbrace\ &\left(\becausec^{\top}W^{\top}\mathbf{\Sigma}_{q}^{-1}\mathbf{\mu}_{q}=\left(\mathbf{\mu}_{q}^{\top}\mathbf{\Sigma}_{q}^{-1}Wc\right)^{\top}=\mathbf{\mu}_{q}^{\top}\mathbf{\Sigma}_{q}^{-1}Wc\right)\\\\
+&= \frac{1}{\sqrt{(2\pi)^{3MT}|\mathbf{\Sigma}_{q}|}} exp\left\lbrace-\frac{1}{2}\left(c^{\top}W^{\top}\mathbf{\Sigma}_{q}^{-1}Wc+\mathbf{\mu}_{q}^{\top}\mathbf{\Sigma}_{q}^{-1}\mathbf{\mu}_{q}-c^{\top}W^{\top}\mathbf{\Sigma}_{q}^{-1}\mathbf{\mu}_{q}-\mathbf{\mu}_{q}^{\top}\mathbf{\Sigma}_{q}^{-1}Wc\right)\right\rbrace \\\\\ 
+
+&  \left(\because  c^{\top}W^{\top}\mathbf{\Sigma}_{q}^{-1}\mathbf{\mu}_{q}=\left(\mathbf{\mu}_{q}^{\top}\mathbf{\Sigma}_{q}^{-1}Wc\right)^{\top}=\mathbf{\mu}_{q}^{\top}\mathbf{\Sigma}_{q}^{-1}Wc\right)\\\\
 
 &= \frac{1}{\sqrt{(2\pi)^{3MT}|\mathbf{\Sigma}_{q}|}} exp\left\lbrace-\frac{1}{2}\left(c^{\top}W^{\top}\mathbf{\Sigma}_{q}^{-1}Wc+\mathbf{\mu}_{q}^{\top}\mathbf{\Sigma}_{q}^{-1}\mathbf{\mu}_{q}-2\mathbf{\mu}_{q}^{\top}\mathbf{\Sigma}_{q}^{-1}Wc\right)\right\rbrace
 
@@ -371,7 +373,7 @@ $$
 
 \frac{\partial\log\mathcal{N}(Wc\mid\mathbf{\mu}_{q},\mathbf{\Sigma}_{q})}{\partial c} &= -\frac{1}{2}\left\lbrace\frac{\partial}{\partial c}\left(c^{\top}\underline{W^{\top}\mathbf{\Sigma}_{q}^{-1}W}c\right)-2\frac{\partial}{\partial c}\left(\underline{\mathbf{\mu}_{q}^{\top}\mathbf{\Sigma}_{q}^{-1}W}c\right)\right\rbrace\\\\
 
-&\left(\because\left(W^{\top}\mathbf{\Sigma}_{q}^{-1}W\right)^{\top}=W^{\top}\mathbf{\Sigma}_{q}^{-1}W\right)\\\\ &= -\frac{1}{2}\left\lbrace 2\left(W^{\top}\mathbf{\Sigma}_{q}^{-1}Wc\right)^{\top}-2\left(\mathbf{\mu}_{q}^{\top}\mathbf{\Sigma}_{q}^{-1}W\right)\right\rbrace\\\\
+&  \left(\because\left(W^{\top}\mathbf{\Sigma}_{q}^{-1}W\right)^{\top}=W^{\top}\mathbf{\Sigma}_{q}^{-1}W\right)\\\\ &= -\frac{1}{2}\left\lbrace 2\left(W^{\top}\mathbf{\Sigma}_{q}^{-1}Wc\right)^{\top}-2\left(\mathbf{\mu}_{q}^{\top}\mathbf{\Sigma}_{q}^{-1}W\right)\right\rbrace\\\\
 
 &= -\frac{1}{2}\left\lbrace 2\left(W^{\top}\mathbf{\Sigma}_{q}^{-1}Wc\right)^{\top}-2\left(W^{\top}\mathbf{\Sigma}_{q}^{-1}\mathbf{\mu}_{q}\right)^{\top}\right\rbrace .
 
@@ -412,9 +414,12 @@ $$
 
 其中$U_{q}$是一个上三角矩阵。因此参数求解方程（组）可以分解为两个方程（组）
 
-$U_{q}^{\top}g_{q} &= r_{q},\\\\
+$$
+\begin{aligned}
+U_{q}^{\top}g_{q} &= r_{q},\\
 U_{q}c_{max} &= g_{q}.
-\en$
+\end{aligned}
+$$
 
 上述方程组可以通过前向-后向迭代法（高斯消去法）求解。
 
@@ -813,7 +818,7 @@ wavenet的声音生成，是当作一个分类问题，而不是回归问题。�
 
 编码: $F(x)=sgn(x)\frac{ln(1+u\mid x\mid)}{ln(1+u)},-1 \leq x  \leq 1$
 
-解码:$x=sgn(F(x))\*(1/F(x))\*((1+u)^{\mid F(x)\mid}-1)$
+解码:$x=sgn(F(x))\ast (1/F(x))\ast ((1+u)^{\mid F(x)\mid}-1)$
 
 其中，$u=255(8bit)$
 
