@@ -8,9 +8,9 @@ tags: tts
 ---
 * content
 {:toc}
-插播今天看到的一篇论文。这篇论文正好做的事情跟我去年做的实验差不多。所以特意关注了。
+插播今天看到的一篇论文[^voice_clone]。这篇论文正好做的事情跟我去年做的实验差不多。所以特意关注了。
 
-文章写的效果很厉害，还提供了网页试听，当时我就信了。等我看完文章再去试听，效果实在不敢恭维，orz。不过也算提供了新思路。
+文章写的效果很厉害，还提供了[网页试听](https://audiodemos.github.io/)，当时我就信了。等我看完文章再去试听，效果实在不敢恭维，orz。不过也算提供了新思路。
 
 
 
@@ -59,4 +59,4 @@ tts研究有个重要的方向是adapt。就是希望用户提供少量的句子
 
 ## 参考文献
 
-[^voice_clone]: Sercan O. Arik, Jitong Chen, Kainan Peng, Wei Ping, Yanqi Zhou，Neural Voice Cloning with a Few Samples
+[^voice_clone]: Sercan O. Arik, Jitong Chen, Kainan Peng, Wei Ping, Yanqi Zhou，Neural Voice Cloning with a Few Samples. arXiv:1802.06006 
