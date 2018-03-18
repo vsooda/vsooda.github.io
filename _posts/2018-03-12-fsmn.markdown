@@ -8,15 +8,18 @@ tags: speech
 ---
 * content
 {:toc}
-
 今天无意中看到阿里tts团队即将发在ICASSP 2018的论文dfsmn[^dfsmn]。基本上就是用一种新的fsmn结构来替代lstm，在不损失效果的前提下，达到减小模型大小，加快训练预测速度的目的。要读懂这篇论文，需要先对fsmn[^fsmn]，cfsmn[^cfsmn]有所了解。本文介绍这三篇论文。
 
+
+
+
+
 ## fsmn
-fsmn(feedforward sequential memory networks) 提出于2015年，讯飞当时的最佳结果似乎是基于这个结构，具体参考这篇[pr](http://blog.sciencenet.cn/blog-1225851-947297.html)。
+Shiliang Zhang等人2015提出fsmn(feedforward sequential memory networks) ，讯飞当时的最佳结果似乎是基于这个结构，具体参考这篇[pr](http://blog.sciencenet.cn/blog-1225851-947297.html)。
 
 我们先来看一下这个网络张什么样子的。
 
-![](../assets/fsmn/fsmn.png)
+![](http://vsooda.github.io/assets/fsmn/fsmn.png)
 
 从上图可以看到，对于每个输入$X_t$, 经过多层网络之后获得$Y_t$. 如果没有虚线框部分，那么就跟普通的dnn没有区别了。重点还是在虚线框部分，这被称为memory block。
 
@@ -45,11 +48,29 @@ $$\mathbf h_t^{l+1}=f(\mathbf W^l\mathbf h_t^l+\tilde{\mathbf w}^l\tilde{\mathbf
 
 ## cfsmn
 
+Shiliang Zhang等人对fsmn进一步改进，提出cfsmn（compact feedforward sequential memory networks）。将模型缩小到原来的60%，速度提高7倍。同时保证效果比blstm更好。
 
+cfsmn结构如下图所示。
+
+![](http://vsooda.github.io/assets/fsmn/cfsmn.png)
+
+从上图可以看出，基本思路就是将$\mathbf h$通过$\mathbf V^l$映射到低维空间，再在低维空间上做memory block的事情，最后对再映射回$\mathbf h$空间。
+
+$$\mathbf p_t^l=\mathbf V^l\mathbf h_t^l+\mathbf b^l$$
+
+$$\mathbf{\tilde{p}}_t^l=\mathbf p_t^l + \sum_{i=0}^N\mathbf a_i^l \odot \mathbf p_{t-i}^l$$
+
+双向形式为：
+
+$$\mathbf{\tilde{p}}_t^l=\mathbf p_t^l + \sum_{i=0}^{N_1}\mathbf a_i^l \odot \mathbf p_{t-i}^l+\sum_{j=0}^{N_2}\mathbf c_j^l \odot \mathbf p_{t+j}^l$$
+
+映射回原空间:
+
+$$\mathbf h_t^{l+1}=f(\mathbf U^l\mathbf{\tilde{p}}_t^l+\mathbf b^{l+1})$$
 
 ## dfsmn
 
-
+![](http://vsooda.github.io/assets/fsmn/dfsmn.png)
 
 
 ## 参考文献
