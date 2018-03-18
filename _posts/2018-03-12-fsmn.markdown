@@ -70,6 +70,9 @@ $$\mathbf h_t^{l+1}=f(\mathbf U^l\mathbf{\tilde{p}}_t^l+\mathbf b^{l+1})$$
 
 ## dfsmn
 
+* skip connections
+* order， stride
+
 ![](http://vsooda.github.io/assets/fsmn/dfsmn.png)
 
 
