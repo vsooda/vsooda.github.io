@@ -108,9 +108,9 @@ $$J(w)=\frac{1}{2}^2+\frac{\lambda}{2}w^Tw$$
 
 令关于$w$梯度为０，得到:
 
-$$w=-\frac{1}{\lambda}\sum_{n=1}^{N}{\{w^T\phi(x_n)-t_n\}}\phi(x_n)=\sum_{n=1}^{N}a_n\phi(x_n)=\Phi^T\bf{a} \qquad(6.3)$$
+$$w=-\frac{1}{\lambda}\sum_{n=1}^{N}{\{w^T\phi(x_n)-t_n\}}\phi(x_n)=\sum_{n=1}^{N}a_n\phi(x_n)=\Phi^T\mathbf a \qquad(6.3)$$
 
-其中$\Phi$是设计矩阵，第n行为$\phi(x_n)^T$. 向量$\bf{a}=(a_1, ...,a_N)^T$, 并且，
+其中$\Phi$是设计矩阵，第n行为$\phi(x_n)^T$. 向量$\mathbf a=(a_1, ...,a_N)^T$, 并且，
 
 $$a_n=-\frac{1}{\lambda}{\{w^T\phi(x_n)-t_n\}}\phi(x_n) \qquad(6.4)$$
 
