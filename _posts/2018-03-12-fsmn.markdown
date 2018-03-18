@@ -1,0 +1,59 @@
+---
+layout: post
+title: "fsmn"
+date: 2018-03-12
+mathjax: true
+categories: deep
+tags: speech
+---
+* content
+{:toc}
+
+今天无意中看到阿里tts团队即将发在ICASSP 2018的论文dfsmn[^dfsmn]。基本上就是用一种新的fsmn结构来替代lstm，在不损失效果的前提下，达到减小模型大小，加快训练预测速度的目的。要读懂这篇论文，需要先对fsmn[^fsmn]，cfsmn[^cfsmn]有所了解。本文介绍这三篇论文。
+
+## fsmn
+fsmn(feedforward sequential memory networks) 提出于2015年，讯飞当时的最佳结果似乎是基于这个结构，具体参考这篇[pr](http://blog.sciencenet.cn/blog-1225851-947297.html)。
+
+我们先来看一下这个网络张什么样子的。
+
+![](../assets/fsmn/fsmn.png)
+
+从上图可以看到，对于每个输入$X_t$, 经过多层网络之后获得$Y_t$. 如果没有虚线框部分，那么就跟普通的dnn没有区别了。重点还是在虚线框部分，这被称为memory block。
+
+memory block来保存历史信息。用blstm和bfsmn来比较，我们可以更好的知道两者的区别（以语音识别为例）：
+
+* blstm由于rnn结构的特性，需要得到整个完整语音输入，再进行双向lstm计算。
+* bfsmn在后向的时候，不需要或者完整输入，只要或者之后的部分信息就够了。比如说，语音识别延时个0.2秒，这部分信心足够后向fsmn使用了。
+
+接下来我们具体列一下fsmn的计算公式, t时刻 $l$ 层的输出表示为$\mathbf h_t^l$：
+
+$$\tilde{\mathbf h}_t^l=\sum_{i=0}^{N}a_i^l\cdot \mathbf h_{t-i}^l$$
+
+其中$a_i^l$是与时间无关的系数。当然也可以是向量。如果是向量, 则换成对位相乘
+
+$$\tilde{\mathbf h}_t^l=\sum_{i=0}^{N}\mathbf a_i^l\odot \mathbf h_{t-i}^l$$
+
+上式只是单向形式，对应双向表示为：
+
+$$\tilde{\mathbf h}_t^l=\sum_{i=0}^{N_1}a_i^l\cdot \mathbf h_{t-i}^l+\sum_{j=1}^{N_2}c_j^l \cdot \mathbf h_{t+j}^l$$
+
+$$\tilde{\mathbf h}_t^l=\sum_{i=0}^{N_1}\mathbf a_i^l\odot \mathbf h_{t-i}^l+\sum_{j=1}^{N_2}\mathbf c_j^l \odot \mathbf h_{t+j}^l$$
+
+通过当前层block memory的计算，下一层的$为:
+
+$$\mathbf h_t^{l+1}=f(\mathbf W^l\mathbf h_t^l+\tilde{\mathbf w}^l\tilde{\mathbf h}_t^l+\mathbf b^l)$$ 
+
+## cfsmn
+
+
+
+## dfsmn
+
+
+
+
+## 参考文献
+
+[^dfsmn]: Mengxiao Bi, Heng Lu, Shiliang Zhang, Ming Lei, Zhijie Yan, Deep Feed-forward Sequential Memory Networks for Speech Synthesis,  ICASSP 2018
+[^cfsmn]: Shiliang Zhang, Hui Jiang, Shifu Xiong, Si Wei, and Li-Rong Dai, “Compact feedforward sequential memory networks for large vocabulary continuous speech recognition.,” in INTER- SPEECH, 2016, pp. 3389–3393.
+[^fsmn]: Shiliang Zhang, Cong Liu, Hui Jiang, Si Wei, Lirong Dai, and Yu Hu, “Feedforward sequential memory networks: A new structure to learn long-term dependency,” arXiv preprint arXiv:1512.08301, 2015.
