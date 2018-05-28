@@ -71,8 +71,5 @@ ssd采用与multibox类似的方法。第一次用overlap最大的进行优化�
 ## 参考文献
 
 [^ssd]: Liu, Wei, et al. "Ssd: Single shot multibox detector." *European conference on computer vision*. Springer, Cham, 2016.
-[^multibox]: Erhan, D., Szegedy, C., Toshev, A., Anguelov, D.: Scalable object detection using deep 
-
-neural networks. In: CVPR. (2014) 
-
+[^multibox]: Erhan, D., Szegedy, C., Toshev, A., Anguelov, D.: Scalable object detection using deep neural networks. In: CVPR. (2014) 
 [^faster_rcnn]: S.Ren,K.He,R.Girshick,and J.Sun,“FasterR-CNN:Towards real-time object detection with region proposal networks,” in Neural Information Processing Systems (NIPS), 2015.
