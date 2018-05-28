@@ -34,10 +34,6 @@ ssd的主要贡献如下：
 
 
 
-```
-详细讲一下SSD的结构，可以参看Caffe代码。SSD的结构为conv1_1，conv1_2，conv2_1，conv2_2，conv3_1，conv3_2，conv3_3，conv4_1，conv4_2，conv4_3，conv5_1，conv5_2，conv5_3（512），fc6：3*3*1024的卷积（原来VGG16中的fc6是全连接层，这里变成卷积层，下面的fc7层同理），fc7:1*1*1024的卷积，conv6_1，conv6_2（对应上图的conv8_2），……，conv9_1，conv9_2，loss。然后针对conv4_3（4），fc7（6），conv6_2（6），conv7_2（6），conv8_2（4），conv9_2（4）的每一个再分别采用两个3*3大小的卷积核进行卷积，这两个卷积核是并列的（括号里的数字代表default box的数量，可以参考Caffe代码，所以上图中SSD结构的倒数第二列的数字8732表示的是所有default box的数量，是这么来的38*38*4+19*19*6+10*10*6+5*5*6+3*3*4+1*1*4=8732），这两个3*3的卷积核一个是用来做localization的（回归用，如果default box是6个，那么就有6*4=24个这样的卷积核，卷积后map的大小和卷积前一样，因为pad=1，下同），另一个是用来做confidence的（分类用，如果default box是6个，VOC的object类别有20个，那么就有6*（20+1）=126个这样的卷积核）。如下图是conv6_2的localizaiton的3*3卷积核操作，卷积核个数是24（6*4=24，由于pad=1，所以卷积结果的map大小不变，下同）：这里的permute层就是交换的作用，比如你卷积后的维度是32*24*19*19，那么经过交换层后就变成32*19*19*24，顺序变了而已。而flatten层的作用就是将32*19*19*24变成32*8664，32是batchsize的大小。
-```
-
 ## anchor boxes
 
 ssd anchor boxes的设置与faster rcnn不大一样。这里考虑不同的长宽比和尺度。对于每个feature map的参数也有不一样。
