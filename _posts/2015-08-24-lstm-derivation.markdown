@@ -2,6 +2,7 @@
 layout: post
 title:  "lstm推导"
 date:   2015-08-24
+mathjax: true
 categories: ml
 tags: lstm python
 ---
@@ -11,7 +12,7 @@ tags: lstm python
 神经网络的公式基本上就是前向后向更新。这里讲LSTM的后向推导。
 说是推导，基本上没有一个公式。注重理解。
 
-
+## 1 反向传播
 
 
 cs231上有一篇关于[非常好的文章](http://cs231n.github.io/optimization-2/#intuitive), 讲得非常好。
@@ -58,9 +59,17 @@ dy += ((1 - sigy) * sigy) * dsigy                                 #(1)
 # done! phew
 ```
 
+## 2 lstm
+
+### 2.1 公式
+
+关于lstm，有个非常好的[博客](http://colah.github.io/posts/2015-08-Understanding-LSTMs/)。
+
 前向更新公式为：
 
 ![image](http://vsooda.github.io/assets/lstm/lstm.png)
+
+### 2.2 代码
 
 依照上文的后向传播的推导方式，可以得到，
 前向更新，请见代码中`#sooda注释`部分：
@@ -71,7 +80,8 @@ dy += ((1 - sigy) * sigy) * dsigy                                 #(1)
 
 ![image](http://vsooda.github.io/assets/lstm/lstm_backward.png)
 
-### 注意点
+**注意点**:
+
 1. 通过观察公式1到4， 发现所有的乘机因子为x、h，互相没有依赖，可以并行化。利用向量化进行加速
 2. IFOG指的是Input，Forget， Output， Cell Gate的计算值。IFOGf是IFOG经过激活函数后的激活值. 并以此为顺序。o-d表示input gate， d-2d表示forget gate， 2d-3d表示output gate， 3d-end 表示cell gate
 3. WLSTM保存的实际上是所有这些门相对于输入+隐藏层+偏置的权值。
@@ -79,5 +89,3 @@ dy += ((1 - sigy) * sigy) * dsigy                                 #(1)
 5. cache是为了保存后向传播所需要的值
 
 本文代码可以参考[gist](https://gist.github.com/f93810ce107b0d393cbf.git)
-
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
