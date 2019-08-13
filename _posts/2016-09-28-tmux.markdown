@@ -145,6 +145,10 @@ tmux attach -t session_name #进入某个会话
 
 在pane内部，无法使用上下键鼠标键进行滚动查看bash历史。需要按**prefix+[**进入复制模式，再去滚动。
 
+**update** :
+
+一个困扰很久的问题，tmux 2.3 以上无法直接用vim快捷键进行滚动，需要在~/.tmux.conf.local最后加上: bind-key -T copy-mode-vi j send-keys -X page-up 
+
 #### 会话保存
 
 **Tmux Resurrect**
